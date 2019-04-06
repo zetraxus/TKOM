@@ -3,4 +3,4 @@ project(TKOM)
 
 set(CMAKE_CXX_STANDARD 11)
 
-add_executable(TKOM main.cpp)
+add_executable(TKOM main.cpp lexer/Scanner.cpp lexer/Scanner.h lexer/Token.cpp lexer/Token.h lexer/Source.cpp lexer/Source.h)

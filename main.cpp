@@ -7,5 +7,8 @@ int main(int argc, char** argv) {
     if (argc > 1)
         source = new Source(argv[1]);
 
+    source->getNextChar();
+
+
     return 0;
 }

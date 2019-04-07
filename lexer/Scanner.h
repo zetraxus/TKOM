@@ -6,7 +6,19 @@
 #define TKOM_SCANNER_H
 
 
+#include <vector>
+#include "Source.h"
+#include "Token.h"
+
 class Scanner {
+private:
+
+    Source* source;
+    std::vector<Token*> tokenList;
+
+public:
+
+    Token* getNextToken();
 
 };
 

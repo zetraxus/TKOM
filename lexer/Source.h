@@ -15,6 +15,10 @@ class Position {
 
 public:
     explicit Position(unsigned int line = 0, unsigned int position = 0);
+
+    void incrementPosition();
+
+    void incrementLine();
 };
 
 
@@ -28,6 +32,10 @@ private:
 
 public:
     Source(const std::string& fileName);
+
+    virtual ~Source();
+
+    int getNextChar();
 };
 
 

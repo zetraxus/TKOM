@@ -17,7 +17,7 @@ Source::Source(const std::string& fileName) : fileName(fileName) {
 int Source::getNextChar() {
     int next = inputStream.get();
     next != LineFeed ? current->incrementPosition() : current->incrementLine();
-
+    
     return next;
 }
 
@@ -28,6 +28,10 @@ Source::~Source() {
 
 Position* Source::getCurrentPosition() const {
     return current;
+}
+
+int Source::peekNextChar() {
+    return inputStream.peek();
 }
 
 Position::Position(unsigned int line, int position) : line(line), position(position) {}

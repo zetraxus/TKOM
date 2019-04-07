@@ -10,3 +10,20 @@ Token::Token(Position* startPosition) : startPosition(startPosition) {}
 Token::~Token() {
     delete startPosition;
 }
+
+void Token::setTokenType(TokenType tokenType) {
+    this->tokenType = tokenType;
+}
+
+void Token::setTokenTypeAndValue(TokenType tokenType, std::string value) {
+    this->tokenType = tokenType;
+    this->value = value;
+}
+
+Token::TokenType Token::getTokenType() const {
+    return tokenType;
+}
+
+const std::string& Token::getValue() const {
+    return value;
+}

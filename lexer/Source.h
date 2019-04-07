@@ -37,6 +37,8 @@ public:
 
     int getNextChar();
 
+    int peekNextChar();
+
     Position* getCurrentPosition() const;
 };
 

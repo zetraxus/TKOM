@@ -10,11 +10,8 @@ int main(int argc, char** argv) {
         source = new Source(argv[1]);
 
     scanner = new Scanner(source);
-
-    scanner->getNextToken();
-    scanner->getNextToken();
-    scanner->getNextToken();
-
+    scanner->preparedTokenList();
+    scanner->printTokenList();
 
     return 0;
 }

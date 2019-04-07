@@ -7,6 +7,7 @@
 
 
 #include <vector>
+#include <map>
 #include "Source.h"
 #include "Token.h"
 
@@ -15,6 +16,7 @@ private:
 
     Source* source;
     std::vector<Token*> tokenList;
+    std::map<std::string, Token::TokenType> keyWords;
 
     Token* getAlphaToken(int firstChar);
 
@@ -29,7 +31,11 @@ public:
 
     ~Scanner();
 
+    void preparedTokenList();
+
     Token* getNextToken();
+
+    void printTokenList();
 
 };
 

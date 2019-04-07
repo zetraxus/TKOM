@@ -1,1 +1,2 @@
-abdEf
+{ V int 15 * 33 A 5 C abdEf b123a int s dd2
+dupa

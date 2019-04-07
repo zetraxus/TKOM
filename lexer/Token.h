@@ -10,11 +10,20 @@
 #include "Source.h"
 
 class Token {
+public:
     enum TokenType {
-        Type,
         Identifier,
         Value,
-        Unit, // V, W, A, Om, S, C, s, J
+        Int, // int
+        Unit, // unit
+        V, // Volt
+        W, // Watt
+        A, // Amper
+        Om, // Ohm
+        S, // Siemens
+        C, // Coulomb
+        s, // second
+        J, // Joule
         OpMul, // *
         OpDiv, // /
         OpSum, // +
@@ -39,6 +48,7 @@ class Token {
         LogicalAnd, // &&
         Assign, // =
         EofSymbol,
+        BadType,
     };
 
 private:
@@ -52,6 +62,14 @@ public:
     Token(Position* startPosition);
 
     ~Token();
+
+    void setTokenType(TokenType tokenType);
+
+    void setTokenTypeAndValue (TokenType tokenType, std::string value);
+
+    TokenType getTokenType() const;
+
+    const std::string& getValue() const;
 
 };
 

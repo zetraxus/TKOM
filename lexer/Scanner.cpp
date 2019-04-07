@@ -12,13 +12,13 @@ Token* Scanner::getNextToken() {
     int nextChar; //code in ASCII
     Token* nextToken;
 
-    do{
-        nextChar = source -> getNextChar();
+    do {
+        nextChar = source->getNextChar();
     } while (isspace(nextChar) || nextChar == LineFeed);
 
-    if(isalpha(nextChar)){
+    if (isalpha(nextChar)) {
         nextToken = getAlphaToken(nextChar);
-    } else if (isdigit(nextChar)){
+    } else if (isdigit(nextChar)) {
         nextToken = getNumberToken(nextChar);
     } else
         nextToken = getOperatorToken(nextChar);
@@ -32,12 +32,12 @@ Token* Scanner::getAlphaToken(int firstChar) {
     result += (char) firstChar;
 
     int nextChar;
-    while(isalpha(nextChar = source -> peekNextChar()) || isdigit(nextChar)){
-        result += source -> getNextChar();
+    while (isalpha(nextChar = source->peekNextChar()) || isdigit(nextChar)) {
+        result += source->getNextChar();
     }
 
     auto it = keyWords.find(result);
-    if(it != keyWords.end())
+    if (it != keyWords.end())
         token->setTokenType(it->second);
     else
         token->setTokenTypeAndValue(Token::TokenType::Identifier, result);
@@ -50,8 +50,8 @@ Token* Scanner::getNumberToken(int firstChar) {
     std::string result;
     result += (char) firstChar;
 
-    while(isdigit(source -> peekNextChar()))
-        result += source -> getNextChar();
+    while (isdigit(source->peekNextChar()))
+        result += source->getNextChar();
 
     token->setTokenTypeAndValue(Token::TokenType::Value, result);
 
@@ -64,69 +64,63 @@ Token* Scanner::getOperatorToken(int firstChar) {
     result += (char) firstChar;
 
     char first = (char) firstChar;
-    if(first == '*')
+    if (first == '*')
         token->setTokenType(Token::TokenType::OpMul);
-    else if(first == '/')
+    else if (first == '/')
         token->setTokenType(Token::TokenType::OpDiv);
-    else if(first == '+')
+    else if (first == '+')
         token->setTokenType(Token::TokenType::OpSum);
-    else if(first == '-')
+    else if (first == '-')
         token->setTokenType(Token::TokenType::OpSub);
-    else if(first == '{')
+    else if (first == '{')
         token->setTokenType(Token::TokenType::BracketOpen);
-    else if(first == '}')
+    else if (first == '}')
         token->setTokenType(Token::TokenType::BracketClose);
-    else if(first == '(')
+    else if (first == '(')
         token->setTokenType(Token::TokenType::ParenthesesOpen);
-    else if(first == ')')
+    else if (first == ')')
         token->setTokenType(Token::TokenType::ParenthesesClose);
-    else if(first == ':')
+    else if (first == ':')
         token->setTokenType(Token::TokenType::Colon);
-    else if(first == ';')
+    else if (first == ';')
         token->setTokenType(Token::TokenType::SemiColon);
-    else if(first == '<'){
-        if(source->peekNextChar() == '='){
+    else if (first == '<') {
+        if (source->peekNextChar() == '=') {
             source->getNextChar();
             token->setTokenType(Token::TokenType::LessEq);
-        }
-        else
+        } else
             token->setTokenType(Token::TokenType::Less);
-    } else if(first == '>'){
-        if(source->peekNextChar() == '='){
+    } else if (first == '>') {
+        if (source->peekNextChar() == '=') {
             source->getNextChar();
             token->setTokenType(Token::TokenType::MoreEq);
-        }
-        else
+        } else
             token->setTokenType(Token::TokenType::More);
-    } else if(first == '='){
-        if(source->peekNextChar() == '='){
+    } else if (first == '=') {
+        if (source->peekNextChar() == '=') {
             source->getNextChar();
             token->setTokenType(Token::TokenType::Equal);
-        }
-        else
+        } else
             token->setTokenType(Token::TokenType::Assign);
-    } else if(first == '!'){
-        if(source->peekNextChar() == '='){
+    } else if (first == '!') {
+        if (source->peekNextChar() == '=') {
             source->getNextChar();
             token->setTokenType(Token::TokenType::NotEqual);
-        }
-        else
+        } else
             token->setTokenType(Token::TokenType::BadType);
-    } else if(first == '|'){
-        if(source->peekNextChar() == '|'){
+    } else if (first == '|') {
+        if (source->peekNextChar() == '|') {
             source->getNextChar();
             token->setTokenType(Token::TokenType::LogicalOr);
-        }
-        else
+        } else
             token->setTokenType(Token::TokenType::BadType);
-    } else if(first == '&'){
-        if(source->peekNextChar() == '&'){
+    } else if (first == '&') {
+        if (source->peekNextChar() == '&') {
             source->getNextChar();
             token->setTokenType(Token::TokenType::LogicalAnd);
-        }
-        else
+        } else
             token->setTokenType(Token::TokenType::BadType);
-    } else if(first == EOF)
+    } else if (first == EOF)
         token->setTokenType(Token::TokenType::EofSymbol);
     else
         token->setTokenType(Token::TokenType::BadType);
@@ -156,7 +150,7 @@ Scanner::~Scanner() {
 }
 
 void Scanner::printTokenList() {
-    for(size_t i = 0 ; i < tokenList.size(); ++i){
+    for (size_t i = 0; i < tokenList.size(); ++i) {
         std::cout << tokenList[i]->getTokenType() << " " << tokenList[i]->getValue() << std::endl;
     }
 
@@ -164,9 +158,9 @@ void Scanner::printTokenList() {
 
 void Scanner::preparedTokenList() {
     Token* next;
-    do{
+    do {
         next = getNextToken();
         tokenList.push_back(next);
-    } while(next->getTokenType() != Token::TokenType::EofSymbol);
+    } while (next->getTokenType() != Token::TokenType::EofSymbol);
 
 }

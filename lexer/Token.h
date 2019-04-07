@@ -65,7 +65,7 @@ public:
 
     void setTokenType(TokenType tokenType);
 
-    void setTokenTypeAndValue (TokenType tokenType, std::string value);
+    void setTokenTypeAndValue(TokenType tokenType, std::string value);
 
     TokenType getTokenType() const;
 

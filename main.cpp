@@ -3,15 +3,26 @@
 #include "lexer/Scanner.h"
 
 int main(int argc, char** argv) {
-    Source* source;
+    Source* source = nullptr;
     Scanner* scanner;
 
     if (argc > 1)
-        source = new Source(argv[1]);
+        try {
+            source = new Source(argv[1]);
+        } catch (const std::runtime_error& error) {
+            std::cout << error.what() << std::endl;
+            return -1;
+        }
 
     scanner = new Scanner(source);
-    scanner->preparedTokenList();
-    scanner->printTokenList();
+
+    try {
+        scanner->preparedTokenList();
+        scanner->printTokenList();
+    } catch (const std::runtime_error& error) {
+        std::cout << error.what() << std::endl;
+        return -1;
+    }
 
     return 0;
 }

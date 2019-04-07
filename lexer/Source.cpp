@@ -52,4 +52,4 @@ int Position::getPosition() const {
     return position;
 }
 
-Position::Position(const Position& other) : line(other.line), position(other.position){}
+Position::Position(const Position& other) : line(other.line), position(other.position) {}

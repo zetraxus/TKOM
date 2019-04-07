@@ -3,6 +3,7 @@
 //
 
 #include <iostream>
+#include <sstream>
 #include "Scanner.h"
 
 const int LineFeed = 10;
@@ -153,9 +154,9 @@ Scanner::~Scanner() {
 
 void Scanner::printTokenList() {
     for (size_t i = 0; i < tokenList.size(); ++i) {
-        std::cout << tokenList[i]->getTokenType() << " " << tokenList[i]->getValue()
-        << " $$ " << tokenList[i]->getStartPosition()->getLine() << " " <<
-            tokenList[i]->getStartPosition()->getPosition() <<std::endl;
+        std::cout << "(" << tokenList[i]->getStartPosition()->getLine() << ","
+                  << tokenList[i]->getStartPosition()->getPosition() << ") " << "Type "
+                  << tokenList[i]->getTokenType() << " (optional) value: " << tokenList[i]->getValue() << std::endl;
     }
 
 }
@@ -165,6 +166,12 @@ void Scanner::preparedTokenList() {
 
     do
         tokenList.push_back(next = getNextToken());
-    while (next->getTokenType() != Token::TokenType::EofSymbol);
+    while (next->getTokenType() != Token::TokenType::EofSymbol && next->getTokenType() != Token::TokenType::BadType);
 
+    if (next->getTokenType() == Token::TokenType::BadType) {
+        std::stringstream message;
+        message << "Uknown token (line, position): (" << next->getStartPosition()->getLine() << ","
+                << next->getStartPosition()->getPosition() << ")";
+        throw std::runtime_error(message.str());
+    }
 }

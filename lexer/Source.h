@@ -11,10 +11,10 @@
 
 class Position {
     unsigned line;
-    unsigned position; // position in line
+    int position; // position in line
 
 public:
-    explicit Position(unsigned int line = 0, unsigned int position = 0);
+    explicit Position(unsigned int line = 0, int position = -1);
 
     void incrementPosition();
 
@@ -36,6 +36,8 @@ public:
     virtual ~Source();
 
     int getNextChar();
+
+    Position* getCurrentPosition() const;
 };
 
 

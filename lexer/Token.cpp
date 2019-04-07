@@ -4,6 +4,9 @@
 
 #include "Token.h"
 
-Token::Token(Token::TokenType tokenType, const std::string& value, const Position& startPosition,
-             const Position& endPosition) : tokenType(tokenType), value(value), startPosition(startPosition),
-                                            endPosition(endPosition) {}
+
+Token::Token(Position* startPosition) : startPosition(startPosition) {}
+
+Token::~Token() {
+    delete startPosition;
+}

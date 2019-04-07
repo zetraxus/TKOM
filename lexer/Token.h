@@ -45,12 +45,13 @@ private:
 
     TokenType tokenType;
     std::string value;
-public:
-    Token(TokenType tokenType, const std::string& value, const Position& startPosition, const Position& endPosition);
+    Position* startPosition;
 
-private:
-    Position startPosition;
-    Position endPosition;
+public:
+
+    Token(Position* startPosition);
+
+    ~Token();
 
 };
 

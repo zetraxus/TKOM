@@ -18,7 +18,7 @@ int Source::getNextChar() {
     int next = inputStream.get();
     next != LineFeed ? current->incrementPosition() : current->incrementLine();
 
-    return inputStream.get();
+    return next;
 }
 
 Source::~Source() {
@@ -26,7 +26,11 @@ Source::~Source() {
 
 }
 
-Position::Position(unsigned int line, unsigned int position) : line(line), position(position) {}
+Position* Source::getCurrentPosition() const {
+    return current;
+}
+
+Position::Position(unsigned int line, int position) : line(line), position(position) {}
 
 void Position::incrementPosition(){
     ++position;

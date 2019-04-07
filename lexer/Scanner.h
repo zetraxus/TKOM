@@ -16,7 +16,18 @@ private:
     Source* source;
     std::vector<Token*> tokenList;
 
+    Token* getAlphaToken(int firstChar);
+
+    Token* getNumberToken(int firstChar);
+
+    Token* getOperatorToken(int firstChar);
+
+
 public:
+
+    Scanner(Source* source);
+
+    ~Scanner();
 
     Token* getNextToken();
 

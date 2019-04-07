@@ -27,3 +27,7 @@ Token::TokenType Token::getTokenType() const {
 const std::string& Token::getValue() const {
     return value;
 }
+
+Position* Token::getStartPosition() const {
+    return startPosition;
+}

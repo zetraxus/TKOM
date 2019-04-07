@@ -71,6 +71,8 @@ public:
 
     const std::string& getValue() const;
 
+    Position* getStartPosition() const;
+
 };
 
 

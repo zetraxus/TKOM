@@ -12,22 +12,23 @@ Token* Scanner::getNextToken() {
     int nextChar; //code in ASCII
     Token* nextToken;
 
-    do {
+    do
         nextChar = source->getNextChar();
-    } while (isspace(nextChar) || nextChar == LineFeed);
+    while (isspace(nextChar) || nextChar == LineFeed);
 
-    if (isalpha(nextChar)) {
+    if (isalpha(nextChar))
         nextToken = getAlphaToken(nextChar);
-    } else if (isdigit(nextChar)) {
+    else if (isdigit(nextChar))
         nextToken = getNumberToken(nextChar);
-    } else
+    else
         nextToken = getOperatorToken(nextChar);
 
     return nextToken;
 }
 
 Token* Scanner::getAlphaToken(int firstChar) {
-    Token* token = new Token(source->getCurrentPosition());
+    Token* token = new Token(new Position(*(source->getCurrentPosition())));
+
     std::string result;
     result += (char) firstChar;
 
@@ -46,7 +47,8 @@ Token* Scanner::getAlphaToken(int firstChar) {
 }
 
 Token* Scanner::getNumberToken(int firstChar) {
-    Token* token = new Token(source->getCurrentPosition());
+    Token* token = new Token(new Position(*(source->getCurrentPosition())));
+
     std::string result;
     result += (char) firstChar;
 
@@ -59,7 +61,7 @@ Token* Scanner::getNumberToken(int firstChar) {
 }
 
 Token* Scanner::getOperatorToken(int firstChar) {
-    Token* token = new Token(source->getCurrentPosition());
+    Token* token = new Token(new Position(*(source->getCurrentPosition())));
     std::string result;
     result += (char) firstChar;
 
@@ -151,16 +153,18 @@ Scanner::~Scanner() {
 
 void Scanner::printTokenList() {
     for (size_t i = 0; i < tokenList.size(); ++i) {
-        std::cout << tokenList[i]->getTokenType() << " " << tokenList[i]->getValue() << std::endl;
+        std::cout << tokenList[i]->getTokenType() << " " << tokenList[i]->getValue()
+        << " $$ " << tokenList[i]->getStartPosition()->getLine() << " " <<
+            tokenList[i]->getStartPosition()->getPosition() <<std::endl;
     }
 
 }
 
 void Scanner::preparedTokenList() {
     Token* next;
-    do {
-        next = getNextToken();
-        tokenList.push_back(next);
-    } while (next->getTokenType() != Token::TokenType::EofSymbol);
+
+    do
+        tokenList.push_back(next = getNextToken());
+    while (next->getTokenType() != Token::TokenType::EofSymbol);
 
 }

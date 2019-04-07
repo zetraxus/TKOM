@@ -43,3 +43,13 @@ void Position::incrementLine() {
     ++line;
     position = 0;
 }
+
+unsigned int Position::getLine() const {
+    return line;
+}
+
+int Position::getPosition() const {
+    return position;
+}
+
+Position::Position(const Position& other) : line(other.line), position(other.position){}

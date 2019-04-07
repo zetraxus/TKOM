@@ -14,11 +14,17 @@ class Position {
     int position; // position in line
 
 public:
-    explicit Position(unsigned int line = 0, int position = -1);
+    explicit Position(unsigned int line = 1, int position = 0);
+
+    Position(const Position& other);
 
     void incrementPosition();
 
     void incrementLine();
+
+    unsigned int getLine() const;
+
+    int getPosition() const;
 };
 
 

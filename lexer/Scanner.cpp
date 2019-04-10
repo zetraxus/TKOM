@@ -5,7 +5,7 @@
 #include <iostream>
 #include <sstream>
 #include "Scanner.h"
-#include "TokensMap.h"
+#include "TokenMap.h"
 
 const int LineFeed = 10;
 
@@ -45,6 +45,11 @@ Token* Scanner::getAlphaToken(int firstChar) {
     else
         token->setTokenTypeAndValue(Token::TokenType::Identifier, result);
 
+    if(flag && token->getTokenType() == Token::TokenType::Identifier)
+        token->setTokenTypeAndValue(Token::TokenType::BadType, result);
+    else
+        flag = false;
+
     return token;
 }
 
@@ -56,6 +61,9 @@ Token* Scanner::getNumberToken(int firstChar) {
 
     while (isdigit(source->peekNextChar()))
         result += source->getNextChar();
+
+    if(isalpha(source->peekNextChar()))
+        flag = true;
 
     token->setTokenTypeAndValue(Token::TokenType::Value, result);
 
@@ -138,7 +146,7 @@ Token* Scanner::getOperatorToken(int firstChar) {
     return token;
 }
 
-Scanner::Scanner(Source* source) : source(source) {
+Scanner::Scanner(Source* source) : source(source), flag (false){
     keyWords.insert(std::make_pair("return", Token::TokenType::Return));
     keyWords.insert(std::make_pair("if", Token::TokenType::If));
     keyWords.insert(std::make_pair("else", Token::TokenType::Else));
@@ -160,7 +168,7 @@ Scanner::~Scanner() {
 }
 
 void Scanner::printTokenList() {
-    TokensMap* tokensMap = new TokensMap();
+    TokenMap* tokensMap = new TokenMap();
     for (size_t i = 0; i < tokenList.size(); ++i) {
         std::cout << "(" << tokenList[i]->getStartPosition()->getLine() << ","
                   << tokenList[i]->getStartPosition()->getPosition() << ") " << "Type "

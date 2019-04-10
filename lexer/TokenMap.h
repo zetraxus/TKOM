@@ -9,10 +9,10 @@
 #include <map>
 #include "Token.h"
 
-class TokensMap { // for test
+class TokenMap { // for test
     std::map<Token::TokenType, std::string> tokens;
 public:
-    TokensMap();
+    TokenMap();
 
     std::string findTokenDescription(Token::TokenType token);
 };

@@ -2,9 +2,9 @@
 // Created by adam on 10.04.19.
 //
 
-#include "TokensMap.h"
+#include "TokenMap.h"
 
-TokensMap::TokensMap() {
+TokenMap::TokenMap() {
     tokens.insert(std::make_pair(Token::TokenType::Identifier, "Identifier"));
     tokens.insert(std::make_pair(Token::TokenType::Value, "value"));
     tokens.insert(std::make_pair(Token::TokenType::Int, "Int"));
@@ -47,6 +47,6 @@ TokensMap::TokensMap() {
     tokens.insert(std::make_pair(Token::TokenType::BadType, "Uknown"));
 }
 
-std::string TokensMap::findTokenDescription(Token::TokenType token) {
+std::string TokenMap::findTokenDescription(Token::TokenType token) {
     return tokens.find(token) -> second;
 }

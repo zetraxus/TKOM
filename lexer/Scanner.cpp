@@ -5,6 +5,7 @@
 #include <iostream>
 #include <sstream>
 #include "Scanner.h"
+#include "TokensMap.h"
 
 const int LineFeed = 10;
 
@@ -76,9 +77,13 @@ Token* Scanner::getOperatorToken(int firstChar) {
     else if (first == '-')
         token->setTokenType(Token::TokenType::OpSub);
     else if (first == '{')
-        token->setTokenType(Token::TokenType::BracketOpen);
+        token->setTokenType(Token::TokenType::CurlyBracketOpen);
     else if (first == '}')
-        token->setTokenType(Token::TokenType::BracketClose);
+        token->setTokenType(Token::TokenType::CurlyBracketClose);
+    else if (first == '[')
+        token->setTokenType(Token::TokenType::SquareBracketsOpen);
+    else if (first == ']')
+        token->setTokenType(Token::TokenType::SquareBracketsClose);
     else if (first == '(')
         token->setTokenType(Token::TokenType::ParenthesesOpen);
     else if (first == ')')
@@ -87,6 +92,8 @@ Token* Scanner::getOperatorToken(int firstChar) {
         token->setTokenType(Token::TokenType::Colon);
     else if (first == ';')
         token->setTokenType(Token::TokenType::SemiColon);
+    else if (first == ',')
+        token->setTokenType(Token::TokenType::Comma);
     else if (first == '<') {
         if (source->peekNextChar() == '=') {
             source->getNextChar();
@@ -153,10 +160,14 @@ Scanner::~Scanner() {
 }
 
 void Scanner::printTokenList() {
+    TokensMap* tokensMap = new TokensMap();
     for (size_t i = 0; i < tokenList.size(); ++i) {
         std::cout << "(" << tokenList[i]->getStartPosition()->getLine() << ","
                   << tokenList[i]->getStartPosition()->getPosition() << ") " << "Type "
-                  << tokenList[i]->getTokenType() << " (optional) value: " << tokenList[i]->getValue() << std::endl;
+                  << tokensMap->findTokenDescription(tokenList[i]->getTokenType());
+        if(tokenList[i]->getTokenType() == Token::TokenType::Value || tokenList[i]->getTokenType() == Token::TokenType::Identifier)
+            std::cout << "\t value: " << tokenList[i]->getValue();
+        std::cout << std::endl;
     }
 
 }

@@ -3,7 +3,7 @@
 #include "lexer/Scanner.h"
 
 int main(int argc, char** argv) {
-    Source* source = nullptr;
+    Source* source;
     Scanner* scanner;
 
     if (argc > 1)

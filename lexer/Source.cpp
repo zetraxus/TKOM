@@ -22,7 +22,6 @@ int Source::getNextChar() {
 
 Source::~Source() {
     inputStream.close();
-
 }
 
 Position* Source::getCurrentPosition() const {

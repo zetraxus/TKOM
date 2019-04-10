@@ -32,12 +32,15 @@ public:
         If,
         Else,
         For,
-        BracketOpen, // {
-        BracketClose, // }
+        CurlyBracketOpen, // {
+        CurlyBracketClose, // }
+        SquareBracketsOpen, // [
+        SquareBracketsClose, // ]
         ParenthesesOpen, // (
         ParenthesesClose, // )
         Colon, // :
         SemiColon, // ;
+        Comma, // ,
         Less, // <
         More, // >
         LessEq, // <=

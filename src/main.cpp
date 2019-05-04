@@ -13,6 +13,8 @@ int main(int argc, char** argv) {
             std::cout << error.what() << std::endl;
             return -1;
         }
+    else
+        return -1;
 
     scanner = new Scanner(source);
 

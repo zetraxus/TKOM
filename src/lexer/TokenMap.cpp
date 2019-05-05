@@ -48,5 +48,5 @@ TokenMap::TokenMap() {
 }
 
 std::string TokenMap::findTokenDescription(Token::TokenType token) {
-    return tokens.find(token) -> second;
+    return tokens.find(token)->second;
 }

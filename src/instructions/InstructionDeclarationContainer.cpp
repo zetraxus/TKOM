@@ -3,3 +3,8 @@
 //
 
 #include "InstructionDeclarationContainer.h"
+
+InstructionDeclarationContainer::InstructionDeclarationContainer(Token::TokenType type, const std::string& identifier,
+                                                                 const std::string& size) : type(type),
+                                                                                            identifier(identifier),
+                                                                                            size(size) {}

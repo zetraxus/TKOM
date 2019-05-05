@@ -13,6 +13,7 @@ class Program {
     std::vector<DefinitionOfFunction*> functions;
 public:
     Program();
+
     void addFunction(DefinitionOfFunction* next);
 };
 

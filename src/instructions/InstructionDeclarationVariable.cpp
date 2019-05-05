@@ -3,3 +3,8 @@
 //
 
 #include "InstructionDeclarationVariable.h"
+
+InstructionDeclarationVariable::InstructionDeclarationVariable(Token::TokenType type,
+                                                               const std::string& identifier) : type(type),
+                                                                                                identifier(
+                                                                                                    identifier) {}

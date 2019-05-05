@@ -45,7 +45,7 @@ Token* Scanner::getAlphaToken(int firstChar) {
     else
         token->setTokenTypeAndValue(Token::TokenType::Identifier, result);
 
-    if(flag && token->getTokenType() == Token::TokenType::Identifier)
+    if (flag && token->getTokenType() == Token::TokenType::Identifier)
         token->setTokenTypeAndValue(Token::TokenType::BadType, result);
     else
         flag = false;
@@ -62,7 +62,7 @@ Token* Scanner::getNumberToken(int firstChar) {
     while (isdigit(source->peekNextChar()))
         result += source->getNextChar();
 
-    if(isalpha(source->peekNextChar()))
+    if (isalpha(source->peekNextChar()))
         flag = true;
 
     token->setTokenTypeAndValue(Token::TokenType::Value, result);
@@ -146,7 +146,7 @@ Token* Scanner::getOperatorToken(int firstChar) {
     return token;
 }
 
-Scanner::Scanner(Source* source) : source(source), flag (false){
+Scanner::Scanner(Source* source) : source(source), flag(false) {
     keyWords.insert(std::make_pair("return", Token::TokenType::Return));
     keyWords.insert(std::make_pair("if", Token::TokenType::If));
     keyWords.insert(std::make_pair("else", Token::TokenType::Else));
@@ -173,7 +173,8 @@ void Scanner::printTokenList() {
         std::cout << "(" << tokenList[i]->getStartPosition()->getLine() << ","
                   << tokenList[i]->getStartPosition()->getPosition() << ") " << "Type "
                   << tokensMap->findTokenDescription(tokenList[i]->getTokenType());
-        if(tokenList[i]->getTokenType() == Token::TokenType::Value || tokenList[i]->getTokenType() == Token::TokenType::Identifier)
+        if (tokenList[i]->getTokenType() == Token::TokenType::Value ||
+            tokenList[i]->getTokenType() == Token::TokenType::Identifier)
             std::cout << "\t value: " << tokenList[i]->getValue();
         std::cout << std::endl;
     }

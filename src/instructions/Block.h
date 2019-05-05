@@ -13,6 +13,7 @@ class Block {
     std::vector<Instruction*> instructions;
 public:
     Block();
+
     void addInstruction(Instruction* next);
 };
 

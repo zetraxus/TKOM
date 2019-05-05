@@ -19,7 +19,7 @@ class Instruction {
     InstructionType instructionType;
 
 public:
-    Instruction(InstructionType instructionType);
+    Instruction();
 
 };
 

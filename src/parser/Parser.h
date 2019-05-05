@@ -16,9 +16,14 @@ class Parser {
 
 public:
     Parser(Scanner* scanner);
+
     Program* parseProgram();
+
     DefinitionOfFunction* parseFunction();
+
     Block* parseBlock();
+
+    Instruction* parseInstruction();
 };
 
 

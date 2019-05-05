@@ -4,4 +4,4 @@
 
 #include "Instruction.h"
 
-Instruction::Instruction(Instruction::InstructionType instructionType) : instructionType(instructionType) {}
+Instruction::Instruction(){}

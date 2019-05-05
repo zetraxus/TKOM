@@ -2,6 +2,7 @@
 // Created by adam on 06.04.19.
 //
 
+#include <iostream>
 #include "Token.h"
 
 

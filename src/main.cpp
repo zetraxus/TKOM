@@ -22,6 +22,7 @@ int main(int argc, char** argv) {
     parser = new Parser(scanner);
     parser->parseProgram();
 
+    //
 //    try {
 //        scanner->preparedTokenList();
 //        scanner->printTokenList();

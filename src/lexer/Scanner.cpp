@@ -178,7 +178,6 @@ void Scanner::printTokenList() {
             std::cout << "\t value: " << tokenList[i]->getValue();
         std::cout << std::endl;
     }
-
 }
 
 void Scanner::preparedTokenList() {

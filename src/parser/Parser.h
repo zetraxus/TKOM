@@ -30,6 +30,10 @@ public:
     Expression* parseExpression();
 
     Operation* parseOperation();
+
+    Operation* parseOperationMulDiv();
+
+    Operation* parseOperationParIdVal();
 };
 
 

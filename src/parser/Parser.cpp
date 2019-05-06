@@ -75,10 +75,8 @@ Block* Parser::parseBlock() {
         while ((current = scanner->getNextToken())->getTokenType() != Token::TokenType::CurlyBracketClose)
             block->addInstruction(parseInstruction());
         return block;
-    } else{
-        std::cout << current->getTokenType();
+    } else
         throw std::runtime_error("TODO7");
-    }
 }
 
 Instruction* Parser::parseInstruction() {
@@ -127,9 +125,10 @@ Instruction* Parser::parseInstruction() {
                     throw std::runtime_error("TODO11");
             } else
                 throw std::runtime_error("TODO12");
-        } else if (current->getTokenType() == Token::TokenType::Assign){
+        } else if (current->getTokenType() == Token::TokenType::Assign)
             return new InstructionAssignment(name, parseOperation());
-        }
+        else
+            throw std::runtime_error("TODO12.1");
     } else if(current->getTokenType() == Token::TokenType::For){ //for
         if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::ParenthesesOpen){
             if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Int || current->getTokenType() == Token::TokenType::Unit){
@@ -184,8 +183,53 @@ Expression* Parser::parseExpression() { //TODO
     return nullptr;
 }
 
-Operation* Parser::parseOperation() { // TODO
-    return nullptr;
+Operation* Parser::parseOperation() {
+    auto* op = new Operation();
+    Operation* newOp;
+
+    op->setLeft(parseOperationMulDiv());
+    while (current->getTokenType() == Token::TokenType::OpSum || current->getTokenType() == Token::TokenType::OpSub){
+        current->getTokenType() == Token::TokenType::OpSum ? op->set_operator(Operation::Sum) : op->set_operator(Operation::Sub);
+        op->setRight(parseOperationMulDiv());
+
+        newOp = new Operation;
+        newOp->setLeft(op);
+        op = newOp;
+    }
+    return op->getRight() == nullptr ? op->getLeft() : op;
+}
+
+Operation* Parser::parseOperationMulDiv() {
+    auto* op = new Operation;
+    Operation* newOp;
+
+    op->setLeft(parseOperationParIdVal());
+    while ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::OpMul || current->getTokenType() == Token::TokenType::OpDiv){
+        current->getTokenType() == Token::TokenType::OpMul ? op->set_operator(Operation::Mul) : op->set_operator(Operation::Div);
+        op->setRight(parseOperationParIdVal());
+
+        newOp = new Operation;
+        newOp->setLeft(op);
+        op = newOp;
+    }
+    return op->getRight() == nullptr ? op->getLeft() : op;
+}
+
+Operation* Parser::parseOperationParIdVal() {
+    auto* op = new Operation;
+    if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::ParenthesesOpen){
+        op->set_operator(Operation::Par);
+        op->setLeft(parseOperation());
+
+        if (current->getTokenType() != Token::TokenType::ParenthesesClose){
+            throw std::runtime_error("TODO23");
+        }
+    } else if(current->getTokenType() == Token::TokenType::Identifier || current->getTokenType() == Token::TokenType::Value){
+        op->setType(current->getTokenType());
+        op->setVal(current->getValue());
+    } else
+        throw std::runtime_error("TODO24");
+    return op;
 }
 
 

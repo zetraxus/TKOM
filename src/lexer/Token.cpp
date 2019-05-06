@@ -32,3 +32,9 @@ const std::string& Token::getValue() const {
 Position* Token::getStartPosition() const {
     return startPosition;
 }
+
+
+
+//lvl0 = lvl1 {+ lvl1} | lvl1 {- lvl1};
+//lvl1 = lvl2 {* lvl2} | lvl2 {/ lvl2};
+//lvl2 = (lvl0) | identifier | value

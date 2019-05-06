@@ -7,3 +7,7 @@
 
 InstructionAssignment::InstructionAssignment(const std::string& identifier, Operation* operation) : identifier(
     identifier), operation(operation) {}
+
+Operation* InstructionAssignment::getOperation() const {
+    return operation;
+}

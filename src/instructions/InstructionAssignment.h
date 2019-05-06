@@ -15,6 +15,8 @@ class InstructionAssignment : public Instruction {
     Operation* operation;
 public:
     InstructionAssignment(const std::string& identifier, Operation* operation);
+
+    Operation* getOperation() const; // TODO only for debug
 };
 
 

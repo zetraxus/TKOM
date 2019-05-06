@@ -27,22 +27,10 @@ void Operation::setVal(const std::string& val) {
     Operation::val = val;
 }
 
-Token::TokenType Operation::getType() const {
-    return type;
-}
-
 Operation* Operation::getLeft() const {
     return left;
 }
 
 Operation* Operation::getRight() const {
     return right;
-}
-
-Operation::Operator Operation::get_operator() const {
-    return _operator;
-}
-
-const std::string& Operation::getVal() const {
-    return val;
 }

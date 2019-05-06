@@ -15,7 +15,6 @@ class Scanner {
 private:
 
     Source* source;
-    std::vector<Token*> tokenList;
     std::map<std::string, Token::TokenType> keyWords;
     bool flag; // set true if last token was Number and number was ended by non-digit symbol (instead of space)
 
@@ -32,11 +31,7 @@ public:
 
     ~Scanner();
 
-    void preparedTokenList();
-
     Token* getNextToken();
-
-    void printTokenList();
 
 };
 

@@ -125,10 +125,15 @@ Instruction* Parser::parseInstruction() {
                     throw std::runtime_error("TODO11");
             } else
                 throw std::runtime_error("TODO12");
-        } else if (current->getTokenType() == Token::TokenType::Assign)
-            return new InstructionAssignment(name, parseOperation());
+        } else if (current->getTokenType() == Token::TokenType::Assign){
+            auto* instruction = new InstructionAssignment(name, parseOperation());
+            if (current->getTokenType() == Token::TokenType::SemiColon)
+                return instruction;
+            else
+                throw std::runtime_error("TODO12.1");
+        }
         else
-            throw std::runtime_error("TODO12.1");
+            throw std::runtime_error("TODO12.2");
     } else if(current->getTokenType() == Token::TokenType::For){ //for
         if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::ParenthesesOpen){
             if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Int || current->getTokenType() == Token::TokenType::Unit){
@@ -180,7 +185,81 @@ Instruction* Parser::parseInstruction() {
 }
 
 Expression* Parser::parseExpression() { //TODO
-    return nullptr;
+    auto* exp = new Expression();
+    Expression* newExp;
+
+    exp->setLeft(parseExpressionAnd());
+    while (current->getTokenType() == Token::TokenType::LogicalOr){
+        exp->setType(current->getTokenType());
+        exp->setRight(parseExpressionAnd());
+
+        newExp = new Expression;
+        newExp->setLeft(exp);
+        exp = newExp;
+    }
+    return exp->getRight() == nullptr ? exp->getLeft() : exp;
+}
+
+Expression* Parser::parseExpressionAnd() {
+    auto* exp = new Expression();
+    Expression* newExp;
+
+    exp->setLeft(parseExpressionEq());
+    while ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::LogicalAnd){
+        exp->setType(current->getTokenType());
+        exp->setRight(parseExpressionEq());
+
+        newExp = new Expression;
+        newExp->setLeft(exp);
+        exp = newExp;
+    }
+    return exp->getRight() == nullptr ? exp->getLeft() : exp;
+}
+
+Expression* Parser::parseExpressionEq() {
+    auto* exp = new Expression();
+    Expression* newExp;
+
+    exp->setLeft(parseExpressionLessMore());
+    while ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Equal || current->getTokenType() == Token::TokenType::NotEqual){
+        exp->setType(current->getTokenType());
+        exp->setRight(parseExpressionLessMore());
+
+        newExp = new Expression;
+        newExp->setLeft(exp);
+        exp = newExp;
+    }
+    return exp->getRight() == nullptr ? exp->getLeft() : exp;
+}
+
+Expression* Parser::parseExpressionLessMore() {
+    auto* exp = new Expression();
+    Expression* newExp;
+
+    exp->setLeft(parseExpressionPar());
+    while ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Less || current->getTokenType() == Token::TokenType::More || current->getTokenType() == Token::TokenType::LessEq || current->getTokenType() == Token::TokenType::MoreEq){
+        exp->setType(current->getTokenType());
+        exp->setRight(parseExpressionPar());
+
+        newExp = new Expression;
+        newExp->setLeft(exp);
+        exp = newExp;
+    }
+    return exp->getRight() == nullptr ? exp->getLeft() : exp;
+}
+
+Expression* Parser::parseExpressionPar() {
+    auto* exp = new Expression();
+    if((current = scanner->getNextToken())->getTokenType() == Token::TokenType::ParenthesesOpen){
+        exp->setType(current->getTokenType());
+        exp->setLeft(parseExpression());
+        if (current->getTokenType() != Token::TokenType::ParenthesesClose){
+            throw std::runtime_error("TODO22.5");
+        }
+    } else
+        exp->setOperation(parseOperation());
+
+    return exp;
 }
 
 Operation* Parser::parseOperation() {
@@ -215,7 +294,7 @@ Operation* Parser::parseOperationMulDiv() {
     return op->getRight() == nullptr ? op->getLeft() : op;
 }
 
-Operation* Parser::parseOperationParIdVal() {
+Operation* Parser::parseOperationParIdVal() { // TODO add value + unit (e.g. 10N)
     auto* op = new Operation;
     if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::ParenthesesOpen){
         op->set_operator(Operation::Par);
@@ -231,5 +310,4 @@ Operation* Parser::parseOperationParIdVal() {
         throw std::runtime_error("TODO24");
     return op;
 }
-
 

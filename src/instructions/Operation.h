@@ -17,14 +17,13 @@ public:
         Mul, // *
         Div, // /
         Par, // ()
-        Default, // TODO for test
     };
 
 private:
     Token::TokenType type;
     Operation* left;
     Operation* right = nullptr;
-    Operator _operator = Default;
+    Operator _operator;
     std::string val; // if type == identifier || type == value
 
 public:
@@ -40,18 +39,9 @@ public:
 
     void setVal(const std::string& val);
 
-
-    //TODO all getters needed only to debug, should be deleted it in release
-
-    Token::TokenType getType() const;
-
     Operation* getLeft() const;
 
     Operation* getRight() const;
-
-    Operator get_operator() const;
-
-    const std::string& getVal() const;
 };
 
 

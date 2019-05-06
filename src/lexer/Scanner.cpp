@@ -166,31 +166,3 @@ Scanner::Scanner(Source* source) : source(source), flag(false) {
 Scanner::~Scanner() {
     delete source;
 }
-
-void Scanner::printTokenList() {
-    TokenMap* tokensMap = new TokenMap();
-    for (size_t i = 0; i < tokenList.size(); ++i) {
-        std::cout << "(" << tokenList[i]->getStartPosition()->getLine() << ","
-                  << tokenList[i]->getStartPosition()->getPosition() << ") " << "Type "
-                  << tokensMap->findTokenDescription(tokenList[i]->getTokenType());
-        if (tokenList[i]->getTokenType() == Token::TokenType::Value ||
-            tokenList[i]->getTokenType() == Token::TokenType::Identifier)
-            std::cout << "\t value: " << tokenList[i]->getValue();
-        std::cout << std::endl;
-    }
-}
-
-void Scanner::preparedTokenList() {
-    Token* next;
-
-    do
-        tokenList.push_back(next = getNextToken());
-    while (next->getTokenType() != Token::TokenType::EofSymbol && next->getTokenType() != Token::TokenType::BadType);
-
-    if (next->getTokenType() == Token::TokenType::BadType) {
-        std::stringstream message;
-        message << "Uknown token (line, position): (" << next->getStartPosition()->getLine() << ","
-                << next->getStartPosition()->getPosition() << ")";
-        throw std::runtime_error(message.str());
-    }
-}

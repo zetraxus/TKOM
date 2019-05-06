@@ -21,15 +21,6 @@ int main(int argc, char** argv) {
     scanner = new Scanner(source);
     parser = new Parser(scanner);
     parser->parseProgram();
-
-    //
-//    try {
-//        scanner->preparedTokenList();
-//        scanner->printTokenList();
-//    } catch (const std::runtime_error& error) {
-//        std::cout << error.what() << std::endl;
-//        return -1;
-//    }
-
+std::cout << "passed";
     return 0;
 }

@@ -29,6 +29,14 @@ public:
 
     Expression* parseExpression();
 
+    Expression* parseExpressionAnd();
+
+    Expression* parseExpressionEq();
+
+    Expression* parseExpressionLessMore();
+
+    Expression* parseExpressionPar();
+
     Operation* parseOperation();
 
     Operation* parseOperationMulDiv();

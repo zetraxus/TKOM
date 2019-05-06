@@ -12,7 +12,7 @@
 
 class InstructionCallFunction : public Instruction {
     std::string name;
-    std::vector <std::string> arguments;
+    std::vector<std::string> arguments;
 
 public:
     explicit InstructionCallFunction(const std::string& name);

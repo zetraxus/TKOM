@@ -3,3 +3,7 @@
 //
 
 #include "InstructionReturnFromFunction.h"
+
+InstructionReturnFromFunction::InstructionReturnFromFunction(bool flag, const std::string& returnValue) : flag(flag),
+                                                                                                          returnValue(
+                                                                                                              returnValue) {}

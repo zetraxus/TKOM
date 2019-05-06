@@ -5,14 +5,19 @@
 #include <iostream>
 #include "Parser.h"
 #include "../instructions/DefinitionOfFunction.h"
+#include "../instructions/InstructionAssignment.h"
 #include "../instructions/InstructionDeclarationContainer.h"
 #include "../instructions/InstructionDeclarationVariable.h"
 #include "../instructions/InstructionCallFunction.h"
+#include "../instructions/For.h"
+#include "../instructions/InstructionReturnFromFunction.h"
+#include "../instructions/Expression.h"
+#include "../instructions/IfElse.h"
 
 Parser::Parser(Scanner* scanner) : scanner(scanner) {}
 
 Program* Parser::parseProgram() {
-    Program* program = new Program();
+    auto* program = new Program();
 
     while ((current = scanner->getNextToken())->getTokenType() != Token::TokenType::EofSymbol)
         program->addFunction(parseFunction());
@@ -33,7 +38,7 @@ DefinitionOfFunction* Parser::parseFunction() {
                 while ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Int ||
                        current->getTokenType() == Token::TokenType::Unit) {
 
-                    Variable* variable = new Variable();
+                    auto* variable = new Variable();
                     variable->setType(current->getTokenType());
                     if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Identifier) {
                         variable->setName(current->getValue());
@@ -70,8 +75,10 @@ Block* Parser::parseBlock() {
         while ((current = scanner->getNextToken())->getTokenType() != Token::TokenType::CurlyBracketClose)
             block->addInstruction(parseInstruction());
         return block;
-    } else
+    } else{
+        std::cout << current->getTokenType();
         throw std::runtime_error("TODO7");
+    }
 }
 
 Instruction* Parser::parseInstruction() {
@@ -97,13 +104,14 @@ Instruction* Parser::parseInstruction() {
                 throw std::runtime_error("TODO8");
         } else
             throw std::runtime_error("TODO9");
-    } else if(current->getTokenType() == Token::TokenType::Identifier){
-        if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::ParenthesesOpen){ // function call
-            auto* instruction = new InstructionCallFunction(current->getValue());
+    } else if(current->getTokenType() == Token::TokenType::Identifier) {
+        std::string name = current->getValue();
+        if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::ParenthesesOpen) { // function call
+            auto* instruction = new InstructionCallFunction(name);
             bool flag = false; // last token was ',' and need read more arguments
-            while ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Identifier){
+            while ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Identifier) { // TODO now container can't be an argument
                 instruction->addArgument(current->getValue());
-                if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Comma){
+                if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Comma) {
                     flag = true;
                     continue;
                 } else if (current->getTokenType() == Token::ParenthesesClose) {
@@ -112,7 +120,6 @@ Instruction* Parser::parseInstruction() {
                 } else
                     throw std::runtime_error("TODO10");
             }
-
             if (current->getTokenType() == Token::ParenthesesClose && !flag) {
                 if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::SemiColon)
                     return instruction;
@@ -120,9 +127,65 @@ Instruction* Parser::parseInstruction() {
                     throw std::runtime_error("TODO11");
             } else
                 throw std::runtime_error("TODO12");
+        } else if (current->getTokenType() == Token::TokenType::Assign){
+            return new InstructionAssignment(name, parseOperation());
         }
-    }
-    // TODO if-else, for, assignment, call, return
+    } else if(current->getTokenType() == Token::TokenType::For){ //for
+        if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::ParenthesesOpen){
+            if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Int || current->getTokenType() == Token::TokenType::Unit){
+                Token::TokenType type = current->getTokenType();
+                if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Identifier){
+                    std::string name = current->getValue();
+                    if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Colon){
+                        if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Identifier){
+                            std::string identifier = current->getValue();
+                            if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::ParenthesesClose){
+                                auto* instruction = new For(type, name, identifier);
+                                instruction->setBody(parseBlock());
+                                return instruction;
+                            } else
+                                throw std::runtime_error("TODO13");
+                        } else
+                            throw std::runtime_error("TODO14");
+                    } else
+                        throw std::runtime_error("TODO15");
+                } else
+                    throw std::runtime_error("TODO16");
+            } else
+                throw std::runtime_error("TODO17");
+        } else
+            throw std::runtime_error("TODO18");
+    } else if(current->getTokenType() == Token::TokenType::Return){ //return
+        if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Identifier)
+            return new InstructionReturnFromFunction(0, current->getValue());
+        else if(current->getTokenType() == Token::TokenType::Value)
+            return new InstructionReturnFromFunction(1, current->getValue());
+        else
+            throw std::runtime_error("TODO18");
+    } else if(current->getTokenType() == Token::TokenType::If){ // if-else
+        if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::ParenthesesOpen){
+            auto* expression = parseExpression();
+            if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::ParenthesesClose){
+                auto* ifBlock = parseBlock();
+                if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Else){ // TODO now else block is obligatory
+                    auto* elseBlock = parseBlock();
+                    return new IfElse(expression, ifBlock, elseBlock);
+                } else
+                    throw std::runtime_error("TODO19");
+            } else
+                throw std::runtime_error("TODO20");
+        } else
+            throw std::runtime_error("TODO21");
+    } else
+        throw std::runtime_error("TODO22");
+}
+
+Expression* Parser::parseExpression() { //TODO
+    return nullptr;
+}
+
+Operation* Parser::parseOperation() { // TODO
+    return nullptr;
 }
 
 

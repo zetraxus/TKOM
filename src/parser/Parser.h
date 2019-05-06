@@ -9,6 +9,8 @@
 #include "../lexer/Scanner.h"
 #include "../instructions/DefinitionOfFunction.h"
 #include "../instructions/Program.h"
+#include "../instructions/Expression.h"
+#include "../instructions/Operation.h"
 
 class Parser {
     Scanner* scanner;
@@ -24,6 +26,10 @@ public:
     Block* parseBlock();
 
     Instruction* parseInstruction();
+
+    Expression* parseExpression();
+
+    Operation* parseOperation();
 };
 
 

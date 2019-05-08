@@ -21,6 +21,7 @@ public:
 
 private:
     Token::TokenType type;
+    Token::TokenType unitType = Token::TokenType::BadType; // only if we have value + unit e.g. 10N
     Operation* left;
     Operation* right = nullptr;
     Operator _operator;
@@ -32,6 +33,8 @@ public:
     void setType(Token::TokenType type);
 
     void setLeft(Operation* left);
+
+    void setUnitType(Token::TokenType unitType);
 
     void setRight(Operation* right);
 

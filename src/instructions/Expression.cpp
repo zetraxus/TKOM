@@ -33,3 +33,7 @@ Expression* Expression::getLeft() const {
 Expression* Expression::getRight() const {
     return rightExp;
 }
+
+Operation* Expression::getOperation() const {
+    return operation;
+}

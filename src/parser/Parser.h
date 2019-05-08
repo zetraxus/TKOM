@@ -15,6 +15,7 @@
 class Parser {
     Scanner* scanner;
     Token* current;
+    Token* peeked;
 
 public:
     Parser(Scanner* scanner);

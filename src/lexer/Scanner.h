@@ -14,6 +14,8 @@
 class Scanner {
 private:
 
+    bool ifLastWasPicked = false;
+    Token* last = nullptr;
     Source* source;
     std::map<std::string, Token::TokenType> keyWords;
     bool flag; // set true if last token was Number and number was ended by non-digit symbol (instead of space)
@@ -32,6 +34,8 @@ public:
     ~Scanner();
 
     Token* getNextToken();
+
+    Token* peekNextToken();
 
 };
 

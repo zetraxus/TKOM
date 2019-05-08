@@ -9,7 +9,19 @@
 
 const int LineFeed = 10;
 
+Token* Scanner::peekNextToken() {
+    std::cout << "only picked: ";
+    last = getNextToken();
+    ifLastWasPicked = true;
+    return last;
+}
+
 Token* Scanner::getNextToken() {
+    if(ifLastWasPicked){
+        ifLastWasPicked = false;
+        std::cout <<last->getTokenType() << std::endl;
+        return last;
+    }
 
     int nextChar; //code in ASCII
     Token* nextToken;
@@ -25,6 +37,8 @@ Token* Scanner::getNextToken() {
     else
         nextToken = getOperatorToken(nextChar);
 
+    ifLastWasPicked = false;
+    std::cout <<nextToken->getTokenType() << std::endl;
     return nextToken;
 }
 

@@ -10,7 +10,7 @@ int function(){
 	temp3=table[0] / table[1];
 	if (temp > 256V && temp3 <= 512 V){
 		temp = 512A;
-    } else {
+    	} else {
 		temp = 1024J;
 	}
 	for(unit u : table){
@@ -20,7 +20,7 @@ int function(){
 	temp2 = temp2 - 3;
 	temp = 10A;
 	temp = temp + 2A;
-	if (temp2 >= 5 && temp2 <= 10 || temp > 10 A || temp < 5A || temp == 3A){
+	if (temp2 >= 5 && temp2 <= 10 || temp > 10 A || temp < 5A || temp == 3A{
 		temp3 = 5V;
 		if (temp2 != 0){
 			temp3 = temp3 * temp2;

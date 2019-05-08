@@ -71,12 +71,15 @@ DefinitionOfFunction* Parser::parseFunction() {
 
 Block* Parser::parseBlock() {
     if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::CurlyBracketOpen){
+        std::cout << "parsuje blok" << std::endl;
         auto* block = new Block();
         while ((current = scanner->getNextToken())->getTokenType() != Token::TokenType::CurlyBracketClose)
             block->addInstruction(parseInstruction());
         return block;
-    } else
+    } else{
+        std::cout << "%" << current->getTokenType();
         throw std::runtime_error("TODO7");
+    }
 }
 
 Instruction* Parser::parseInstruction() {
@@ -127,7 +130,7 @@ Instruction* Parser::parseInstruction() {
                 throw std::runtime_error("TODO12");
         } else if (current->getTokenType() == Token::TokenType::Assign){
             auto* instruction = new InstructionAssignment(name, parseOperation());
-            if (current->getTokenType() == Token::TokenType::SemiColon)
+            if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::SemiColon)
                 return instruction;
             else
                 throw std::runtime_error("TODO12.1");
@@ -171,25 +174,30 @@ Instruction* Parser::parseInstruction() {
             auto* expression = parseExpression();
             if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::ParenthesesClose){
                 auto* ifBlock = parseBlock();
-                if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Else){ // TODO now else block is obligatory
+                if((scanner->peekNextToken())->getTokenType() == Token::TokenType::Else){
+                    scanner->getNextToken();
                     auto* elseBlock = parseBlock();
                     return new IfElse(expression, ifBlock, elseBlock);
                 } else
-                    throw std::runtime_error("TODO19");
-            } else
+                    return new IfElse(expression, ifBlock, nullptr);
+            } else{
+                std::cout << current->getTokenType();
                 throw std::runtime_error("TODO20");
+            }
         } else
             throw std::runtime_error("TODO21");
     } else
         throw std::runtime_error("TODO22");
 }
 
-Expression* Parser::parseExpression() { //TODO
+Expression* Parser::parseExpression() { //TODO fix it
+    std::cout << "parseExpression" << std::endl;
     auto* exp = new Expression();
     Expression* newExp;
 
     exp->setLeft(parseExpressionAnd());
-    while (current->getTokenType() == Token::TokenType::LogicalOr){
+    while ((peeked = scanner->peekNextToken())->getTokenType() == Token::TokenType::LogicalOr){
+        current = scanner->getNextToken();
         exp->setType(current->getTokenType());
         exp->setRight(parseExpressionAnd());
 
@@ -201,11 +209,13 @@ Expression* Parser::parseExpression() { //TODO
 }
 
 Expression* Parser::parseExpressionAnd() {
+    std::cout << "parseExpressionAnd" << std::endl;
     auto* exp = new Expression();
     Expression* newExp;
 
     exp->setLeft(parseExpressionEq());
-    while ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::LogicalAnd){
+    while ((peeked = scanner->peekNextToken())->getTokenType() == Token::TokenType::LogicalAnd){
+        current = scanner->getNextToken();
         exp->setType(current->getTokenType());
         exp->setRight(parseExpressionEq());
 
@@ -217,11 +227,13 @@ Expression* Parser::parseExpressionAnd() {
 }
 
 Expression* Parser::parseExpressionEq() {
+    std::cout << "parseExpressionEq" << std::endl;
     auto* exp = new Expression();
     Expression* newExp;
 
     exp->setLeft(parseExpressionLessMore());
-    while ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Equal || current->getTokenType() == Token::TokenType::NotEqual){
+    while ((peeked = scanner->peekNextToken())->getTokenType() == Token::TokenType::Equal || peeked->getTokenType() == Token::TokenType::NotEqual){
+        current = scanner->getNextToken();
         exp->setType(current->getTokenType());
         exp->setRight(parseExpressionLessMore());
 
@@ -233,11 +245,15 @@ Expression* Parser::parseExpressionEq() {
 }
 
 Expression* Parser::parseExpressionLessMore() {
+    std::cout << "parseExpressionLessMore" << std::endl;
     auto* exp = new Expression();
     Expression* newExp;
 
     exp->setLeft(parseExpressionPar());
-    while ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Less || current->getTokenType() == Token::TokenType::More || current->getTokenType() == Token::TokenType::LessEq || current->getTokenType() == Token::TokenType::MoreEq){
+    std::cout << "debug: " << scanner->peekNextToken()->getTokenType() << std::endl;
+    while ((peeked = scanner->peekNextToken())->getTokenType() == Token::TokenType::Less || peeked->getTokenType() == Token::TokenType::More || peeked->getTokenType() == Token::TokenType::LessEq || peeked->getTokenType() == Token::TokenType::MoreEq){
+        std::cout << "debug2: " << scanner->peekNextToken()->getTokenType() << std::endl;
+        current = scanner->getNextToken();
         exp->setType(current->getTokenType());
         exp->setRight(parseExpressionPar());
 
@@ -249,25 +265,33 @@ Expression* Parser::parseExpressionLessMore() {
 }
 
 Expression* Parser::parseExpressionPar() {
+    std::cout << "parseExpressionPar" << std::endl;
     auto* exp = new Expression();
-    if((current = scanner->getNextToken())->getTokenType() == Token::TokenType::ParenthesesOpen){
+    if((peeked = scanner->peekNextToken())->getTokenType() == Token::TokenType::ParenthesesOpen){
+        current = scanner->getNextToken();
         exp->setType(current->getTokenType());
         exp->setLeft(parseExpression());
-        if (current->getTokenType() != Token::TokenType::ParenthesesClose){
+        if ((current = scanner->getNextToken())->getTokenType() != Token::TokenType::ParenthesesClose){
             throw std::runtime_error("TODO22.5");
         }
-    } else
+    } else{
+        std::cout << "kuku1" << std::endl;
         exp->setOperation(parseOperation());
+        std::cout << "kuku2" << std::endl;
+    }
 
     return exp;
 }
 
 Operation* Parser::parseOperation() {
+    std::cout << "parseOperation" << std::endl;
     auto* op = new Operation();
     Operation* newOp;
 
     op->setLeft(parseOperationMulDiv());
-    while (current->getTokenType() == Token::TokenType::OpSum || current->getTokenType() == Token::TokenType::OpSub){
+    std::cout << "parseOperation2" << std::endl;
+    while ((peeked = scanner->peekNextToken())->getTokenType() == Token::TokenType::OpSum || peeked->getTokenType() == Token::TokenType::OpSub){
+        current = scanner->getNextToken();
         current->getTokenType() == Token::TokenType::OpSum ? op->set_operator(Operation::Sum) : op->set_operator(Operation::Sub);
         op->setRight(parseOperationMulDiv());
 
@@ -279,11 +303,14 @@ Operation* Parser::parseOperation() {
 }
 
 Operation* Parser::parseOperationMulDiv() {
+    std::cout << "parseOperationMulDiv" << std::endl;
     auto* op = new Operation;
     Operation* newOp;
 
     op->setLeft(parseOperationParIdVal());
-    while ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::OpMul || current->getTokenType() == Token::TokenType::OpDiv){
+    std::cout << "parseOperationMulDiv2" << std::endl;
+    while ((peeked = scanner->peekNextToken())->getTokenType() == Token::TokenType::OpMul || peeked->getTokenType() == Token::TokenType::OpDiv){
+        current = scanner->getNextToken();
         current->getTokenType() == Token::TokenType::OpMul ? op->set_operator(Operation::Mul) : op->set_operator(Operation::Div);
         op->setRight(parseOperationParIdVal());
 
@@ -294,20 +321,30 @@ Operation* Parser::parseOperationMulDiv() {
     return op->getRight() == nullptr ? op->getLeft() : op;
 }
 
-Operation* Parser::parseOperationParIdVal() { // TODO add value + unit (e.g. 10N)
+Operation* Parser::parseOperationParIdVal() {
+    std::cout << "parseOperationParIdVal" << std::endl;
     auto* op = new Operation;
-    if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::ParenthesesOpen){
+    if ((peeked = scanner->getNextToken())->getTokenType() == Token::TokenType::ParenthesesOpen){
+        current = scanner->getNextToken();
         op->set_operator(Operation::Par);
         op->setLeft(parseOperation());
 
-        if (current->getTokenType() != Token::TokenType::ParenthesesClose){
+        if((scanner->peekNextToken())->isUnitType()){
+            current = scanner->getNextToken();
+            op->setUnitType(current->getTokenType());
+        }
+        if ((current = scanner->getNextToken())->getTokenType() != Token::TokenType::ParenthesesClose){
             throw std::runtime_error("TODO23");
         }
-    } else if(current->getTokenType() == Token::TokenType::Identifier || current->getTokenType() == Token::TokenType::Value){
+    } else if((peeked = scanner->peekNextToken())->getTokenType() == Token::TokenType::Identifier || peeked->getTokenType() == Token::TokenType::Value) {
+        current = scanner->getNextToken();
         op->setType(current->getTokenType());
         op->setVal(current->getValue());
-    } else
-        throw std::runtime_error("TODO24");
+    }
+//    } else{ // TODO fix it
+//        std::cout << current->getTokenType();
+//        throw std::runtime_error("TODO24");
+//    }
     return op;
 }
 

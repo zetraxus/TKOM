@@ -21,6 +21,7 @@ int main(int argc, char** argv) {
     scanner = new Scanner(source);
     parser = new Parser(scanner);
     parser->parseProgram();
-std::cout << "passed";
+
+    std::cout << "passed";
     return 0;
 }

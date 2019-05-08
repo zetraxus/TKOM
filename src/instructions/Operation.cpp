@@ -34,3 +34,7 @@ Operation* Operation::getLeft() const {
 Operation* Operation::getRight() const {
     return right;
 }
+
+void Operation::setUnitType(Token::TokenType unitType) {
+    Operation::unitType = unitType;
+}

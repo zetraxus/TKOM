@@ -76,6 +76,8 @@ public:
 
     Position* getStartPosition() const;
 
+    bool isUnitType() const;
+
 };
 
 

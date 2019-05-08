@@ -32,6 +32,8 @@ public:
 
     void setOperation(Operation* operation);
 
+    Operation* getOperation() const;
+
 };
 
 

@@ -8,6 +8,7 @@
 
 #include <string>
 #include <fstream>
+#include <sstream>
 
 class Position {
     unsigned line;
@@ -32,12 +33,14 @@ class Source {
 
 private:
 
-    const std::string& fileName;
+    std::string fileName;
     std::ifstream inputStream;
     Position* current;
+    bool mode; // 0 release, 1 tests
+    std::stringstream input; // if mode == 0
 
 public:
-    Source(const std::string& fileName);
+    Source(const std::string& fileName, bool mode = 0);
 
     virtual ~Source();
 
@@ -46,6 +49,7 @@ public:
     int peekNextChar();
 
     Position* getCurrentPosition() const;
+
 };
 
 

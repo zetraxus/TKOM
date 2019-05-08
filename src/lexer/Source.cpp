@@ -2,26 +2,35 @@
 // Created by adam on 06.04.19.
 //
 
+#include <iostream>
 #include "Source.h"
 
 const int LineFeed = 10; // \n in ASCII
 
-Source::Source(const std::string& fileName) : fileName(fileName) {
-    current = new Position();
-    inputStream.open(fileName.c_str());
-    if (!inputStream)
-        throw std::runtime_error("File not found.");
+Source::Source(const std::string& fileNameOrInput, bool mode) : mode(mode) {
+    if(mode == 0){ // release
+        fileName = fileNameOrInput;
+        current = new Position();
+        inputStream.open(fileName.c_str());
+        if (!inputStream)
+            throw std::runtime_error("File not found.");
+    } else{
+        current = new Position();
+        input << fileNameOrInput;
+    }
 }
 
 int Source::getNextChar() {
-    int next = inputStream.get();
-    next != LineFeed ? current->incrementPosition() : current->incrementLine();
+    int next;
+    mode ? next = input.get() : next = inputStream.get();
 
+    next != LineFeed ? current->incrementPosition() : current->incrementLine();
     return next;
 }
 
 Source::~Source() {
-    inputStream.close();
+    if(inputStream.is_open())
+        inputStream.close();
 }
 
 Position* Source::getCurrentPosition() const {
@@ -29,7 +38,7 @@ Position* Source::getCurrentPosition() const {
 }
 
 int Source::peekNextChar() {
-    return inputStream.peek();
+    return mode ? input.peek() : inputStream.peek();
 }
 
 Position::Position(unsigned int line, int position) : line(line), position(position) {}

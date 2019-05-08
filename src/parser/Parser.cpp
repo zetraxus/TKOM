@@ -71,15 +71,12 @@ DefinitionOfFunction* Parser::parseFunction() {
 
 Block* Parser::parseBlock() {
     if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::CurlyBracketOpen){
-        std::cout << "parsuje blok" << std::endl;
         auto* block = new Block();
         while ((current = scanner->getNextToken())->getTokenType() != Token::TokenType::CurlyBracketClose)
             block->addInstruction(parseInstruction());
         return block;
-    } else{
-        std::cout << "%" << current->getTokenType();
+    } else
         throw std::runtime_error("7");
-    }
 }
 
 Instruction* Parser::parseInstruction() {
@@ -180,10 +177,8 @@ Instruction* Parser::parseInstruction() {
                     return new IfElse(expression, ifBlock, elseBlock);
                 } else
                     return new IfElse(expression, ifBlock, nullptr);
-            } else{
-                std::cout << current->getTokenType();
+            } else
                 throw std::runtime_error("25");
-            }
         } else
             throw std::runtime_error("26");
     } else
@@ -191,7 +186,6 @@ Instruction* Parser::parseInstruction() {
 }
 
 Expression* Parser::parseExpression() { //TODO fix it
-    std::cout << "parseExpression" << std::endl;
     auto* exp = new Expression();
     Expression* newExp;
 
@@ -209,7 +203,6 @@ Expression* Parser::parseExpression() { //TODO fix it
 }
 
 Expression* Parser::parseExpressionAnd() {
-    std::cout << "parseExpressionAnd" << std::endl;
     auto* exp = new Expression();
     Expression* newExp;
 
@@ -227,7 +220,6 @@ Expression* Parser::parseExpressionAnd() {
 }
 
 Expression* Parser::parseExpressionEq() {
-    std::cout << "parseExpressionEq" << std::endl;
     auto* exp = new Expression();
     Expression* newExp;
 
@@ -245,14 +237,11 @@ Expression* Parser::parseExpressionEq() {
 }
 
 Expression* Parser::parseExpressionLessMore() {
-    std::cout << "parseExpressionLessMore" << std::endl;
     auto* exp = new Expression();
     Expression* newExp;
 
     exp->setLeft(parseExpressionPar());
-    std::cout << "debug: " << scanner->peekNextToken()->getTokenType() << std::endl;
     while ((peeked = scanner->peekNextToken())->getTokenType() == Token::TokenType::Less || peeked->getTokenType() == Token::TokenType::More || peeked->getTokenType() == Token::TokenType::LessEq || peeked->getTokenType() == Token::TokenType::MoreEq){
-        std::cout << "debug2: " << scanner->peekNextToken()->getTokenType() << std::endl;
         current = scanner->getNextToken();
         exp->setType(current->getTokenType());
         exp->setRight(parseExpressionPar());
@@ -265,29 +254,24 @@ Expression* Parser::parseExpressionLessMore() {
 }
 
 Expression* Parser::parseExpressionPar() {
-    std::cout << "parseExpressionPar" << std::endl;
     auto* exp = new Expression();
     if((peeked = scanner->peekNextToken())->getTokenType() == Token::TokenType::ParenthesesOpen){
         current = scanner->getNextToken();
         exp->setType(current->getTokenType());
         exp->setLeft(parseExpression());
-        if ((current = scanner->getNextToken())->getTokenType() != Token::TokenType::ParenthesesClose){
+        if ((current = scanner->getNextToken())->getTokenType() != Token::TokenType::ParenthesesClose)
             throw std::runtime_error("28");
-        }
-    } else{
+    } else
         exp->setOperation(parseOperation());
-    }
 
     return exp;
 }
 
 Operation* Parser::parseOperation() {
-    std::cout << "parseOperation" << std::endl;
     auto* op = new Operation();
     Operation* newOp;
 
     op->setLeft(parseOperationMulDiv());
-    std::cout << "parseOperation2" << std::endl;
     while ((peeked = scanner->peekNextToken())->getTokenType() == Token::TokenType::OpSum || peeked->getTokenType() == Token::TokenType::OpSub){
         current = scanner->getNextToken();
         current->getTokenType() == Token::TokenType::OpSum ? op->set_operator(Operation::Sum) : op->set_operator(Operation::Sub);
@@ -301,12 +285,10 @@ Operation* Parser::parseOperation() {
 }
 
 Operation* Parser::parseOperationMulDiv() {
-    std::cout << "parseOperationMulDiv" << std::endl;
     auto* op = new Operation;
     Operation* newOp;
 
     op->setLeft(parseOperationParIdVal());
-    std::cout << "parseOperationMulDiv2" << std::endl;
     while ((peeked = scanner->peekNextToken())->getTokenType() == Token::TokenType::OpMul || peeked->getTokenType() == Token::TokenType::OpDiv){
         current = scanner->getNextToken();
         current->getTokenType() == Token::TokenType::OpMul ? op->set_operator(Operation::Mul) : op->set_operator(Operation::Div);
@@ -320,7 +302,6 @@ Operation* Parser::parseOperationMulDiv() {
 }
 
 Operation* Parser::parseOperationParIdVal() {
-    std::cout << "parseOperationParIdVal" << std::endl;
     auto* op = new Operation;
     if ((peeked = scanner->peekNextToken())->getTokenType() == Token::TokenType::ParenthesesOpen){
         current = scanner->getNextToken();
@@ -335,7 +316,6 @@ Operation* Parser::parseOperationParIdVal() {
         op->setType(current->getTokenType());
         op->setVal(current->getValue());
 
-        std::cout<<"&" << scanner->peekNextToken()->getTokenType() << std::endl;
         if(current->getTokenType() == Token::TokenType::Value && (scanner->peekNextToken())->isUnitType()){
             current = scanner->getNextToken();
             op->setUnitType(current->getTokenType());

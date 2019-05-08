@@ -10,7 +10,6 @@
 const int LineFeed = 10;
 
 Token* Scanner::peekNextToken() {
-    std::cout << "only picked: ";
     last = getNextToken();
     ifLastWasPicked = true;
     return last;
@@ -19,7 +18,6 @@ Token* Scanner::peekNextToken() {
 Token* Scanner::getNextToken() {
     if(ifLastWasPicked){
         ifLastWasPicked = false;
-        std::cout <<last->getTokenType() << std::endl;
         return last;
     }
 
@@ -38,7 +36,6 @@ Token* Scanner::getNextToken() {
         nextToken = getOperatorToken(nextChar);
 
     ifLastWasPicked = false;
-    std::cout <<nextToken->getTokenType() << std::endl;
     return nextToken;
 }
 

@@ -20,6 +20,8 @@ class Parser {
 public:
     Parser(Scanner* scanner);
 
+    Token* getCurrent() const;
+
     Program* parseProgram();
 
     DefinitionOfFunction* parseFunction();

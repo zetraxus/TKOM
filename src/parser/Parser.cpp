@@ -39,10 +39,10 @@ DefinitionOfFunction* Parser::parseFunction() {
                        current->getTokenType() == Token::TokenType::Unit) {
 
                     auto* variable = new Variable();
-                    variable->setType(current->getTokenType());
+                    Token::TokenType type = current->getTokenType();
                     if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Identifier) {
                         variable->setName(current->getValue());
-                        function->addArgument(variable);
+                        function->addArgument(type, variable);
                     } else
                         throw std::runtime_error("1");
 
@@ -320,17 +320,37 @@ Operation* Parser::parseOperationParIdVal() { // TODO add minus operator (e.g. -
             throw std::runtime_error("29");
         }
     } else if((peeked = scanner->peekNextToken())->getTokenType() == Token::TokenType::Identifier || peeked->getTokenType() == Token::TokenType::Value) {
-        current = scanner->getNextToken();
-        op->setType(current->getTokenType());
-        op->setVal(current->getValue());
-
-        if(current->getTokenType() == Token::TokenType::Value && (scanner->peekNextToken())->isUnitType()){
-            current = scanner->getNextToken();
-            op->setUnitType(current->getTokenType());
-        }
+        op->setVariable(parseVariable());
     } //TODO what if else?
 
     return op;
+}
+
+Variable* Parser::parseVariable() {
+    if((peeked = scanner->peekNextToken())->getTokenType() == Token::TokenType::Identifier){
+        current= scanner->getNextToken();
+        std::string id = current->getValue();
+        if((peeked = scanner->peekNextToken())->getTokenType() == Token::TokenType::SquareBracketsOpen){
+            current= scanner->getNextToken();
+            if((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Value){
+                std::string position = current->getValue();
+                if((current = scanner->getNextToken())->getTokenType() == Token::TokenType::SquareBracketsClose)
+                    return new Variable(id, position);
+                else
+                    throw std::runtime_error("30");
+            } else
+                throw std::runtime_error("31");
+        }
+    } else if(peeked->getTokenType() == Token::TokenType::Value){
+        current = scanner->getNextToken();
+        std::string value = current->getValue();
+        if((peeked = scanner->peekNextToken())->isUnitType()){
+            current = scanner->getNextToken();
+            return new Variable(new Value(current->getTokenType(), value)); // e.g Value(A, 10)
+        } else
+            return new Variable(new Value(current->getTokenType(), value)); // e.g. Value(Value, 10)
+    } else
+        throw std::runtime_error("32");
 }
 
 Token* Parser::getCurrent() const {

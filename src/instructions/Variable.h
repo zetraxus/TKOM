@@ -7,17 +7,31 @@
 
 
 #include "../lexer/Token.h"
+#include "Value.h"
 
 class Variable {
-    Token::TokenType type;
-    std::string name;
+public:
+    enum Type{
+        Id,
+        Val,
+    };
+
+private:
+    Type type;
+    std::string name; // if type == id
+    std::string positionInContainer; // (optional) if type == id
+    Value* value; // if type == val
 
 public:
     Variable();
 
-    void setType(Token::TokenType type);
+    Variable(Value* value);
+
+    Variable(const std::string& name, const std::string& positionInContainer);
 
     void setName(const std::string& name);
+
+    void setPositionInContainer(const std::string& positionInContainer);
 };
 
 

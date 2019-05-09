@@ -12,8 +12,8 @@ void DefinitionOfFunction::setIdentifier(const std::string& identifier) {
     DefinitionOfFunction::identifier = identifier;
 }
 
-void DefinitionOfFunction::addArgument(Variable* next) {
-    arguments.push_back(next);
+void DefinitionOfFunction::addArgument(Token::TokenType type, Variable* next) {
+    arguments.emplace_back(std::make_pair(type, next));
 }
 
 void DefinitionOfFunction::addInstruction(Instruction* next) {

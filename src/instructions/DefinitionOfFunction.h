@@ -15,7 +15,7 @@
 class DefinitionOfFunction {
     Token::TokenType returnType;
     std::string identifier;
-    std::vector<Variable*> arguments;
+    std::vector<std::pair<Token::TokenType, Variable*> > arguments;
     std::vector<Instruction*> instructions;
     Block* body;
 
@@ -26,7 +26,7 @@ public:
 
     void setBody(Block* body);
 
-    void addArgument(Variable* next);
+    void addArgument(Token::TokenType type, Variable* next);
 
     void addInstruction(Instruction* next);
 };

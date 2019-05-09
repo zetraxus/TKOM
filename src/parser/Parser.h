@@ -45,6 +45,8 @@ public:
     Operation* parseOperationMulDiv();
 
     Operation* parseOperationParIdVal();
+
+    Variable* parseVariable();
 };
 
 

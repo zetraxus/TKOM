@@ -84,7 +84,7 @@ Instruction* Parser::parseInstruction() {
         Token::TokenType type = current->getTokenType();
         if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Identifier){
             std::string name = current->getValue();
-            if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::SquareBracketsOpen){ // TODO fix it here
+            if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::SquareBracketsOpen){
                 if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Value){
                     std::string size = current->getValue();
                     if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::SquareBracketsClose){
@@ -193,7 +193,7 @@ Instruction* Parser::parseInstruction() {
         throw std::runtime_error("27");
 }
 
-Expression* Parser::parseExpression() { //TODO fix it
+Expression* Parser::parseExpression() {
     auto* exp = new Expression();
     Expression* newExp;
 

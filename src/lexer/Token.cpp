@@ -36,9 +36,3 @@ Position* Token::getStartPosition() const {
 bool Token::isUnitType() const {
     return tokenType == V || tokenType == W || tokenType == A || tokenType == Om || tokenType == S || tokenType == C || tokenType == s || tokenType == J;
 }
-
-
-
-//lvl0 = lvl1 {+ lvl1} | lvl1 {- lvl1};
-//lvl1 = lvl2 {* lvl2} | lvl2 {/ lvl2};
-//lvl2 = (lvl0) | identifier | value

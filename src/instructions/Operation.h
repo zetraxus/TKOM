@@ -20,10 +20,10 @@ public:
         Par, // ()
     };
 
-private:
-    Token::TokenType type;
-    Token::TokenType unitType = Token::TokenType::BadType; // only if we have value + unit e.g. 10N
-    std::string val; // if type == identifier || type == value
+//private:
+//    Token::TokenType type;
+//    Token::TokenType unitType = Token::TokenType::BadType; // only if we have value + unit e.g. 10N
+//    std::string val; // if type == identifier || type == value
 public:
     void setVariable(Variable* variable);
 

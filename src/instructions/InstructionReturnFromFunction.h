@@ -8,12 +8,12 @@
 
 #include <string>
 #include "Instruction.h"
+#include "Variable.h"
 
 class InstructionReturnFromFunction : public Instruction {
-    bool flag; // 0 = identifier, 1 = value
-    std::string returnValue;
+    Variable* variable;
 public:
-    InstructionReturnFromFunction(bool flag, const std::string& returnValue);
+    InstructionReturnFromFunction(Variable* variable);
 };
 
 

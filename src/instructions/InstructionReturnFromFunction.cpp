@@ -4,6 +4,6 @@
 
 #include "InstructionReturnFromFunction.h"
 
-InstructionReturnFromFunction::InstructionReturnFromFunction(bool flag, const std::string& returnValue) : flag(flag),
-                                                                                                          returnValue(
-                                                                                                              returnValue) {}
+InstructionReturnFromFunction::InstructionReturnFromFunction(Variable* variable) : variable(variable){
+
+}

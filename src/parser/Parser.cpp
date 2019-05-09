@@ -160,20 +160,11 @@ Instruction* Parser::parseInstruction() {
         } else
             throw std::runtime_error("23");
     } else if(current->getTokenType() == Token::TokenType::Return){ //return
-        if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Identifier){
-            if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::SemiColon){
-                return new InstructionReturnFromFunction(0, current->getValue());
-            } else
-                throw std::runtime_error("23.1");
-        }
-        else if(current->getTokenType() == Token::TokenType::Value){ // TODO add returning with unit value
-            if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::SemiColon){
-                return new InstructionReturnFromFunction(1, current->getValue());
-            } else
-                throw std::runtime_error("23.2");
-        }
-        else
-            throw std::runtime_error("24");
+        auto* variable = parseVariable();
+        if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::SemiColon){
+            return new InstructionReturnFromFunction(variable);
+        } else
+            throw std::runtime_error("23.1");
     } else if(current->getTokenType() == Token::TokenType::If){ // if-else
         if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::ParenthesesOpen){
             auto* expression = parseExpression();

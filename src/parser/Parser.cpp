@@ -160,10 +160,18 @@ Instruction* Parser::parseInstruction() {
         } else
             throw std::runtime_error("23");
     } else if(current->getTokenType() == Token::TokenType::Return){ //return
-        if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Identifier)
-            return new InstructionReturnFromFunction(0, current->getValue());
-        else if(current->getTokenType() == Token::TokenType::Value)
-            return new InstructionReturnFromFunction(1, current->getValue());
+        if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Identifier){
+            if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::SemiColon){
+                return new InstructionReturnFromFunction(0, current->getValue());
+            } else
+                throw std::runtime_error("23.1");
+        }
+        else if(current->getTokenType() == Token::TokenType::Value){ // TODO add returning with unit value
+            if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::SemiColon){
+                return new InstructionReturnFromFunction(1, current->getValue());
+            } else
+                throw std::runtime_error("23.2");
+        }
         else
             throw std::runtime_error("24");
     } else if(current->getTokenType() == Token::TokenType::If){ // if-else
@@ -301,7 +309,7 @@ Operation* Parser::parseOperationMulDiv() {
     return op->getRight() == nullptr ? op->getLeft() : op;
 }
 
-Operation* Parser::parseOperationParIdVal() {
+Operation* Parser::parseOperationParIdVal() { // TODO add minus operator (e.g. -5)
     auto* op = new Operation;
     if ((peeked = scanner->peekNextToken())->getTokenType() == Token::TokenType::ParenthesesOpen){
         current = scanner->getNextToken();

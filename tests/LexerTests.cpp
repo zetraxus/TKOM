@@ -9,15 +9,73 @@
 #include "../src/lexer/Source.h"
 #include "../src/parser/Parser.h"
 
-BOOST_AUTO_TEST_CASE(test1){
-    std::string program = "int a(){}";
+Parser* config(const std::string& program){
     std::stringstream input(program);
 
     auto* source = new Source(program, 1);
     auto* scanner = new Scanner(source);
-    auto* parser = new Parser(scanner);
+    return new Parser(scanner);
+}
 
-    parser->parseProgram();
+BOOST_AUTO_TEST_CASE(SIMPLE_CORRECT_EXAMPLE){
+    std::string program = "int a(){}";
+    auto* parser = config(program);
 
-    BOOST_CHECK(2 + 2 == 4);
+    BOOST_CHECK_NO_THROW(parser->parseProgram());
+}
+
+BOOST_AUTO_TEST_CASE(SIMPLE_INCORRECT_EXAMPLE){
+    std::string program = "int a(){a}";
+    auto* parser = config(program);
+
+    BOOST_CHECK_THROW(parser->parseProgram(), std::runtime_error);
+}
+
+BOOST_AUTO_TEST_CASE(TWO_FUNCTIONS){
+    std::string program = "int a(){} int b(){}";
+    auto* parser = config(program);
+
+    BOOST_CHECK_NO_THROW(parser->parseProgram());
+}
+
+BOOST_AUTO_TEST_CASE(DECLARATION_VARIABLE){
+    std::string program = "int a(){int b;}";
+    auto* parser = config(program);
+
+    BOOST_CHECK_NO_THROW(parser->parseProgram());
+}
+
+BOOST_AUTO_TEST_CASE(CALL_FUNCTION){
+    std::string program = "int a(){ b();}";
+    auto* parser = config(program);
+
+    BOOST_CHECK_NO_THROW(parser->parseProgram());
+}
+
+BOOST_AUTO_TEST_CASE(RETURN_FROM_FUNCTION_WITH_INT_VALUE){
+    std::string program = "int a(){return 5;}";
+    auto* parser = config(program);
+
+    BOOST_CHECK_NO_THROW(parser->parseProgram());
+}
+
+BOOST_AUTO_TEST_CASE(RETURN_FROM_FUNCTION_WITH_VARIABLE){
+    std::string program = "int a(){return b;}";
+    auto* parser = config(program);
+
+    BOOST_CHECK_NO_THROW(parser->parseProgram());
+}
+
+BOOST_AUTO_TEST_CASE(IF_WITHOUT_ELSE){
+    std::string program = "int a(){if(){}}";
+    auto* parser = config(program);
+
+    BOOST_CHECK_NO_THROW(parser->parseProgram());
+}
+
+BOOST_AUTO_TEST_CASE(IF_WITH_ELSE){
+    std::string program = "int a(){if(){}else{}}";
+    auto* parser = config(program);
+
+    BOOST_CHECK_NO_THROW(parser->parseProgram());
 }

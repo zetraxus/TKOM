@@ -27,6 +27,8 @@ public:
 
     Variable(Value* value);
 
+    Variable(const std::string& name);
+
     Variable(const std::string& name, const std::string& positionInContainer);
 
     void setName(const std::string& name);

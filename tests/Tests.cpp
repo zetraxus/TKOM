@@ -31,6 +31,20 @@ BOOST_AUTO_TEST_CASE(SIMPLE_INCORRECT_EXAMPLE){
     BOOST_CHECK_THROW(parser->parseProgram(), std::runtime_error);
 }
 
+BOOST_AUTO_TEST_CASE(FUNCTION_WITH_PARAMETER){
+    std::string program = "int a(int b){}";
+    auto* parser = config(program);
+
+    BOOST_CHECK_NO_THROW(parser->parseProgram());
+}
+
+BOOST_AUTO_TEST_CASE(FUNCTION_WITH_PARAMETERS){
+    std::string program = "int a(int b, unit c){}";
+    auto* parser = config(program);
+
+    BOOST_CHECK_NO_THROW(parser->parseProgram());
+}
+
 BOOST_AUTO_TEST_CASE(TWO_FUNCTIONS){
     std::string program = "int a(){} int b(){}";
     auto* parser = config(program);
@@ -59,8 +73,99 @@ BOOST_AUTO_TEST_CASE(DECLARATION_VARIABLE_UNIT){
     BOOST_CHECK_NO_THROW(parser->parseProgram());
 }
 
+BOOST_AUTO_TEST_CASE(DECLARATION_CONTAINER){
+    std::string program = "int a(){unit b[5];}";
+    auto* parser = config(program);
+
+    BOOST_CHECK_NO_THROW(parser->parseProgram());
+}
+
+BOOST_AUTO_TEST_CASE(ASSIGN_OTHER_VARIABLE){
+    std::string program = "int a(){int b; int c; b = c;}";
+    auto* parser = config(program);
+
+    BOOST_CHECK_NO_THROW(parser->parseProgram());
+}
+
+BOOST_AUTO_TEST_CASE(ASSIGN_OTHER_VARIABLE_FROM_CONTAINER){
+    std::string program = "int a(){int b; int c[5]; b = c[0];}";
+    auto* parser = config(program);
+
+    BOOST_CHECK_NO_THROW(parser->parseProgram());
+}
+
+BOOST_AUTO_TEST_CASE(ASSIGN_OTHER_VARIABLE_IN_CONTAINER){
+    std::string program = "int a(){int b; int c[5]; c[0] = b;}";
+    auto* parser = config(program);
+
+    BOOST_CHECK_NO_THROW(parser->parseProgram());
+}
+
+BOOST_AUTO_TEST_CASE(ASSIGN_INT_VALUE){
+    std::string program = "int a(){int b; b = 5;}";
+    auto* parser = config(program);
+
+    BOOST_CHECK_NO_THROW(parser->parseProgram());
+}
+
+BOOST_AUTO_TEST_CASE(ASSIGN_UNIT_VALUE){
+    std::string program = "int a(){unit b; b = 5A;}";
+    auto* parser = config(program);
+
+    BOOST_CHECK_NO_THROW(parser->parseProgram());
+}
+
+BOOST_AUTO_TEST_CASE(ASSIGN_VALUE_FROM_EXPRESSION_MULTIPLICATION){
+    std::string program = "int a(){unit b; b = 5 * 10A;}";
+    auto* parser = config(program);
+
+    BOOST_CHECK_NO_THROW(parser->parseProgram());
+}
+
+BOOST_AUTO_TEST_CASE(ASSIGN_VALUE_FROM_EXPRESSION_DIVISION){
+    std::string program = "int a(){int b[5]; b[0] = b[3] / b[2];}";
+    auto* parser = config(program);
+
+    BOOST_CHECK_NO_THROW(parser->parseProgram());
+}
+
+BOOST_AUTO_TEST_CASE(ASSIGN_VALUE_FROM_EXPRESSION_ADDITION){
+    std::string program = "int a(){int b; int c; b = b + c;}";
+    auto* parser = config(program);
+
+    BOOST_CHECK_NO_THROW(parser->parseProgram());
+}
+
+BOOST_AUTO_TEST_CASE(ASSIGN_VALUE_FROM_EXPRESSION_SUBTRACTION){
+    std::string program = "int a(){int b; b = 10 - b;}";
+    auto* parser = config(program);
+
+    BOOST_CHECK_NO_THROW(parser->parseProgram());
+}
+
 BOOST_AUTO_TEST_CASE(CALL_FUNCTION){
     std::string program = "int a(){ b();}";
+    auto* parser = config(program);
+
+    BOOST_CHECK_NO_THROW(parser->parseProgram());
+}
+
+BOOST_AUTO_TEST_CASE(CALL_FUNCTION_WITH_INT_PARAMETER){
+    std::string program = "int a(int b){ int c; a(c);}";
+    auto* parser = config(program);
+
+    BOOST_CHECK_NO_THROW(parser->parseProgram());
+}
+
+BOOST_AUTO_TEST_CASE(CALL_FUNCTION_WITH_PARAMETER_FROM_CONTAINER){
+    std::string program = "int a(int b){ int c[10]; a(c[0]);}";
+    auto* parser = config(program);
+
+    BOOST_CHECK_NO_THROW(parser->parseProgram());
+}
+
+BOOST_AUTO_TEST_CASE(CALL_FUNCTION_WITH_PARAMETERS){
+    std::string program = "int a(int b, int c){ int d; a(d,d);}";
     auto* parser = config(program);
 
     BOOST_CHECK_NO_THROW(parser->parseProgram());
@@ -182,6 +287,13 @@ BOOST_AUTO_TEST_CASE(FOOR_LOOP_UNIT){
 
 BOOST_AUTO_TEST_CASE(FOOR_LOOP_INT){
     std::string program = "int a(){for(int u : table){}}";
+    auto* parser = config(program);
+
+    BOOST_CHECK_NO_THROW(parser->parseProgram());
+}
+
+BOOST_AUTO_TEST_CASE(fuckup){
+    std::string program = "int a(){int b; b = -3; }";
     auto* parser = config(program);
 
     BOOST_CHECK_NO_THROW(parser->parseProgram());

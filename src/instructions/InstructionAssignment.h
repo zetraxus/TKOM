@@ -11,10 +11,10 @@
 #include "Operation.h"
 
 class InstructionAssignment : public Instruction {
-    std::string identifier;
+    Variable* variable;
     Operation* operation;
 public:
-    InstructionAssignment(const std::string& identifier, Operation* operation);
+    InstructionAssignment(Variable* variable, Operation* operation);
 
     Operation* getOperation() const;
 };

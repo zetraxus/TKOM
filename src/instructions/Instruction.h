@@ -20,7 +20,6 @@ class Instruction {
 
 public:
     Instruction();
-
 };
 
 

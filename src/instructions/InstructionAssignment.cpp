@@ -5,8 +5,8 @@
 #include "Operation.h"
 #include "InstructionAssignment.h"
 
-InstructionAssignment::InstructionAssignment(const std::string& identifier, Operation* operation) : identifier(
-    identifier), operation(operation) {}
+InstructionAssignment::InstructionAssignment(Variable* variable, Operation* operation) : variable(variable),
+                                                                                         operation(operation) {}
 
 Operation* InstructionAssignment::getOperation() const {
     return operation;

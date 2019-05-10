@@ -18,3 +18,5 @@ Variable::Variable(const std::string& name, const std::string& positionInContain
     positionInContainer), type(Type::Id) {}
 
 Variable::Variable(Value* value) : value(value), type(Type::Val) {}
+
+Variable::Variable(const std::string& name) : name(name) {}

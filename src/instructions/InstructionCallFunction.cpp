@@ -8,6 +8,6 @@ InstructionCallFunction::InstructionCallFunction(const std::string& name) {
 
 }
 
-void InstructionCallFunction::addArgument(const std::string& next) {
-    arguments.push_back(next);
+void InstructionCallFunction::addArgument(Token::TokenType type, Variable* next) {
+    arguments.emplace_back(std::make_pair(type, next));
 }

@@ -2,7 +2,6 @@
 // Created by adam on 06.05.19.
 //
 
-#include <iostream>
 #include "Operation.h"
 
 Operation::Operation() {}

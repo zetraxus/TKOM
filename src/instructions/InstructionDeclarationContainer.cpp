@@ -8,3 +8,9 @@ InstructionDeclarationContainer::InstructionDeclarationContainer(Token::TokenTyp
                                                                  const std::string& size) : type(type),
                                                                                             identifier(identifier),
                                                                                             size(size) {}
+
+void InstructionDeclarationContainer::setInitialValues(
+    const std::vector<std::pair<Token::TokenType, Variable*>>& initialValues) {
+    InstructionDeclarationContainer::initialValues = initialValues;
+}
+

@@ -7,15 +7,21 @@
 
 
 #include <string>
+#include <vector>
 #include "Instruction.h"
 #include "../lexer/Token.h"
+#include "Variable.h"
 
 class InstructionDeclarationContainer : public Instruction {
     Token::TokenType type;
     std::string identifier;
     std::string size;
+    std::vector<std::pair<Token::TokenType, Variable*>> initialValues;
+
 public:
     InstructionDeclarationContainer(Token::TokenType type, const std::string& identifier, const std::string& size);
+
+    void setInitialValues(const std::vector<std::pair<Token::TokenType, Variable*>>& initialValues);
 };
 
 

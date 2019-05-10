@@ -12,7 +12,7 @@
 
 class Operation {
 public:
-    enum Operator{
+    enum Operator {
         Sum, // +
         Sub, // -
         Mul, // *
@@ -20,10 +20,6 @@ public:
         Par, // ()
     };
 
-//private:
-//    Token::TokenType type;
-//    Token::TokenType unitType = Token::TokenType::BadType; // only if we have value + unit e.g. 10N
-//    std::string val; // if type == identifier || type == value
 public:
     void setVariable(Variable* variable);
 
@@ -36,17 +32,11 @@ private:
 public:
     Operation();
 
-//    void setType(Token::TokenType type);
-
     void setLeft(Operation* left);
-
-//    void setUnitType(Token::TokenType unitType);
 
     void setRight(Operation* right);
 
     void set_operator(Operator _operator);
-
-//    void setVal(const std::string& val);
 
     Operation* getLeft() const;
 

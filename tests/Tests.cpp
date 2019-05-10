@@ -80,6 +80,13 @@ BOOST_AUTO_TEST_CASE(DECLARATION_CONTAINER){
     BOOST_CHECK_NO_THROW(parser->parseProgram());
 }
 
+BOOST_AUTO_TEST_CASE(DECLARATION_CONTAINER_WITH_INITIAL_VALUES){
+    std::string program = "int a(){unit b[5] {1A, 2W};}";
+    auto* parser = config(program);
+
+    BOOST_CHECK_NO_THROW(parser->parseProgram());
+}
+
 BOOST_AUTO_TEST_CASE(ASSIGN_OTHER_VARIABLE){
     std::string program = "int a(){int b; int c; b = c;}";
     auto* parser = config(program);
@@ -103,6 +110,13 @@ BOOST_AUTO_TEST_CASE(ASSIGN_OTHER_VARIABLE_IN_CONTAINER){
 
 BOOST_AUTO_TEST_CASE(ASSIGN_INT_VALUE){
     std::string program = "int a(){int b; b = 5;}";
+    auto* parser = config(program);
+
+    BOOST_CHECK_NO_THROW(parser->parseProgram());
+}
+
+BOOST_AUTO_TEST_CASE(ASSIGN_NEGATIVE_VALUE){
+    std::string program = "int a(){int b; b = -3; }";
     auto* parser = config(program);
 
     BOOST_CHECK_NO_THROW(parser->parseProgram());
@@ -287,13 +301,6 @@ BOOST_AUTO_TEST_CASE(FOOR_LOOP_UNIT){
 
 BOOST_AUTO_TEST_CASE(FOOR_LOOP_INT){
     std::string program = "int a(){for(int u : table){}}";
-    auto* parser = config(program);
-
-    BOOST_CHECK_NO_THROW(parser->parseProgram());
-}
-
-BOOST_AUTO_TEST_CASE(fuckup){
-    std::string program = "int a(){int b; b = -3; }";
     auto* parser = config(program);
 
     BOOST_CHECK_NO_THROW(parser->parseProgram());

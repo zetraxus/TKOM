@@ -3,9 +3,7 @@
 //
 
 #include <iostream>
-#include <sstream>
 #include "Scanner.h"
-#include "TokenMap.h"
 
 const int LineFeed = 10;
 
@@ -16,7 +14,7 @@ Token* Scanner::peekNextToken() {
 }
 
 Token* Scanner::getNextToken() {
-    if(ifLastWasPicked){
+    if (ifLastWasPicked) {
         ifLastWasPicked = false;
         return last;
     }

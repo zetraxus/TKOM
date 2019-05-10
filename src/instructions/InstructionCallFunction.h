@@ -20,6 +20,8 @@ public:
     explicit InstructionCallFunction(const std::string& name);
 
     void addArgument(Token::TokenType type, Variable* next);
+
+    void setArguments(const std::vector<std::pair<Token::TokenType, Variable*>>& arguments);
 };
 
 

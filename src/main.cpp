@@ -21,10 +21,12 @@ int main(int argc, char** argv) {
     scanner = new Scanner(source);
     parser = new Parser(scanner);
 
-    try{
+    try {
         parser->parseProgram();
-    } catch (const std::runtime_error& e){
-        std::cout<< "Error: " << e.what() << " in:" << std::endl << "line: " << parser->getCurrent()->getStartPosition()->getLine() << std::endl << "position: "  << parser->getCurrent()->getStartPosition()->getPosition()<< std::endl;
+    } catch (const std::runtime_error& e) {
+        std::cout << "Error: " << e.what() << " in:" << std::endl << "line: "
+                  << parser->getCurrent()->getStartPosition()->getLine() << std::endl << "position: "
+                  << parser->getCurrent()->getStartPosition()->getPosition() << std::endl;
         return -1;
     }
 

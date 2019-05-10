@@ -11,7 +11,7 @@
 
 class Variable {
 public:
-    enum Type{
+    enum Type {
         Id,
         Val,
     };

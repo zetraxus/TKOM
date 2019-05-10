@@ -4,6 +4,6 @@
 
 #include "InstructionReturnFromFunction.h"
 
-InstructionReturnFromFunction::InstructionReturnFromFunction(Variable* variable) : variable(variable){
+InstructionReturnFromFunction::InstructionReturnFromFunction(Variable* variable) : variable(variable) {
 
 }

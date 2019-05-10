@@ -70,7 +70,7 @@ DefinitionOfFunction* Parser::parseFunction() {
 }
 
 Block* Parser::parseBlock() {
-    if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::CurlyBracketOpen){
+    if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::CurlyBracketOpen) {
         auto* block = new Block();
         while ((peeked = scanner->peekNextToken())->getTokenType() != Token::TokenType::CurlyBracketClose)
             block->addInstruction(parseInstruction());
@@ -81,47 +81,51 @@ Block* Parser::parseBlock() {
 }
 
 Instruction* Parser::parseInstruction() {
-    if((peeked = scanner->peekNextToken())->getTokenType() == Token::TokenType::Int || peeked->getTokenType() == Token::TokenType::Unit){ // declaration variable or container
+    if ((peeked = scanner->peekNextToken())->getTokenType() == Token::TokenType::Int ||
+        peeked->getTokenType() == Token::TokenType::Unit) { // declaration variable or container
         current = scanner->getNextToken();
         Token::TokenType type = current->getTokenType();
-        if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Identifier){
+        if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Identifier) {
             std::string name = current->getValue();
-            if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::SquareBracketsOpen){
-                if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Value){
+            if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::SquareBracketsOpen) {
+                if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Value) {
                     std::string size = current->getValue();
-                    if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::SquareBracketsClose){
-                        if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::SemiColon)
+                    if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::SquareBracketsClose) {
+                        if ((peeked = scanner->peekNextToken())->getTokenType() == Token::TokenType::SemiColon){
+                            current = scanner->getNextToken();
                             return new InstructionDeclarationContainer(type, name, size);
-                        else
+                        } else if(peeked->getTokenType() == Token::TokenType::CurlyBracketOpen){
+                            auto* instruction = new InstructionDeclarationContainer(type, name, size);
+                            bool flag;
+                            std::vector<std::pair<Token::TokenType, Variable*> > argumentList = parseArgumentList(flag, Token::CurlyBracketClose);
+                            instruction->setInitialValues(argumentList);
+                            if (current->getTokenType() == Token::CurlyBracketClose && !flag) {
+                                if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::SemiColon)
+                                    return instruction;
+                                else
+                                    throw std::runtime_error("7.1");
+                            } else
+                                throw std::runtime_error("7.2");
+                        } else
                             throw std::runtime_error("8");
                     } else
                         throw std::runtime_error("9");
                 } else
                     throw std::runtime_error("10");
-            } else if(current->getTokenType() == Token::TokenType::SemiColon)
+            } else if (current->getTokenType() == Token::TokenType::SemiColon)
                 return new InstructionDeclarationVariable(type, name);
             else
                 throw std::runtime_error("11");
         } else
             throw std::runtime_error("12");
-    } else if(peeked->getTokenType() == Token::TokenType::Identifier) {
+    } else if (peeked->getTokenType() == Token::TokenType::Identifier) {
         current = scanner->getNextToken();
         std::string name = current->getValue();
         if ((peeked = scanner->peekNextToken())->getTokenType() == Token::TokenType::ParenthesesOpen) { // function call
-            current = scanner->getNextToken();
             auto* instruction = new InstructionCallFunction(name);
-            bool flag = false; // last token was ',' and need read more arguments
-            while ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Identifier) {
-                instruction->addArgument(current->getTokenType(), parseVariable());
-                if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Comma) {
-                    flag = true;
-                    continue;
-                } else if (current->getTokenType() == Token::ParenthesesClose) {
-                    flag = false;
-                    break;
-                } else
-                    throw std::runtime_error("13");
-            }
+            bool flag;
+            std::vector<std::pair<Token::TokenType, Variable*> > argumentList = parseArgumentList(flag, Token::ParenthesesClose);
+            instruction->setArguments(argumentList);
             if (current->getTokenType() == Token::ParenthesesClose && !flag) {
                 if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::SemiColon)
                     return instruction;
@@ -131,7 +135,7 @@ Instruction* Parser::parseInstruction() {
                 throw std::runtime_error("15");
         } else {
             auto* variable = parseVariable();
-            if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Assign){
+            if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Assign) {
                 auto* instruction = new InstructionAssignment(variable, parseOperation());
                 if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::SemiColon)
                     return instruction;
@@ -139,16 +143,18 @@ Instruction* Parser::parseInstruction() {
                     throw std::runtime_error("16");
             }
         }
-    } else if((current = scanner->getNextToken())->getTokenType() == Token::TokenType::For){ //for
-        if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::ParenthesesOpen){
-            if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Int || current->getTokenType() == Token::TokenType::Unit){
+    } else if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::For) { //for
+        if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::ParenthesesOpen) {
+            if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Int ||
+                current->getTokenType() == Token::TokenType::Unit) {
                 Token::TokenType type = current->getTokenType();
-                if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Identifier){
+                if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Identifier) {
                     std::string name = current->getValue();
-                    if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Colon){
-                        if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Identifier){
+                    if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Colon) {
+                        if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Identifier) {
                             std::string identifier = current->getValue();
-                            if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::ParenthesesClose){
+                            if ((current = scanner->getNextToken())->getTokenType() ==
+                                Token::TokenType::ParenthesesClose) {
                                 auto* instruction = new For(type, name, identifier);
                                 instruction->setBody(parseBlock());
                                 return instruction;
@@ -164,19 +170,19 @@ Instruction* Parser::parseInstruction() {
                 throw std::runtime_error("22");
         } else
             throw std::runtime_error("23");
-    } else if(current->getTokenType() == Token::TokenType::Return){ //return
+    } else if (current->getTokenType() == Token::TokenType::Return) { //return
         current = scanner->getNextToken();
         auto* variable = parseVariable();
-        if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::SemiColon){
+        if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::SemiColon) {
             return new InstructionReturnFromFunction(variable);
         } else
             throw std::runtime_error("23.1");
-    } else if(current->getTokenType() == Token::TokenType::If){ // if-else
-        if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::ParenthesesOpen){
+    } else if (current->getTokenType() == Token::TokenType::If) { // if-else
+        if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::ParenthesesOpen) {
             auto* expression = parseExpression();
-            if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::ParenthesesClose){
+            if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::ParenthesesClose) {
                 auto* ifBlock = parseBlock();
-                if((scanner->peekNextToken())->getTokenType() == Token::TokenType::Else){
+                if ((scanner->peekNextToken())->getTokenType() == Token::TokenType::Else) {
                     scanner->getNextToken();
                     auto* elseBlock = parseBlock();
                     return new IfElse(expression, ifBlock, elseBlock);
@@ -195,7 +201,7 @@ Expression* Parser::parseExpression() {
     Expression* newExp;
 
     exp->setLeft(parseExpressionAnd());
-    while ((peeked = scanner->peekNextToken())->getTokenType() == Token::TokenType::LogicalOr){
+    while ((peeked = scanner->peekNextToken())->getTokenType() == Token::TokenType::LogicalOr) {
         current = scanner->getNextToken();
         exp->setType(current->getTokenType());
         exp->setRight(parseExpressionAnd());
@@ -212,7 +218,7 @@ Expression* Parser::parseExpressionAnd() {
     Expression* newExp;
 
     exp->setLeft(parseExpressionEq());
-    while ((peeked = scanner->peekNextToken())->getTokenType() == Token::TokenType::LogicalAnd){
+    while ((peeked = scanner->peekNextToken())->getTokenType() == Token::TokenType::LogicalAnd) {
         current = scanner->getNextToken();
         exp->setType(current->getTokenType());
         exp->setRight(parseExpressionEq());
@@ -229,7 +235,8 @@ Expression* Parser::parseExpressionEq() {
     Expression* newExp;
 
     exp->setLeft(parseExpressionLessMore());
-    while ((peeked = scanner->peekNextToken())->getTokenType() == Token::TokenType::Equal || peeked->getTokenType() == Token::TokenType::NotEqual){
+    while ((peeked = scanner->peekNextToken())->getTokenType() == Token::TokenType::Equal ||
+           peeked->getTokenType() == Token::TokenType::NotEqual) {
         current = scanner->getNextToken();
         exp->setType(current->getTokenType());
         exp->setRight(parseExpressionLessMore());
@@ -246,7 +253,9 @@ Expression* Parser::parseExpressionLessMore() {
     Expression* newExp;
 
     exp->setLeft(parseExpressionPar());
-    while ((peeked = scanner->peekNextToken())->getTokenType() == Token::TokenType::Less || peeked->getTokenType() == Token::TokenType::More || peeked->getTokenType() == Token::TokenType::LessEq || peeked->getTokenType() == Token::TokenType::MoreEq){
+    while ((peeked = scanner->peekNextToken())->getTokenType() == Token::TokenType::Less ||
+           peeked->getTokenType() == Token::TokenType::More || peeked->getTokenType() == Token::TokenType::LessEq ||
+           peeked->getTokenType() == Token::TokenType::MoreEq) {
         current = scanner->getNextToken();
         exp->setType(current->getTokenType());
         exp->setRight(parseExpressionPar());
@@ -260,7 +269,7 @@ Expression* Parser::parseExpressionLessMore() {
 
 Expression* Parser::parseExpressionPar() {
     auto* exp = new Expression();
-    if((peeked = scanner->peekNextToken())->getTokenType() == Token::TokenType::ParenthesesOpen){
+    if ((peeked = scanner->peekNextToken())->getTokenType() == Token::TokenType::ParenthesesOpen) {
         current = scanner->getNextToken();
         exp->setType(current->getTokenType());
         exp->setLeft(parseExpression());
@@ -277,9 +286,11 @@ Operation* Parser::parseOperation() {
     Operation* newOp;
 
     op->setLeft(parseOperationMulDiv());
-    while ((peeked = scanner->peekNextToken())->getTokenType() == Token::TokenType::OpSum || peeked->getTokenType() == Token::TokenType::OpSub){
+    while ((peeked = scanner->peekNextToken())->getTokenType() == Token::TokenType::OpSum ||
+           peeked->getTokenType() == Token::TokenType::OpSub) {
         current = scanner->getNextToken();
-        current->getTokenType() == Token::TokenType::OpSum ? op->set_operator(Operation::Sum) : op->set_operator(Operation::Sub);
+        current->getTokenType() == Token::TokenType::OpSum ? op->set_operator(Operation::Sum) : op->set_operator(
+            Operation::Sub);
         op->setRight(parseOperationMulDiv());
 
         newOp = new Operation;
@@ -294,9 +305,11 @@ Operation* Parser::parseOperationMulDiv() {
     Operation* newOp;
 
     op->setLeft(parseOperationParIdVal());
-    while ((peeked = scanner->peekNextToken())->getTokenType() == Token::TokenType::OpMul || peeked->getTokenType() == Token::TokenType::OpDiv){
+    while ((peeked = scanner->peekNextToken())->getTokenType() == Token::TokenType::OpMul ||
+           peeked->getTokenType() == Token::TokenType::OpDiv) {
         current = scanner->getNextToken();
-        current->getTokenType() == Token::TokenType::OpMul ? op->set_operator(Operation::Mul) : op->set_operator(Operation::Div);
+        current->getTokenType() == Token::TokenType::OpMul ? op->set_operator(Operation::Mul) : op->set_operator(
+            Operation::Div);
         op->setRight(parseOperationParIdVal());
 
         newOp = new Operation;
@@ -306,41 +319,42 @@ Operation* Parser::parseOperationMulDiv() {
     return op->getRight() == nullptr ? op->getLeft() : op;
 }
 
-Operation* Parser::parseOperationParIdVal() { // TODO add minus operator (e.g. -5)
+Operation* Parser::parseOperationParIdVal() {
     auto* op = new Operation;
-    if ((peeked = scanner->peekNextToken())->getTokenType() == Token::TokenType::ParenthesesOpen){
+    if ((peeked = scanner->peekNextToken())->getTokenType() == Token::TokenType::ParenthesesOpen) {
         current = scanner->getNextToken();
         op->set_operator(Operation::Par);
         op->setLeft(parseOperation());
 
-        if ((current = scanner->getNextToken())->getTokenType() != Token::TokenType::ParenthesesClose){
+        if ((current = scanner->getNextToken())->getTokenType() != Token::TokenType::ParenthesesClose) {
             throw std::runtime_error("29");
         }
-    } else if((peeked = scanner->peekNextToken())->getTokenType() == Token::TokenType::Identifier || peeked->getTokenType() == Token::TokenType::Value) {
+    } else if ((peeked = scanner->peekNextToken())->getTokenType() == Token::TokenType::Identifier ||
+               peeked->getTokenType() == Token::TokenType::Value) {
         current = scanner->getNextToken();
         op->setVariable(parseVariable());
-    } //TODO what if else?
+    }
 
     return op;
 }
 
 Variable* Parser::parseVariable() {
-    if(current->getTokenType() == Token::TokenType::Identifier){
+    if (current->getTokenType() == Token::TokenType::Identifier) {
         std::string id = current->getValue();
-        if((peeked = scanner->peekNextToken())->getTokenType() == Token::TokenType::SquareBracketsOpen){
-            current= scanner->getNextToken();
-            if((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Value){
+        if ((peeked = scanner->peekNextToken())->getTokenType() == Token::TokenType::SquareBracketsOpen) {
+            current = scanner->getNextToken();
+            if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Value) {
                 std::string position = current->getValue();
-                if((current = scanner->getNextToken())->getTokenType() == Token::TokenType::SquareBracketsClose)
+                if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::SquareBracketsClose)
                     return new Variable(id, position);
                 else
                     throw std::runtime_error("30");
             } else
                 throw std::runtime_error("31");
         }
-    } else if(current->getTokenType() == Token::TokenType::Value){
+    } else if (current->getTokenType() == Token::TokenType::Value) {
         std::string value = current->getValue();
-        if((peeked = scanner->peekNextToken())->isUnitType()){
+        if ((peeked = scanner->peekNextToken())->isUnitType()) {
             current = scanner->getNextToken();
             return new Variable(new Value(current->getTokenType(), value)); // e.g Value(A, 10)
         } else
@@ -351,5 +365,24 @@ Variable* Parser::parseVariable() {
 
 Token* Parser::getCurrent() const {
     return current;
+}
+
+std::vector<std::pair<Token::TokenType, Variable*> > Parser::parseArgumentList(bool& flag, Token::TokenType endListSymbol){
+    std::vector<std::pair<Token::TokenType, Variable*> > argumentList;
+    current = scanner->getNextToken();
+    flag = false; // last token was ',' and need read more arguments
+    while ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Identifier || current->getTokenType() == Token::TokenType::Value) {
+        argumentList.emplace_back(current->getTokenType(), parseVariable());
+        if ((current = scanner->getNextToken())->getTokenType() == Token::TokenType::Comma) {
+            flag = true;
+            continue;
+        } else if (current->getTokenType() == endListSymbol) {
+            flag = false;
+            break;
+        } else
+            throw std::runtime_error("13");
+    }
+
+    return argumentList;
 }
 

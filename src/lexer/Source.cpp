@@ -8,13 +8,13 @@
 const int LineFeed = 10; // \n in ASCII
 
 Source::Source(const std::string& fileNameOrInput, bool mode) : mode(mode) {
-    if(mode == 0){ // release
+    if (mode == 0) { // release
         fileName = fileNameOrInput;
         current = new Position();
         inputStream.open(fileName.c_str());
         if (!inputStream)
             throw std::runtime_error("File not found.");
-    } else{
+    } else {
         current = new Position();
         input << fileNameOrInput;
     }
@@ -29,7 +29,7 @@ int Source::getNextChar() {
 }
 
 Source::~Source() {
-    if(inputStream.is_open())
+    if (inputStream.is_open())
         inputStream.close();
 }
 

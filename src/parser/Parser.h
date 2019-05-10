@@ -22,6 +22,8 @@ public:
 
     Token* getCurrent() const;
 
+    std::vector<std::pair<Token::TokenType, Variable*> > parseArgumentList(bool& flag, Token::TokenType endListSymbol);
+
     Program* parseProgram();
 
     DefinitionOfFunction* parseFunction();

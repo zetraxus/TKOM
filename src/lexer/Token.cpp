@@ -34,5 +34,6 @@ Position* Token::getStartPosition() const {
 }
 
 bool Token::isUnitType() const {
-    return tokenType == V || tokenType == W || tokenType == A || tokenType == Om || tokenType == S || tokenType == C || tokenType == s || tokenType == J;
+    return tokenType == V || tokenType == W || tokenType == A || tokenType == Om || tokenType == S || tokenType == C ||
+           tokenType == s || tokenType == J;
 }

@@ -10,7 +10,7 @@
 #include "Operation.h"
 
 class Expression {
-    Token::TokenType type;
+    Token::Type type;
     Expression* leftExp;
     Expression* rightExp = nullptr;
     Operation* operation;
@@ -18,13 +18,13 @@ class Expression {
 public:
     Expression();
 
-    void setType(Token::TokenType type);
+    void setType(Token::Type type);
 
     void setLeft(Expression* left);
 
     void setRight(Expression* right);
 
-    Token::TokenType getType() const;
+    Token::Type getType() const;
 
     Expression* getLeft() const;
 

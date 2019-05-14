@@ -4,13 +4,13 @@
 
 #include "InstructionDeclarationContainer.h"
 
-InstructionDeclarationContainer::InstructionDeclarationContainer(Token::TokenType type, const std::string& identifier,
+InstructionDeclarationContainer::InstructionDeclarationContainer(Token::Type type, const std::string& identifier,
                                                                  const std::string& size) : type(type),
                                                                                             identifier(identifier),
                                                                                             size(size) {}
 
 void InstructionDeclarationContainer::setInitialValues(
-    const std::vector<std::pair<Token::TokenType, Variable*>>& initialValues) {
+    const std::vector<std::pair<Token::Type, Variable*>>& initialValues) {
     InstructionDeclarationContainer::initialValues = initialValues;
 }
 

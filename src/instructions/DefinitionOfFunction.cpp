@@ -4,7 +4,7 @@
 
 #include "DefinitionOfFunction.h"
 
-void DefinitionOfFunction::setReturnType(Token::TokenType returnType) {
+void DefinitionOfFunction::setReturnType(Token::Type returnType) {
     DefinitionOfFunction::returnType = returnType;
 }
 
@@ -12,7 +12,7 @@ void DefinitionOfFunction::setIdentifier(const std::string& identifier) {
     DefinitionOfFunction::identifier = identifier;
 }
 
-void DefinitionOfFunction::addArgument(Token::TokenType type, Variable* next) {
+void DefinitionOfFunction::addArgument(Token::Type type, Variable* next) {
     arguments.emplace_back(std::make_pair(type, next));
 }
 

@@ -12,16 +12,16 @@ Token::~Token() {
     delete startPosition;
 }
 
-void Token::setTokenType(TokenType tokenType) {
+void Token::setTokenType(Type tokenType) {
     this->tokenType = tokenType;
 }
 
-void Token::setTokenTypeAndValue(TokenType tokenType, std::string value) {
+void Token::setTokenTypeAndValue(Type tokenType, std::string value) {
     this->tokenType = tokenType;
     this->value = value;
 }
 
-Token::TokenType Token::getTokenType() const {
+Token::Type Token::getTokenType() const {
     return tokenType;
 }
 

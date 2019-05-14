@@ -11,13 +11,13 @@
 #include "Block.h"
 
 class For : public Instruction {
-    Token::TokenType type;
+    Token::Type type;
     std::string itName;
     std::string container;
     Block* body;
 
 public:
-    For(Token::TokenType type, const std::string& itName, const std::string& container);
+    For(Token::Type type, const std::string& itName, const std::string& container);
 
     void setBody(Block* body);
 };

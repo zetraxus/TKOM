@@ -9,11 +9,11 @@
 #include "../lexer/Token.h"
 
 class Value {
-    Token::TokenType type;
+    Token::Type type;
     std::string value;
 
 public:
-    Value(Token::TokenType type, const std::string& value);
+    Value(Token::Type type, const std::string& value);
 };
 
 

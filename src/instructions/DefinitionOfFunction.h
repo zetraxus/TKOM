@@ -13,20 +13,20 @@
 #include "Block.h"
 
 class DefinitionOfFunction {
-    Token::TokenType returnType;
+    Token::Type returnType;
     std::string identifier;
-    std::vector<std::pair<Token::TokenType, Variable*> > arguments;
+    std::vector<std::pair<Token::Type, Variable*> > arguments;
     std::vector<Instruction*> instructions;
     Block* body;
 
 public:
-    void setReturnType(Token::TokenType returnType);
+    void setReturnType(Token::Type returnType);
 
     void setIdentifier(const std::string& identifier);
 
     void setBody(Block* body);
 
-    void addArgument(Token::TokenType type, Variable* next);
+    void addArgument(Token::Type type, Variable* next);
 
     void addInstruction(Instruction* next);
 };

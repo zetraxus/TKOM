@@ -11,11 +11,11 @@
 #include "../lexer/Token.h"
 
 class InstructionDeclarationVariable : public Instruction {
-    Token::TokenType type;
+    Token::Type type;
     std::string identifier;
 
 public:
-    InstructionDeclarationVariable(Token::TokenType type, const std::string& identifier);
+    InstructionDeclarationVariable(Token::Type type, const std::string& identifier);
 };
 
 

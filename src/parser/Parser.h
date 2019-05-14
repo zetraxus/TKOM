@@ -22,7 +22,19 @@ public:
 
     Token* getCurrent() const;
 
-    std::vector<std::pair<Token::TokenType, Variable*> > parseArgumentList(bool& flag, Token::TokenType endListSymbol);
+    bool CheckToken (std::initializer_list<Token::Type> list, bool isIf);
+
+    bool GetAndCheckToken(std::initializer_list<Token::Type> list, bool isIf);
+
+    bool PeekAndCheckToken(std::initializer_list<Token::Type> list, bool isIf);
+
+    bool CheckIfNotToken(std::initializer_list<Token::Type> list, bool isIf);
+
+    bool GetAndCheckIfNotToken(std::initializer_list<Token::Type> list, bool isIf);
+
+    bool PeekAndCheckIfNotToken(std::initializer_list<Token::Type> list, bool isIf);
+
+    std::vector<std::pair<Token::Type, Variable*> > parseArgumentList(bool& flag, Token::Type endListSymbol);
 
     Program* parseProgram();
 

@@ -44,6 +44,18 @@ public:
 
     Instruction* parseInstruction();
 
+    Instruction* parseDeclaration();
+
+    Instruction* parseFunctionCall();
+
+    Instruction* parseAssignment();
+
+    Instruction* parseLoopFor();
+
+    Instruction* parseReturnInstruction();
+
+    Instruction* parseIfInstruction();
+
     Expression* parseExpression();
 
     Expression* parseExpressionAnd();

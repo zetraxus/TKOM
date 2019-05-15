@@ -14,14 +14,14 @@
 
 class InstructionCallFunction : public Instruction {
     std::string name;
-    std::vector<std::pair<Token::TokenType, Variable*> > arguments;
+    std::vector<std::pair<Token::Type, Variable*> > arguments;
 
 public:
     explicit InstructionCallFunction(const std::string& name);
 
-    void addArgument(Token::TokenType type, Variable* next);
+    void addArgument(Token::Type type, Variable* next);
 
-    void setArguments(const std::vector<std::pair<Token::TokenType, Variable*>>& arguments);
+    void setArguments(const std::vector<std::pair<Token::Type, Variable*>>& arguments);
 };
 
 

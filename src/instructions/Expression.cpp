@@ -6,7 +6,7 @@
 
 Expression::Expression() {}
 
-void Expression::setType(Token::TokenType type) {
+void Expression::setType(Token::Type type) {
     Expression::type = type;
 }
 
@@ -22,7 +22,7 @@ void Expression::setOperation(Operation* operation) {
     Expression::operation = operation;
 }
 
-Token::TokenType Expression::getType() const {
+Token::Type Expression::getType() const {
     return type;
 }
 

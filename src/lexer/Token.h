@@ -11,7 +11,7 @@
 
 class Token {
 public:
-    enum TokenType {
+    enum Type {
         Identifier,
         Value,
         Int, // int
@@ -56,7 +56,7 @@ public:
 
 private:
 
-    TokenType tokenType;
+    Type tokenType;
     std::string value;
     Position* startPosition;
 
@@ -66,11 +66,11 @@ public:
 
     ~Token();
 
-    void setTokenType(TokenType tokenType);
+    void setTokenType(Type tokenType);
 
-    void setTokenTypeAndValue(TokenType tokenType, std::string value);
+    void setTokenTypeAndValue(Type tokenType, std::string value);
 
-    TokenType getTokenType() const;
+    Type getTokenType() const;
 
     const std::string& getValue() const;
 

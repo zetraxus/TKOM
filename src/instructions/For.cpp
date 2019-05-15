@@ -4,8 +4,8 @@
 
 #include "For.h"
 
-For::For(Token::TokenType type, const std::string& itName, const std::string& container) : type(type), itName(itName),
-                                                                                           container(container) {}
+For::For(Token::Type type, const std::string& itName, const std::string& container) : type(type), itName(itName),
+                                                                                      container(container) {}
 
 void For::setBody(Block* body) {
     For::body = body;

@@ -4,7 +4,7 @@
 
 #include "InstructionDeclarationVariable.h"
 
-InstructionDeclarationVariable::InstructionDeclarationVariable(Token::TokenType type,
+InstructionDeclarationVariable::InstructionDeclarationVariable(Token::Type type,
                                                                const std::string& identifier) : type(type),
                                                                                                 identifier(
                                                                                                     identifier) {}

@@ -4,4 +4,4 @@
 
 #include "Value.h"
 
-Value::Value(Token::TokenType type, const std::string& value) : type(type), value(value) {}
+Value::Value(Token::Type type, const std::string& value) : type(type), value(value) {}

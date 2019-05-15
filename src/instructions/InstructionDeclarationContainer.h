@@ -13,15 +13,15 @@
 #include "Variable.h"
 
 class InstructionDeclarationContainer : public Instruction {
-    Token::TokenType type;
+    Token::Type type;
     std::string identifier;
     std::string size;
-    std::vector<std::pair<Token::TokenType, Variable*>> initialValues;
+    std::vector<std::pair<Token::Type, Variable*>> initialValues;
 
 public:
-    InstructionDeclarationContainer(Token::TokenType type, const std::string& identifier, const std::string& size);
+    InstructionDeclarationContainer(Token::Type type, const std::string& identifier, const std::string& size);
 
-    void setInitialValues(const std::vector<std::pair<Token::TokenType, Variable*>>& initialValues);
+    void setInitialValues(const std::vector<std::pair<Token::Type, Variable*>>& initialValues);
 };
 
 

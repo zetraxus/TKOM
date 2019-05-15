@@ -22,7 +22,7 @@ public:
 
     Token* getCurrent() const;
 
-    bool CheckToken (std::initializer_list<Token::Type> list, bool isIf);
+    bool CheckToken(std::initializer_list<Token::Type> list, bool isIf);
 
     bool GetAndCheckToken(std::initializer_list<Token::Type> list, bool isIf);
 

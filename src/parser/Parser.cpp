@@ -4,14 +4,12 @@
 
 #include <iostream>
 #include "Parser.h"
-#include "../instructions/DefinitionOfFunction.h"
-#include "../instructions/InstructionAssignment.h"
 #include "../instructions/InstructionDeclarationContainer.h"
-#include "../instructions/InstructionDeclarationVariable.h"
 #include "../instructions/InstructionCallFunction.h"
 #include "../instructions/For.h"
+#include "../instructions/InstructionDeclarationVariable.h"
+#include "../instructions/InstructionAssignment.h"
 #include "../instructions/InstructionReturnFromFunction.h"
-#include "../instructions/Expression.h"
 #include "../instructions/IfElse.h"
 
 const bool THROW = true;
@@ -22,7 +20,7 @@ Parser::Parser(Scanner* scanner) : scanner(scanner) {}
 Program* Parser::parseProgram() {
     auto* program = new Program();
 
-    while(GetAndCheckIfNotToken({Token::EofSymbol}, NOTTHROW))
+    while (GetAndCheckIfNotToken({Token::EofSymbol}, NOTTHROW))
         program->addFunction(parseFunction());
 
     return program;
@@ -37,24 +35,24 @@ DefinitionOfFunction* Parser::parseFunction() {
     function->setIdentifier(current->getValue());
     GetAndCheckToken({Token::ParenthesesOpen}, THROW);
     bool flag = false;
-    while(GetAndCheckToken({Token::Int, Token::Unit}, NOTTHROW)){
+    while (GetAndCheckToken({Token::Int, Token::Unit}, NOTTHROW)) {
         auto* variable = new Variable();
         Token::Type type = current->getTokenType();
 
-        if(GetAndCheckToken({Token::Identifier}, THROW)){
+        if (GetAndCheckToken({Token::Identifier}, THROW)) {
             variable->setName(current->getValue());
             function->addArgument(type, variable);
         }
-        if(GetAndCheckToken({Token::Comma}, NOTTHROW)){ // dont need to throw exception here
+        if (GetAndCheckToken({Token::Comma}, NOTTHROW)) { // dont need to throw exception here
             flag = true;
             continue;
-        } else if (CheckToken({Token::ParenthesesClose}, THROW)){
+        } else if (CheckToken({Token::ParenthesesClose}, THROW)) {
             flag = false;
             break;
         }
     }
     CheckToken({Token::ParenthesesClose}, THROW);
-    if(!flag){
+    if (!flag) {
         function->setBody(parseBlock());
         return function;
     } else
@@ -64,56 +62,57 @@ DefinitionOfFunction* Parser::parseFunction() {
 Block* Parser::parseBlock() {
     GetAndCheckToken({Token::CurlyBracketOpen}, THROW);
     auto* block = new Block();
-    while(PeekAndCheckIfNotToken({Token::Type::CurlyBracketClose}, NOTTHROW))
+    while (PeekAndCheckIfNotToken({Token::Type::CurlyBracketClose}, NOTTHROW))
         block->addInstruction(parseInstruction());
     current = scanner->getNextToken();
     return block;
 }
 
-Instruction* Parser::parseDeclaration(){
+Instruction* Parser::parseDeclaration() {
     current = scanner->getNextToken();
     Token::Type type = current->getTokenType();
     GetAndCheckToken({Token::Identifier}, THROW);
     std::string name = current->getValue();
-    if(GetAndCheckToken({Token::SquareBracketsOpen}, NOTTHROW)){
+    if (GetAndCheckToken({Token::SquareBracketsOpen}, NOTTHROW)) {
         GetAndCheckToken({Token::Value}, THROW);
         std::string size = current->getValue();
         GetAndCheckToken({Token::SquareBracketsClose}, THROW);
-        if(PeekAndCheckToken({Token::SemiColon}, NOTTHROW)){
+        if (PeekAndCheckToken({Token::SemiColon}, NOTTHROW)) {
             current = scanner->getNextToken();
             return new InstructionDeclarationContainer(type, name, size);
-        } else if(PeekAndCheckToken({Token::CurlyBracketOpen}, THROW)){
+        } else if (PeekAndCheckToken({Token::CurlyBracketOpen}, THROW)) {
             auto* instruction = new InstructionDeclarationContainer(type, name, size);
             bool flag;
-            std::vector<std::pair<Token::Type, Variable*> > argumentList = parseArgumentList(flag, Token::CurlyBracketClose);
+            std::vector<std::pair<Token::Type, Variable*> > argumentList = parseArgumentList(flag,
+                                                                                             Token::CurlyBracketClose);
             instruction->setInitialValues(argumentList);
             CheckToken({Token::CurlyBracketClose}, THROW);
-            if(!flag){
+            if (!flag) {
                 GetAndCheckToken({Token::SemiColon}, THROW);
                 return instruction;
             } else
                 throw std::runtime_error("Unexpected token.");
         }
 
-    } else if(CheckToken({Token::Type::SemiColon}, THROW))
+    } else if (CheckToken({Token::Type::SemiColon}, THROW))
         return new InstructionDeclarationVariable(type, name);
 }
 
-Instruction* Parser::parseFunctionCall(){
+Instruction* Parser::parseFunctionCall() {
     std::string name = current->getValue();
     auto* instruction = new InstructionCallFunction(name);
     bool flag;
     std::vector<std::pair<Token::Type, Variable*> > argumentList = parseArgumentList(flag, Token::ParenthesesClose);
     instruction->setArguments(argumentList);
     CheckToken({Token::ParenthesesClose}, THROW);
-    if(!flag){
+    if (!flag) {
         GetAndCheckToken({Token::SemiColon}, THROW);
         return instruction;
     } else
         throw std::runtime_error("Unexpected token.");
 }
 
-Instruction* Parser::parseAssignment(){
+Instruction* Parser::parseAssignment() {
     auto* variable = parseVariable();
     GetAndCheckToken({Token::Assign}, THROW);
     auto* instruction = new InstructionAssignment(variable, parseOperation());
@@ -149,7 +148,7 @@ Instruction* Parser::parseIfInstruction() {
     auto* expression = parseExpression();
     GetAndCheckToken({Token::ParenthesesClose}, THROW);
     auto* ifBlock = parseBlock();
-    if(PeekAndCheckToken({Token::Else}, NOTTHROW)){
+    if (PeekAndCheckToken({Token::Else}, NOTTHROW)) {
         scanner->getNextToken();
         auto* elseBlock = parseBlock();
         return new IfElse(expression, ifBlock, elseBlock);
@@ -158,19 +157,19 @@ Instruction* Parser::parseIfInstruction() {
 }
 
 Instruction* Parser::parseInstruction() {
-    if(PeekAndCheckToken({Token::Int, Token::Unit}, NOTTHROW)){
+    if (PeekAndCheckToken({Token::Int, Token::Unit}, NOTTHROW)) {
         return parseDeclaration();
-    } else if(PeekAndCheckToken({Token::Identifier}, NOTTHROW)){
+    } else if (PeekAndCheckToken({Token::Identifier}, NOTTHROW)) {
         current = scanner->getNextToken();
-        if(PeekAndCheckToken({Token::ParenthesesOpen}, NOTTHROW))
+        if (PeekAndCheckToken({Token::ParenthesesOpen}, NOTTHROW))
             return parseFunctionCall();
         else
             return parseAssignment();
-    } else if(GetAndCheckToken({Token::For}, NOTTHROW))
+    } else if (GetAndCheckToken({Token::For}, NOTTHROW))
         return parseLoopFor();
-    else if(CheckToken({Token::Return}, NOTTHROW))
+    else if (CheckToken({Token::Return}, NOTTHROW))
         return parseReturnInstruction();
-    else if(CheckToken({Token::If}, THROW))
+    else if (CheckToken({Token::If}, THROW))
         return parseIfInstruction();
 }
 
@@ -293,87 +292,64 @@ Operation* Parser::parseOperationMulDiv() {
 
 Operation* Parser::parseOperationParIdVal() {
     auto* op = new Operation;
-    if(PeekAndCheckToken({Token::ParenthesesOpen}, NOTTHROW)){
+    if (PeekAndCheckToken({Token::ParenthesesOpen}, NOTTHROW)) {
         current = scanner->getNextToken();
         op->set_operator(Operation::Par);
         op->setLeft(parseOperation());
         GetAndCheckToken({Token::ParenthesesClose}, THROW);
-    } else if(PeekAndCheckToken({Token::Identifier, Token::Value}, NOTTHROW)){
+    } else if (PeekAndCheckToken({Token::Identifier, Token::Value}, NOTTHROW)) {
         current = scanner->getNextToken();
         op->setVariable(parseVariable());
     }
 
     return op;
 }
-//Variable* Parser::parseVariable(){
-//    if(CheckToken({Token::Identifier}, NOTTHROW)){
-//        std::string id = current->getValue();
-//        PeekAndCheckToken({Token::SquareBracketsOpen}, THROW);
-//        current = scanner->getNextToken();
-//        GetAndCheckToken({Token::Value}, THROW);
-//        std::string position = current->getValue();
-//        GetAndCheckToken({Token::SquareBracketsClose}, THROW);
-//        return new Variable(id, position);
-//    } else if(CheckToken({Token::Value}, THROW)){
-//        std::string value = current->getValue();
-//        if ((peeked = scanner->peekNextToken())->isUnitType()) {
-//            current = scanner->getNextToken();
-//            return new Variable(new Value(current->getTokenType(), value)); // e.g Value(A, 10)
-//        } else
-//            return new Variable(new Value(current->getTokenType(), value)); // e.g. Value(Value, 10)
-//    }
-//}
+
 Variable* Parser::parseVariable() {
-    if (current->getTokenType() == Token::Type::Identifier) {
+    if (CheckToken({Token::Identifier}, NOTTHROW)) {
         std::string id = current->getValue();
-        if ((peeked = scanner->peekNextToken())->getTokenType() == Token::Type::SquareBracketsOpen) {
+        if (PeekAndCheckToken({Token::SquareBracketsOpen}, NOTTHROW)) {
             current = scanner->getNextToken();
-            if ((current = scanner->getNextToken())->getTokenType() == Token::Type::Value) {
-                std::string position = current->getValue();
-                if ((current = scanner->getNextToken())->getTokenType() == Token::Type::SquareBracketsClose)
-                    return new Variable(id, position);
-                else
-                    throw std::runtime_error("30");
-            } else
-                throw std::runtime_error("31");
+            GetAndCheckToken({Token::Value}, THROW);
+            std::string position = current->getValue();
+            GetAndCheckToken({Token::SquareBracketsClose}, THROW);
+            return new Variable(id, position);
         }
-    } else if (current->getTokenType() == Token::Type::Value) {
+    } else if (CheckToken({Token::Value}, THROW)) {
         std::string value = current->getValue();
         if ((peeked = scanner->peekNextToken())->isUnitType()) {
             current = scanner->getNextToken();
             return new Variable(new Value(current->getTokenType(), value)); // e.g Value(A, 10)
         } else
             return new Variable(new Value(current->getTokenType(), value)); // e.g. Value(Value, 10)
-    } else
-        throw std::runtime_error("32");
+    }
 }
 
 Token* Parser::getCurrent() const {
     return current;
 }
 
-std::vector<std::pair<Token::Type, Variable*> > Parser::parseArgumentList(bool& flag, Token::Type endListSymbol){
+std::vector<std::pair<Token::Type, Variable*> > Parser::parseArgumentList(bool& flag, Token::Type endListSymbol) {
     std::vector<std::pair<Token::Type, Variable*> > argumentList;
     current = scanner->getNextToken();
     flag = false; // last token was ',' and need read more arguments
-    while ((current = scanner->getNextToken())->getTokenType() == Token::Type::Identifier || current->getTokenType() == Token::Type::Value) {
+    while (GetAndCheckToken({Token::Identifier, Token::Value}, NOTTHROW)) {
         argumentList.emplace_back(current->getTokenType(), parseVariable());
-        if ((current = scanner->getNextToken())->getTokenType() == Token::Type::Comma) {
+        if (GetAndCheckToken({Token::Type::Comma}, NOTTHROW)) {
             flag = true;
             continue;
-        } else if (current->getTokenType() == endListSymbol) {
+        } else if (CheckToken({endListSymbol}, THROW)) {
             flag = false;
             break;
-        } else
-            throw std::runtime_error("13");
+        }
     }
 
     return argumentList;
 }
 
 bool Parser::CheckToken(std::initializer_list<Token::Type> list, bool isIf) {
-    for (auto token : list){
-        if(current->getTokenType() == token)
+    for (auto token : list) {
+        if (current->getTokenType() == token)
             return true;
     }
     return isIf ? throw std::runtime_error("Unexpected token.") : false;
@@ -386,16 +362,16 @@ bool Parser::GetAndCheckToken(std::initializer_list<Token::Type> list, bool isIf
 
 bool Parser::PeekAndCheckToken(std::initializer_list<Token::Type> list, bool isIf) {
     peeked = scanner->peekNextToken();
-    for (auto token : list){
-        if(peeked->getTokenType() == token)
+    for (auto token : list) {
+        if (peeked->getTokenType() == token)
             return true;
     }
     return isIf ? throw std::runtime_error("Unexpected token.") : false;
 }
 
 bool Parser::CheckIfNotToken(std::initializer_list<Token::Type> list, bool isIf) {
-    for (auto token : list){
-        if(current->getTokenType() == token)
+    for (auto token : list) {
+        if (current->getTokenType() == token)
             return isIf ? throw std::runtime_error("Unexpected token.") : false;
     }
     return true;
@@ -408,8 +384,8 @@ bool Parser::GetAndCheckIfNotToken(std::initializer_list<Token::Type> list, bool
 
 bool Parser::PeekAndCheckIfNotToken(std::initializer_list<Token::Type> list, bool isIf) {
     peeked = scanner->peekNextToken();
-    for (auto token : list){
-        if(peeked->getTokenType() == token)
+    for (auto token : list) {
+        if (peeked->getTokenType() == token)
             return isIf ? throw std::runtime_error("Unexpected token.") : false;
     }
     return true;

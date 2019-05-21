@@ -1,3 +1,11 @@
+#include <memory>
+
+#include <memory>
+
+#include <memory>
+
+#include <memory>
+
 //
 // Created by adam on 04.05.19.
 //
@@ -79,7 +87,7 @@ std::unique_ptr<Instruction> Parser::parseDeclaration() {
         GetAndCheckToken({Token::SquareBracketsClose}, THROW);
         if (PeekAndCheckToken({Token::SemiColon}, NOTTHROW)) {
             current = scanner->getNextToken();
-            return std::unique_ptr<InstructionDeclarationContainer> (new InstructionDeclarationContainer(type, name, size));
+            return std::make_unique<InstructionDeclarationContainer> (type, name, size);
         } else if (PeekAndCheckToken({Token::CurlyBracketOpen}, THROW)) {
             std::unique_ptr <InstructionDeclarationContainer> instruction (new InstructionDeclarationContainer(type, name, size));
             bool flag;
@@ -96,7 +104,7 @@ std::unique_ptr<Instruction> Parser::parseDeclaration() {
         }
 
     } else if (CheckToken({Token::Type::SemiColon}, THROW))
-        return std::unique_ptr<InstructionDeclarationVariable> (new InstructionDeclarationVariable(type, name));
+        return std::make_unique<InstructionDeclarationVariable> (type, name);
 }
 
 std::unique_ptr<Instruction> Parser::parseFunctionCall() {
@@ -117,7 +125,7 @@ std::unique_ptr<Instruction> Parser::parseFunctionCall() {
 
 std::unique_ptr<Instruction> Parser::parseAssignment() {
     std::unique_ptr <Variable> variable = parseVariable();
-    GetAndCheckToken({Token::Assign}, THROW);
+    GetAndCheckToken({Token::Assign}, THROW); // TODO bug here
     std::unique_ptr <InstructionAssignment> instruction (new InstructionAssignment(std::move(variable), std::move(parseOperation())));
     GetAndCheckToken({Token::SemiColon}, THROW);
     return instruction;
@@ -143,7 +151,7 @@ std::unique_ptr<Instruction> Parser::parseReturnInstruction() {
     current = scanner->getNextToken();
     std::unique_ptr <Variable> variable = parseVariable();
     GetAndCheckToken({Token::SemiColon}, THROW);
-    return std::unique_ptr<InstructionReturnFromFunction> (new InstructionReturnFromFunction(std::move(variable)));
+    return std::make_unique<InstructionReturnFromFunction> (std::move(variable));
 }
 
 std::unique_ptr<Instruction> Parser::parseIfInstruction() {
@@ -154,9 +162,9 @@ std::unique_ptr<Instruction> Parser::parseIfInstruction() {
     if (PeekAndCheckToken({Token::Else}, NOTTHROW)) {
         scanner->getNextToken();
         std::unique_ptr <Block> elseBlock = parseBlock();
-        return std::unique_ptr<IfElse> (new IfElse(std::move(expression), std::move(ifBlock), std::move(elseBlock)));
+        return std::make_unique<IfElse> (std::move(expression), std::move(ifBlock), std::move(elseBlock));
     }
-    return std::unique_ptr<IfElse> (new IfElse(std::move(expression), std::move(ifBlock), nullptr));
+    return std::make_unique<IfElse> (std::move(expression), std::move(ifBlock), nullptr);
 }
 
 std::unique_ptr<Instruction> Parser::parseInstruction() {
@@ -176,7 +184,7 @@ std::unique_ptr<Instruction> Parser::parseInstruction() {
         return parseIfInstruction();
 }
 
-std::unique_ptr<Expression> Parser::parseExpression() { // todo fix it
+std::unique_ptr<Expression> Parser::parseExpression() {
     std::unique_ptr<Expression> exp (new Expression());
 
     exp->addExpression(parseExpressionAnd());
@@ -242,7 +250,7 @@ std::unique_ptr<Expression> Parser::parseExpressionPar() {
     return exp;
 }
 
-std::unique_ptr<Operation> Parser::parseOperation() { // todo continue here
+std::unique_ptr<Operation> Parser::parseOperation() {
     std::unique_ptr<Operation> op (new Operation());
 
     op->addOperation(parseOperationMulDiv());
@@ -294,19 +302,19 @@ std::unique_ptr<Variable> Parser::parseVariable() {
             GetAndCheckToken({Token::Value}, THROW);
             std::string position = current->getValue();
             GetAndCheckToken({Token::SquareBracketsClose}, THROW);
-            return std::unique_ptr<Variable> (new Variable(id, position));
+            return std::make_unique<Variable> (id, position);
         }
     } else if (CheckToken({Token::Value}, THROW)) {
         std::string value = current->getValue();
         if ((peeked = scanner->peekNextToken())->isUnitType()) {
             current = scanner->getNextToken();
-            return std::unique_ptr<Variable> (new Variable(std::unique_ptr<Value>(new Value(current->getTokenType(), value)))); // e.g Value(A, 10)
+            return std::make_unique<Variable> (std::make_unique<Value>(current->getTokenType(), value)); // e.g Value(A, 10)
         } else
-            return std::unique_ptr<Variable> (new Variable(std::unique_ptr<Value>(new Value(current->getTokenType(), value)))); // e.g. Value(Value, 10)
+            return std::make_unique<Variable> (std::make_unique<Value>(current->getTokenType(), value)); // e.g. Value(Value, 10)
     }
 }
 
-Token* Parser::getCurrent() const {
+std::shared_ptr<Token> Parser::getCurrent() const {
     return current;
 }
 

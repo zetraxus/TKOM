@@ -6,11 +6,7 @@
 #include "Token.h"
 
 
-Token::Token(Position* startPosition) : startPosition(startPosition) {}
-
-Token::~Token() {
-    delete startPosition;
-}
+Token::Token(std::shared_ptr<Position> startPosition) : startPosition(startPosition) {}
 
 void Token::setTokenType(Type tokenType) {
     this->tokenType = tokenType;
@@ -29,7 +25,7 @@ const std::string& Token::getValue() const {
     return value;
 }
 
-Position* Token::getStartPosition() const {
+std::shared_ptr<Position> Token::getStartPosition() const {
     return startPosition;
 }
 

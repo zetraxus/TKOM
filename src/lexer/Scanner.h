@@ -16,25 +16,25 @@ class Scanner {
 private:
 
     bool ifLastWasPicked = false;
-    Token* last = nullptr;
+    std::shared_ptr<Token> last = nullptr;
     std::unique_ptr<Source> source;
     std::map<std::string, Token::Type> keyWords;
     bool flag; // set true if last token was Number and number was ended by non-digit symbol (instead of space)
 
-    Token* getAlphaToken(int firstChar);
+    std::shared_ptr<Token> getAlphaToken(int firstChar);
 
-    Token* getNumberToken(int firstChar);
+    std::shared_ptr<Token> getNumberToken(int firstChar);
 
-    Token* getOperatorToken(int firstChar);
+    std::shared_ptr<Token> getOperatorToken(int firstChar);
 
 
 public:
 
     Scanner(std::unique_ptr<Source> source);
 
-    Token* getNextToken();
+    std::shared_ptr<Token> getNextToken();
 
-    Token* peekNextToken();
+    std::shared_ptr<Token> peekNextToken();
 
 };
 

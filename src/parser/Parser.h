@@ -15,13 +15,13 @@
 
 class Parser {
     std::unique_ptr<Scanner> scanner;
-    Token* current;
-    Token* peeked;
+    std::shared_ptr<Token> current;
+    std::shared_ptr<Token> peeked;
 
 public:
     Parser(std::unique_ptr<Scanner> scanner);
 
-    Token* getCurrent() const;
+    std::shared_ptr<Token> getCurrent() const;
 
     bool CheckToken(std::initializer_list<Token::Type> list, bool isIf);
 

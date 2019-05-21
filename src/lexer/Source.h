@@ -9,7 +9,7 @@
 #include <string>
 #include <fstream>
 #include <sstream>
-
+#include <memory>
 class Position {
     unsigned line;
     int position; // position in line
@@ -35,7 +35,7 @@ private:
 
     std::string fileName;
     std::ifstream inputStream;
-    Position* current;
+    std::shared_ptr<Position> current;
     bool mode; // 0 release, 1 tests
     std::stringstream input; // if mode == 0
 
@@ -48,7 +48,7 @@ public:
 
     int peekNextChar();
 
-    Position* getCurrentPosition() const;
+    std::shared_ptr<Position> getCurrentPosition() const;
 
 };
 

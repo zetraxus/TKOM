@@ -58,13 +58,11 @@ private:
 
     Type tokenType;
     std::string value;
-    Position* startPosition;
+    std::shared_ptr<Position> startPosition;
 
 public:
 
-    Token(Position* startPosition);
-
-    ~Token();
+    Token(std::shared_ptr<Position> startPosition);
 
     void setTokenType(Type tokenType);
 
@@ -74,7 +72,7 @@ public:
 
     const std::string& getValue() const;
 
-    Position* getStartPosition() const;
+    std::shared_ptr<Position> getStartPosition() const;
 
     bool isUnitType() const;
 

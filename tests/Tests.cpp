@@ -17,19 +17,19 @@ std::unique_ptr<Parser> config(const std::string& program){
     return std::make_unique<Parser> (std::move(scanner));
 }
 
-BOOST_AUTO_TEST_CASE(SIMPLE_CORRECT_EXAMPLE){
-    std::string program = "int a(){}";
-    auto parser = config(program);
-
-    BOOST_CHECK_NO_THROW(parser->parseProgram());
-}
-
 //BOOST_AUTO_TEST_CASE(SIMPLE_INCORRECT_EXAMPLE){
 //    std::string program = "int a(){a}";
 //    auto parser = config(program);
 //
 //    BOOST_CHECK_THROW(parser->parseProgram(), std::runtime_error);
 //}
+
+BOOST_AUTO_TEST_CASE(SIMPLE_CORRECT_EXAMPLE){
+    std::string program = "int a(){}";
+    auto parser = config(program);
+
+    BOOST_CHECK_NO_THROW(parser->parseProgram());
+}
 
 BOOST_AUTO_TEST_CASE(FUNCTION_WITH_PARAMETER){
     std::string program = "int a(int b){}";

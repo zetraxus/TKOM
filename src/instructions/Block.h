@@ -8,13 +8,14 @@
 
 #include <vector>
 #include "Instruction.h"
+#include <memory>
 
 class Block {
-    std::vector<Instruction*> instructions;
+    std::vector<std::unique_ptr<Instruction>> instructions;
 public:
     Block();
 
-    void addInstruction(Instruction* next);
+    void addInstruction(std::unique_ptr<Instruction> next);
 };
 
 

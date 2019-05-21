@@ -6,26 +6,14 @@
 
 Operation::Operation() {}
 
-void Operation::setLeft(Operation* left) {
-    Operation::left = left;
-}
-
-void Operation::setRight(Operation* right) {
-    Operation::right = right;
+void Operation::addOperation(std::unique_ptr<Operation> next) {
+    operations.emplace_back(std::move(next));
 }
 
 void Operation::set_operator(Operation::Operator _operator) {
     Operation::_operator = _operator;
 }
 
-Operation* Operation::getLeft() const {
-    return left;
-}
-
-Operation* Operation::getRight() const {
-    return right;
-}
-
-void Operation::setVariable(Variable* variable) {
-    Operation::variable = variable;
+void Operation::setVariable(std::unique_ptr<Variable> variable) {
+    Operation::variable = std::move(variable);
 }

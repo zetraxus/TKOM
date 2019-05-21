@@ -9,6 +9,8 @@
 #include <string>
 #include "../lexer/Token.h"
 #include "Variable.h"
+#include <memory>
+#include <vector>
 
 class Operation {
 public:
@@ -20,27 +22,19 @@ public:
         Par, // ()
     };
 
-public:
-    void setVariable(Variable* variable);
-
 private:
-    Operation* left;
-    Operation* right = nullptr;
+    std::vector<std::unique_ptr<Operation>> operations;
     Operator _operator;
-    Variable* variable;
+    std::unique_ptr<Variable> variable;
 
 public:
     Operation();
 
-    void setLeft(Operation* left);
+    void addOperation(std::unique_ptr<Operation> next);
 
-    void setRight(Operation* right);
+    void setVariable(std::unique_ptr<Variable> variable);
 
     void set_operator(Operator _operator);
-
-    Operation* getLeft() const;
-
-    Operation* getRight() const;
 };
 
 

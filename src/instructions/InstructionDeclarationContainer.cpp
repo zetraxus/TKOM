@@ -9,8 +9,8 @@ InstructionDeclarationContainer::InstructionDeclarationContainer(Token::Type typ
                                                                                             identifier(identifier),
                                                                                             size(size) {}
 
-void InstructionDeclarationContainer::setInitialValues(
-    const std::vector<std::pair<Token::Type, Variable*>>& initialValues) {
-    InstructionDeclarationContainer::initialValues = initialValues;
+void InstructionDeclarationContainer::setInitialValues(std::vector<Token::Type>& types, std::vector<std::unique_ptr<Variable>>& variables) {
+    InstructionDeclarationContainer::types = types;
+    InstructionDeclarationContainer::variables = std::move(variables);
 }
 

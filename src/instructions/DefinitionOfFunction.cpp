@@ -12,14 +12,10 @@ void DefinitionOfFunction::setIdentifier(const std::string& identifier) {
     DefinitionOfFunction::identifier = identifier;
 }
 
-void DefinitionOfFunction::addArgument(Token::Type type, Variable* next) {
-    arguments.emplace_back(std::make_pair(type, next));
+void DefinitionOfFunction::addArgument(Token::Type type, std::unique_ptr<Variable> next) {
+    arguments.emplace_back(std::make_pair(type, std::move(next)));
 }
 
-void DefinitionOfFunction::addInstruction(Instruction* next) {
-    instructions.push_back(next);
-}
-
-void DefinitionOfFunction::setBody(Block* body) {
-    DefinitionOfFunction::body = body;
+void DefinitionOfFunction::setBody(std::unique_ptr<Block> body) {
+    DefinitionOfFunction::body = std::move(body);
 }

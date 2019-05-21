@@ -4,14 +4,16 @@
 
 #include "InstructionCallFunction.h"
 
-InstructionCallFunction::InstructionCallFunction(const std::string& name) {
+InstructionCallFunction::InstructionCallFunction(const std::string& name) : name (name){
 
 }
 
-void InstructionCallFunction::addArgument(Token::Type type, Variable* next) {
-    arguments.emplace_back(std::make_pair(type, next));
+void InstructionCallFunction::addArgument(Token::Type type, std::unique_ptr<Variable> next) {
+    types.emplace_back(type);
+    variables.emplace_back(std::move(next));
 }
 
-void InstructionCallFunction::setArguments(const std::vector<std::pair<Token::Type, Variable*>>& arguments) {
-    InstructionCallFunction::arguments = arguments;
+void InstructionCallFunction::setArguments(std::vector<Token::Type> types, std::vector<std::unique_ptr<Variable>> variables) {
+    InstructionCallFunction::types = types;
+    InstructionCallFunction::variables = std::move(variables);
 }

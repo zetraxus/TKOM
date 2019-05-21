@@ -7,14 +7,15 @@
 
 
 #include <vector>
+#include <bits/unique_ptr.h>
 #include "DefinitionOfFunction.h"
 
 class Program {
-    std::vector<DefinitionOfFunction*> functions;
+    std::vector<std::unique_ptr<DefinitionOfFunction>> functions;
 public:
     Program();
 
-    void addFunction(DefinitionOfFunction* next);
+    void addFunction(std::unique_ptr<DefinitionOfFunction> next);
 };
 
 

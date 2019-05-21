@@ -10,12 +10,13 @@
 #include "Block.h"
 
 class IfElse : public Instruction {
-    Expression* expression;
-    Block* blockIf;
-    Block* blockElse;
+    std::unique_ptr <Expression> expression;
+    std::unique_ptr <Block> blockIf;
+    std::unique_ptr <Block> blockElse;
 
 public:
-    IfElse(Expression* expression, Block* blockIf, Block* blockElse);
+    IfElse(std::unique_ptr <Expression> expression, std::unique_ptr <Block> blockIf, std::unique_ptr <Block> blockElse);
+
 };
 
 

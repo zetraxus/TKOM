@@ -8,6 +8,7 @@
 
 #include "../lexer/Token.h"
 #include "Value.h"
+#include <memory>
 
 class Variable {
 public:
@@ -20,12 +21,12 @@ private:
     Type type;
     std::string name; // if type == id
     std::string positionInContainer; // (optional) if type == id
-    Value* value; // if type == val
+    std::unique_ptr <Value> value; // if type == val
 
 public:
     Variable();
 
-    Variable(Value* value);
+    Variable(std::unique_ptr <Value> value);
 
     Variable(const std::string& name);
 

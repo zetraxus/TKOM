@@ -10,30 +10,14 @@ void Expression::setType(Token::Type type) {
     Expression::type = type;
 }
 
-void Expression::setLeft(Expression* left) {
-    Expression::leftExp = left;
-}
-
-void Expression::setRight(Expression* right) {
-    Expression::rightExp = right;
-}
-
-void Expression::setOperation(Operation* operation) {
-    Expression::operation = operation;
+void Expression::setOperation(std::unique_ptr<Operation> operation) {
+    Expression::operation = std::move(operation);
 }
 
 Token::Type Expression::getType() const {
     return type;
 }
 
-Expression* Expression::getLeft() const {
-    return leftExp;
-}
-
-Expression* Expression::getRight() const {
-    return rightExp;
-}
-
-Operation* Expression::getOperation() const {
-    return operation;
+void Expression::addExpression(std::unique_ptr<Expression> next) {
+    expressions.emplace_back(std::move(next));
 }

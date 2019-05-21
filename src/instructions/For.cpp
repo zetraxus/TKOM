@@ -7,6 +7,6 @@
 For::For(Token::Type type, const std::string& itName, const std::string& container) : type(type), itName(itName),
                                                                                       container(container) {}
 
-void For::setBody(Block* body) {
-    For::body = body;
+void For::setBody(std::unique_ptr <Block> body) {
+    For::body = std::move(body);
 }

@@ -17,17 +17,16 @@ const bool NOTTHROW = false;
 
 Parser::Parser(Scanner* scanner) : scanner(scanner) {}
 
-Program* Parser::parseProgram() {
-    auto* program = new Program();
-
+std::unique_ptr<Program> Parser::parseProgram() {
+    std::unique_ptr <Program> program (new Program());
     while (GetAndCheckIfNotToken({Token::EofSymbol}, NOTTHROW))
         program->addFunction(parseFunction());
 
     return program;
 }
 
-DefinitionOfFunction* Parser::parseFunction() {
-    auto* function = new DefinitionOfFunction();
+std::unique_ptr<DefinitionOfFunction> Parser::parseFunction() {
+    std::unique_ptr <DefinitionOfFunction> function (new DefinitionOfFunction());
 
     CheckToken({Token::Int, Token::Unit}, THROW);
     function->setReturnType(current->getTokenType());
@@ -36,12 +35,12 @@ DefinitionOfFunction* Parser::parseFunction() {
     GetAndCheckToken({Token::ParenthesesOpen}, THROW);
     bool flag = false;
     while (GetAndCheckToken({Token::Int, Token::Unit}, NOTTHROW)) {
-        auto* variable = new Variable();
+        std::unique_ptr<Variable> variable (new Variable());
         Token::Type type = current->getTokenType();
 
         if (GetAndCheckToken({Token::Identifier}, THROW)) {
             variable->setName(current->getValue());
-            function->addArgument(type, variable);
+            function->addArgument(type, std::move(variable));
         }
         if (GetAndCheckToken({Token::Comma}, NOTTHROW)) { // dont need to throw exception here
             flag = true;
@@ -59,16 +58,17 @@ DefinitionOfFunction* Parser::parseFunction() {
         throw std::runtime_error("Unexpected token.");
 }
 
-Block* Parser::parseBlock() {
+std::unique_ptr<Block> Parser::parseBlock() {
     GetAndCheckToken({Token::CurlyBracketOpen}, THROW);
-    auto* block = new Block();
+
+    std::unique_ptr <Block> block (new Block());
     while (PeekAndCheckIfNotToken({Token::Type::CurlyBracketClose}, NOTTHROW))
         block->addInstruction(parseInstruction());
     current = scanner->getNextToken();
     return block;
 }
 
-Instruction* Parser::parseDeclaration() {
+std::unique_ptr<Instruction> Parser::parseDeclaration() {
     current = scanner->getNextToken();
     Token::Type type = current->getTokenType();
     GetAndCheckToken({Token::Identifier}, THROW);
@@ -79,13 +79,14 @@ Instruction* Parser::parseDeclaration() {
         GetAndCheckToken({Token::SquareBracketsClose}, THROW);
         if (PeekAndCheckToken({Token::SemiColon}, NOTTHROW)) {
             current = scanner->getNextToken();
-            return new InstructionDeclarationContainer(type, name, size);
+            return std::unique_ptr<InstructionDeclarationContainer> (new InstructionDeclarationContainer(type, name, size));
         } else if (PeekAndCheckToken({Token::CurlyBracketOpen}, THROW)) {
-            auto* instruction = new InstructionDeclarationContainer(type, name, size);
+            std::unique_ptr <InstructionDeclarationContainer> instruction (new InstructionDeclarationContainer(type, name, size));
             bool flag;
-            std::vector<std::pair<Token::Type, Variable*> > argumentList = parseArgumentList(flag,
-                                                                                             Token::CurlyBracketClose);
-            instruction->setInitialValues(argumentList);
+            std::vector<Token::Type> types;
+            std::vector<std::unique_ptr<Variable>> variables;
+            parseArgumentList(types, variables, flag, Token::CurlyBracketClose);
+            instruction->setInitialValues(types, variables);
             CheckToken({Token::CurlyBracketClose}, THROW);
             if (!flag) {
                 GetAndCheckToken({Token::SemiColon}, THROW);
@@ -95,15 +96,17 @@ Instruction* Parser::parseDeclaration() {
         }
 
     } else if (CheckToken({Token::Type::SemiColon}, THROW))
-        return new InstructionDeclarationVariable(type, name);
+        return std::unique_ptr<InstructionDeclarationVariable> (new InstructionDeclarationVariable(type, name));
 }
 
-Instruction* Parser::parseFunctionCall() {
+std::unique_ptr<Instruction> Parser::parseFunctionCall() {
     std::string name = current->getValue();
-    auto* instruction = new InstructionCallFunction(name);
+    std::unique_ptr <InstructionCallFunction> instruction (new InstructionCallFunction(name));
     bool flag;
-    std::vector<std::pair<Token::Type, Variable*> > argumentList = parseArgumentList(flag, Token::ParenthesesClose);
-    instruction->setArguments(argumentList);
+    std::vector<Token::Type> types;
+    std::vector<std::unique_ptr<Variable>> variables;
+    parseArgumentList(types, variables, flag, Token::ParenthesesClose);
+    instruction->setArguments(types, std::move(variables));
     CheckToken({Token::ParenthesesClose}, THROW);
     if (!flag) {
         GetAndCheckToken({Token::SemiColon}, THROW);
@@ -112,15 +115,15 @@ Instruction* Parser::parseFunctionCall() {
         throw std::runtime_error("Unexpected token.");
 }
 
-Instruction* Parser::parseAssignment() {
-    auto* variable = parseVariable();
+std::unique_ptr<Instruction> Parser::parseAssignment() {
+    std::unique_ptr <Variable> variable = parseVariable();
     GetAndCheckToken({Token::Assign}, THROW);
-    auto* instruction = new InstructionAssignment(variable, parseOperation());
+    std::unique_ptr <InstructionAssignment> instruction (new InstructionAssignment(std::move(variable), std::move(parseOperation())));
     GetAndCheckToken({Token::SemiColon}, THROW);
     return instruction;
 }
 
-Instruction* Parser::parseLoopFor() {
+std::unique_ptr<Instruction> Parser::parseLoopFor() {
     GetAndCheckToken({Token::ParenthesesOpen}, THROW);
     GetAndCheckToken({Token::Int, Token::Unit}, THROW);
     Token::Type type = current->getTokenType();
@@ -131,32 +134,32 @@ Instruction* Parser::parseLoopFor() {
     std::string identifier = current->getValue();
     GetAndCheckToken({Token::ParenthesesClose}, THROW);
 
-    auto* instruction = new For(type, name, identifier);
+    std::unique_ptr <For> instruction (new For(type, name, identifier));
     instruction->setBody(parseBlock());
     return instruction;
 }
 
-Instruction* Parser::parseReturnInstruction() {
+std::unique_ptr<Instruction> Parser::parseReturnInstruction() {
     current = scanner->getNextToken();
-    auto* variable = parseVariable();
+    std::unique_ptr <Variable> variable = parseVariable();
     GetAndCheckToken({Token::SemiColon}, THROW);
-    return new InstructionReturnFromFunction(variable);
+    return std::unique_ptr<InstructionReturnFromFunction> (new InstructionReturnFromFunction(std::move(variable)));
 }
 
-Instruction* Parser::parseIfInstruction() {
+std::unique_ptr<Instruction> Parser::parseIfInstruction() {
     GetAndCheckToken({Token::ParenthesesOpen}, THROW);
-    auto* expression = parseExpression();
+    std::unique_ptr <Expression> expression = parseExpression();
     GetAndCheckToken({Token::ParenthesesClose}, THROW);
-    auto* ifBlock = parseBlock();
+    std::unique_ptr <Block> ifBlock = parseBlock();
     if (PeekAndCheckToken({Token::Else}, NOTTHROW)) {
         scanner->getNextToken();
-        auto* elseBlock = parseBlock();
-        return new IfElse(expression, ifBlock, elseBlock);
+        std::unique_ptr <Block> elseBlock = parseBlock();
+        return std::unique_ptr<IfElse> (new IfElse(std::move(expression), std::move(ifBlock), std::move(elseBlock)));
     }
-    return new IfElse(expression, ifBlock, nullptr);
+    return std::unique_ptr<IfElse> (new IfElse(std::move(expression), std::move(ifBlock), nullptr));
 }
 
-Instruction* Parser::parseInstruction() {
+std::unique_ptr<Instruction> Parser::parseInstruction() {
     if (PeekAndCheckToken({Token::Int, Token::Unit}, NOTTHROW)) {
         return parseDeclaration();
     } else if (PeekAndCheckToken({Token::Identifier}, NOTTHROW)) {
@@ -173,80 +176,65 @@ Instruction* Parser::parseInstruction() {
         return parseIfInstruction();
 }
 
-Expression* Parser::parseExpression() {
-    auto* exp = new Expression();
-    Expression* newExp;
+std::unique_ptr<Expression> Parser::parseExpression() { // todo fix it
+    std::unique_ptr<Expression> exp (new Expression());
 
-    exp->setLeft(parseExpressionAnd());
+    exp->addExpression(parseExpressionAnd());
     while (PeekAndCheckToken({Token::LogicalOr}, NOTTHROW)) {
         current = scanner->getNextToken();
         exp->setType(current->getTokenType());
-        exp->setRight(parseExpressionAnd());
-
-        newExp = new Expression;
-        newExp->setLeft(exp);
-        exp = newExp;
+        exp->addExpression(parseExpressionAnd());
     }
-    return exp->getRight() == nullptr ? exp->getLeft() : exp;
+
+    return exp;
 }
 
-Expression* Parser::parseExpressionAnd() {
-    auto* exp = new Expression();
-    Expression* newExp;
+std::unique_ptr<Expression> Parser::parseExpressionAnd() {
+    std::unique_ptr<Expression> exp (new Expression());
 
-    exp->setLeft(parseExpressionEq());
+    exp->addExpression(parseExpressionEq());
     while (PeekAndCheckToken({Token::LogicalAnd}, NOTTHROW)) {
         current = scanner->getNextToken();
         exp->setType(current->getTokenType());
-        exp->setRight(parseExpressionEq());
-
-        newExp = new Expression;
-        newExp->setLeft(exp);
-        exp = newExp;
+        exp->addExpression(parseExpressionEq());
     }
-    return exp->getRight() == nullptr ? exp->getLeft() : exp;
+
+    return exp;
 }
 
-Expression* Parser::parseExpressionEq() {
-    auto* exp = new Expression();
-    Expression* newExp;
+std::unique_ptr<Expression> Parser::parseExpressionEq() {
+    std::unique_ptr<Expression> exp (new Expression());
 
-    exp->setLeft(parseExpressionLessMore());
+    exp->addExpression(parseExpressionLessMore());
     while (PeekAndCheckToken({Token::Equal, Token::NotEqual}, NOTTHROW)) {
         current = scanner->getNextToken();
         exp->setType(current->getTokenType());
-        exp->setRight(parseExpressionLessMore());
-
-        newExp = new Expression;
-        newExp->setLeft(exp);
-        exp = newExp;
+        exp->addExpression(parseExpressionLessMore());
     }
-    return exp->getRight() == nullptr ? exp->getLeft() : exp;
+
+    return exp;
 }
 
-Expression* Parser::parseExpressionLessMore() {
-    auto* exp = new Expression();
-    Expression* newExp;
+std::unique_ptr<Expression> Parser::parseExpressionLessMore() {
+    std::unique_ptr<Expression> exp (new Expression());
 
-    exp->setLeft(parseExpressionPar());
+    exp->addExpression(parseExpressionPar());
     while (PeekAndCheckToken({Token::Less, Token::More, Token::LessEq, Token::MoreEq}, NOTTHROW)) {
         current = scanner->getNextToken();
         exp->setType(current->getTokenType());
-        exp->setRight(parseExpressionPar());
-
-        newExp = new Expression;
-        newExp->setLeft(exp);
-        exp = newExp;
+        exp->addExpression(parseExpressionPar());
     }
-    return exp->getRight() == nullptr ? exp->getLeft() : exp;
+
+    return exp;
 }
 
-Expression* Parser::parseExpressionPar() {
-    auto* exp = new Expression();
+std::unique_ptr<Expression> Parser::parseExpressionPar() {
+    std::unique_ptr<Expression> exp (new Expression());
+
     if (PeekAndCheckToken({Token::ParenthesesOpen}, NOTTHROW)) {
         current = scanner->getNextToken();
         exp->setType(current->getTokenType());
-        exp->setLeft(parseExpression());
+        exp->addExpression(parseExpression());
         GetAndCheckToken({Token::ParenthesesClose}, THROW);
     } else
         exp->setOperation(parseOperation());
@@ -254,48 +242,41 @@ Expression* Parser::parseExpressionPar() {
     return exp;
 }
 
-Operation* Parser::parseOperation() {
-    auto* op = new Operation();
-    Operation* newOp;
+std::unique_ptr<Operation> Parser::parseOperation() { // todo continue here
+    std::unique_ptr<Operation> op (new Operation());
 
-    op->setLeft(parseOperationMulDiv());
+    op->addOperation(parseOperationMulDiv());
     while (PeekAndCheckToken({Token::OpSum, Token::OpSub}, NOTTHROW)) {
         current = scanner->getNextToken();
         current->getTokenType() == Token::Type::OpSum ? op->set_operator(Operation::Sum) : op->set_operator(
             Operation::Sub);
-        op->setRight(parseOperationMulDiv());
-
-        newOp = new Operation;
-        newOp->setLeft(op);
-        op = newOp;
+        op->addOperation(parseOperationMulDiv());
     }
-    return op->getRight() == nullptr ? op->getLeft() : op;
+
+    return op;
 }
 
-Operation* Parser::parseOperationMulDiv() {
-    auto* op = new Operation;
-    Operation* newOp;
+std::unique_ptr<Operation> Parser::parseOperationMulDiv() {
+    std::unique_ptr<Operation> op (new Operation());
 
-    op->setLeft(parseOperationParIdVal());
+    op->addOperation(parseOperationParIdVal());
     while (PeekAndCheckToken({Token::OpMul, Token::OpDiv}, NOTTHROW)) {
         current = scanner->getNextToken();
         current->getTokenType() == Token::Type::OpMul ? op->set_operator(Operation::Mul) : op->set_operator(
             Operation::Div);
-        op->setRight(parseOperationParIdVal());
-
-        newOp = new Operation;
-        newOp->setLeft(op);
-        op = newOp;
+        op->addOperation(parseOperationParIdVal());
     }
-    return op->getRight() == nullptr ? op->getLeft() : op;
+
+    return op;
 }
 
-Operation* Parser::parseOperationParIdVal() {
-    auto* op = new Operation;
+std::unique_ptr<Operation> Parser::parseOperationParIdVal() {
+    std::unique_ptr<Operation> op (new Operation());
+
     if (PeekAndCheckToken({Token::ParenthesesOpen}, NOTTHROW)) {
         current = scanner->getNextToken();
         op->set_operator(Operation::Par);
-        op->setLeft(parseOperation());
+        op->addOperation(parseOperation());
         GetAndCheckToken({Token::ParenthesesClose}, THROW);
     } else if (PeekAndCheckToken({Token::Identifier, Token::Value}, NOTTHROW)) {
         current = scanner->getNextToken();
@@ -305,7 +286,7 @@ Operation* Parser::parseOperationParIdVal() {
     return op;
 }
 
-Variable* Parser::parseVariable() {
+std::unique_ptr<Variable> Parser::parseVariable() {
     if (CheckToken({Token::Identifier}, NOTTHROW)) {
         std::string id = current->getValue();
         if (PeekAndCheckToken({Token::SquareBracketsOpen}, NOTTHROW)) {
@@ -313,15 +294,15 @@ Variable* Parser::parseVariable() {
             GetAndCheckToken({Token::Value}, THROW);
             std::string position = current->getValue();
             GetAndCheckToken({Token::SquareBracketsClose}, THROW);
-            return new Variable(id, position);
+            return std::unique_ptr<Variable> (new Variable(id, position));
         }
     } else if (CheckToken({Token::Value}, THROW)) {
         std::string value = current->getValue();
         if ((peeked = scanner->peekNextToken())->isUnitType()) {
             current = scanner->getNextToken();
-            return new Variable(new Value(current->getTokenType(), value)); // e.g Value(A, 10)
+            return std::unique_ptr<Variable> (new Variable(std::unique_ptr<Value>(new Value(current->getTokenType(), value)))); // e.g Value(A, 10)
         } else
-            return new Variable(new Value(current->getTokenType(), value)); // e.g. Value(Value, 10)
+            return std::unique_ptr<Variable> (new Variable(std::unique_ptr<Value>(new Value(current->getTokenType(), value)))); // e.g. Value(Value, 10)
     }
 }
 
@@ -329,12 +310,13 @@ Token* Parser::getCurrent() const {
     return current;
 }
 
-std::vector<std::pair<Token::Type, Variable*> > Parser::parseArgumentList(bool& flag, Token::Type endListSymbol) {
-    std::vector<std::pair<Token::Type, Variable*> > argumentList;
+void Parser::parseArgumentList(std::vector<Token::Type>& types, std::vector<std::unique_ptr<Variable>>& variables, bool& flag, Token::Type endListSymbol) {
     current = scanner->getNextToken();
     flag = false; // last token was ',' and need read more arguments
     while (GetAndCheckToken({Token::Identifier, Token::Value}, NOTTHROW)) {
-        argumentList.emplace_back(current->getTokenType(), parseVariable());
+        types.emplace_back(current->getTokenType());
+        variables.emplace_back(parseVariable());
+
         if (GetAndCheckToken({Token::Type::Comma}, NOTTHROW)) {
             flag = true;
             continue;
@@ -343,8 +325,6 @@ std::vector<std::pair<Token::Type, Variable*> > Parser::parseArgumentList(bool& 
             break;
         }
     }
-
-    return argumentList;
 }
 
 bool Parser::CheckToken(std::initializer_list<Token::Type> list, bool isIf) {

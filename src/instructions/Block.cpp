@@ -6,6 +6,6 @@
 
 Block::Block() {}
 
-void Block::addInstruction(Instruction* next) {
-    instructions.push_back(next);
+void Block::addInstruction(std::unique_ptr<Instruction> next) {
+    instructions.push_back(std::move(next));
 }

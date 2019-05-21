@@ -6,6 +6,6 @@
 
 Program::Program() {}
 
-void Program::addFunction(DefinitionOfFunction* next) {
-    functions.push_back(next);
+void Program::addFunction(std::unique_ptr<DefinitionOfFunction> next){
+    functions.push_back(std::move(next));
 }

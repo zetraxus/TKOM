@@ -4,5 +4,5 @@
 
 #include "IfElse.h"
 
-IfElse::IfElse(Expression* expression, Block* blockIf, Block* blockElse) : expression(expression), blockIf(blockIf),
-                                                                           blockElse(blockElse) {}
+IfElse::IfElse(std::unique_ptr <Expression> expression, std::unique_ptr <Block> blockIf, std::unique_ptr <Block> blockElse) : expression(std::move(expression)), blockIf(std::move(blockIf)),
+                                                                           blockElse(std::move(blockElse)) {}

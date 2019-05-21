@@ -9,11 +9,12 @@
 #include <string>
 #include "Instruction.h"
 #include "Variable.h"
+#include <memory>
 
 class InstructionReturnFromFunction : public Instruction {
-    Variable* variable;
+    std::unique_ptr <Variable> variable;
 public:
-    InstructionReturnFromFunction(Variable* variable);
+    explicit InstructionReturnFromFunction(std::unique_ptr <Variable> variable);
 };
 
 

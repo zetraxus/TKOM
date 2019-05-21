@@ -14,12 +14,12 @@
 #include "../instructions/Operation.h"
 
 class Parser {
-    Scanner* scanner;
+    std::unique_ptr<Scanner> scanner;
     Token* current;
     Token* peeked;
 
 public:
-    Parser(Scanner* scanner);
+    Parser(std::unique_ptr<Scanner> scanner);
 
     Token* getCurrent() const;
 

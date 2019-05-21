@@ -15,7 +15,7 @@
 const bool THROW = true;
 const bool NOTTHROW = false;
 
-Parser::Parser(Scanner* scanner) : scanner(scanner) {}
+Parser::Parser(std::unique_ptr<Scanner> scanner) : scanner(std::move(scanner)) {}
 
 std::unique_ptr<Program> Parser::parseProgram() {
     std::unique_ptr <Program> program (new Program());

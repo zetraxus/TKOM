@@ -10,13 +10,14 @@
 #include <map>
 #include "Source.h"
 #include "Token.h"
+#include <memory>
 
 class Scanner {
 private:
 
     bool ifLastWasPicked = false;
     Token* last = nullptr;
-    Source* source;
+    std::unique_ptr<Source> source;
     std::map<std::string, Token::Type> keyWords;
     bool flag; // set true if last token was Number and number was ended by non-digit symbol (instead of space)
 
@@ -29,9 +30,7 @@ private:
 
 public:
 
-    Scanner(Source* source);
-
-    ~Scanner();
+    Scanner(std::unique_ptr<Source> source);
 
     Token* getNextToken();
 

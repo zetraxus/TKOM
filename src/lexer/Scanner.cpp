@@ -155,7 +155,7 @@ Token* Scanner::getOperatorToken(int firstChar) {
     return token;
 }
 
-Scanner::Scanner(Source* source) : source(source), flag(false) {
+Scanner::Scanner(std::unique_ptr<Source> source) : source(std::move(source)), flag(false) {
     keyWords.insert(std::make_pair("return", Token::Type::Return));
     keyWords.insert(std::make_pair("if", Token::Type::If));
     keyWords.insert(std::make_pair("else", Token::Type::Else));
@@ -170,8 +170,4 @@ Scanner::Scanner(Source* source) : source(source), flag(false) {
     keyWords.insert(std::make_pair("C", Token::Type::C));
     keyWords.insert(std::make_pair("s", Token::Type::s));
     keyWords.insert(std::make_pair("J", Token::Type::J));
-}
-
-Scanner::~Scanner() {
-    delete source;
 }

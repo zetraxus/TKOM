@@ -8,31 +8,25 @@
 
 #include "../lexer/Token.h"
 #include "Operation.h"
+#include <memory>
+#include <vector>
 
 class Expression {
     Token::Type type;
-    Expression* leftExp;
-    Expression* rightExp = nullptr;
-    Operation* operation;
+
+    std::vector<std::unique_ptr<Expression>> expressions;
+    std::unique_ptr<Operation> operation;
 
 public:
     Expression();
 
     void setType(Token::Type type);
 
-    void setLeft(Expression* left);
-
-    void setRight(Expression* right);
-
     Token::Type getType() const;
 
-    Expression* getLeft() const;
+    void addExpression(std::unique_ptr<Expression> next);
 
-    Expression* getRight() const;
-
-    void setOperation(Operation* operation);
-
-    Operation* getOperation() const;
+    void setOperation(std::unique_ptr<Operation> operation);
 
 };
 

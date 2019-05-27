@@ -11,17 +11,21 @@
 #include "Instruction.h"
 #include "../lexer/Token.h"
 #include "Variable.h"
+#include <memory>
 
 class InstructionDeclarationContainer : public Instruction {
     Token::Type type;
     std::string identifier;
     std::string size;
-    std::vector<std::pair<Token::Type, Variable*>> initialValues;
+    std::vector<Token::Type> types; //initial values
+    std::vector<std::unique_ptr<Variable>> variables; //initial values
 
 public:
     InstructionDeclarationContainer(Token::Type type, const std::string& identifier, const std::string& size);
 
-    void setInitialValues(const std::vector<std::pair<Token::Type, Variable*>>& initialValues);
+    void setInitialValues(std::vector<Token::Type>& types, std::vector<std::unique_ptr<Variable>>& variables);
+
+    void execute() override;
 };
 
 

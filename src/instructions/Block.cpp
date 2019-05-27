@@ -6,6 +6,12 @@
 
 Block::Block() {}
 
-void Block::addInstruction(Instruction* next) {
-    instructions.push_back(next);
+void Block::addInstruction(std::unique_ptr<Instruction> next) {
+    instructions.emplace_back(std::move(next));
+}
+
+void Block::execute() {
+    for (auto& instruction : instructions) {
+        instruction->execute();
+    }
 }

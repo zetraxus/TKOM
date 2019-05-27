@@ -11,17 +11,20 @@
 #include "Instruction.h"
 #include "../lexer/Token.h"
 #include "Variable.h"
+#include <memory>
 
 class InstructionCallFunction : public Instruction {
     std::string name;
-    std::vector<std::pair<Token::Type, Variable*> > arguments;
-
+    std::vector<Token::Type> types;
+    std::vector<std::unique_ptr<Variable>> variables;
 public:
     explicit InstructionCallFunction(const std::string& name);
 
-    void addArgument(Token::Type type, Variable* next);
+    void addArgument(Token::Type type, std::unique_ptr<Variable> next);
 
-    void setArguments(const std::vector<std::pair<Token::Type, Variable*>>& arguments);
+    void setArguments(std::vector<Token::Type> types, std::vector<std::unique_ptr<Variable>> variables);
+
+    void execute() override;
 };
 
 

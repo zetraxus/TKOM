@@ -20,6 +20,7 @@ class Instruction {
 
 public:
     Instruction();
+    virtual void execute() = 0;
 };
 
 

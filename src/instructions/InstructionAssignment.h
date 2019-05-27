@@ -9,14 +9,14 @@
 #include <string>
 #include "Instruction.h"
 #include "Operation.h"
+#include <memory>
 
 class InstructionAssignment : public Instruction {
-    Variable* variable;
-    Operation* operation;
+    std::unique_ptr<Variable> variable;
+    std::unique_ptr<Operation> operation;
 public:
-    InstructionAssignment(Variable* variable, Operation* operation);
-
-    Operation* getOperation() const;
+    InstructionAssignment(std::unique_ptr<Variable> variable, std::unique_ptr<Operation> operation);
+    void execute() override;
 };
 
 

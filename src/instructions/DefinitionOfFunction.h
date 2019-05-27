@@ -11,24 +11,22 @@
 #include "../lexer/Token.h"
 #include "Variable.h"
 #include "Block.h"
+#include <memory>
 
 class DefinitionOfFunction {
     Token::Type returnType;
     std::string identifier;
-    std::vector<std::pair<Token::Type, Variable*> > arguments;
-    std::vector<Instruction*> instructions;
-    Block* body;
+    std::vector<std::pair<Token::Type, std::unique_ptr<Variable>> > arguments;
+    std::unique_ptr <Block> body;
 
 public:
     void setReturnType(Token::Type returnType);
 
     void setIdentifier(const std::string& identifier);
 
-    void setBody(Block* body);
+    void setBody(std::unique_ptr<Block> body);
 
-    void addArgument(Token::Type type, Variable* next);
-
-    void addInstruction(Instruction* next);
+    void addArgument(Token::Type type, std::unique_ptr<Variable> next);
 };
 
 

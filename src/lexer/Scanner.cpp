@@ -1,3 +1,5 @@
+#include <memory>
+
 //
 // Created by adam on 06.04.19.
 //
@@ -7,20 +9,20 @@
 
 const int LineFeed = 10;
 
-Token* Scanner::peekNextToken() {
+std::shared_ptr<Token> Scanner::peekNextToken() {
     last = getNextToken();
     ifLastWasPicked = true;
     return last;
 }
 
-Token* Scanner::getNextToken() {
+std::shared_ptr<Token> Scanner::getNextToken() {
     if (ifLastWasPicked) {
         ifLastWasPicked = false;
         return last;
     }
 
     int nextChar; //code in ASCII
-    Token* nextToken;
+    std::shared_ptr<Token> nextToken;
 
     do
         nextChar = source->getNextChar();
@@ -37,8 +39,8 @@ Token* Scanner::getNextToken() {
     return nextToken;
 }
 
-Token* Scanner::getAlphaToken(int firstChar) {
-    Token* token = new Token(new Position(*(source->getCurrentPosition())));
+std::shared_ptr<Token> Scanner::getAlphaToken(int firstChar) {
+    std::shared_ptr<Token> token (new Token(std::make_shared<Position> (*(source->getCurrentPosition()))));
 
     std::string result;
     result += (char) firstChar;
@@ -62,8 +64,8 @@ Token* Scanner::getAlphaToken(int firstChar) {
     return token;
 }
 
-Token* Scanner::getNumberToken(int firstChar) {
-    Token* token = new Token(new Position(*(source->getCurrentPosition())));
+std::shared_ptr<Token> Scanner::getNumberToken(int firstChar) {
+    std::shared_ptr<Token> token (new Token(std::make_shared<Position> (*(source->getCurrentPosition()))));
 
     std::string result;
     result += (char) firstChar;
@@ -79,8 +81,8 @@ Token* Scanner::getNumberToken(int firstChar) {
     return token;
 }
 
-Token* Scanner::getOperatorToken(int firstChar) {
-    Token* token = new Token(new Position(*(source->getCurrentPosition())));
+std::shared_ptr<Token> Scanner::getOperatorToken(int firstChar) {
+    std::shared_ptr<Token> token (new Token(std::make_shared<Position> (*(source->getCurrentPosition()))));
     std::string result;
     result += (char) firstChar;
 
@@ -155,7 +157,7 @@ Token* Scanner::getOperatorToken(int firstChar) {
     return token;
 }
 
-Scanner::Scanner(Source* source) : source(source), flag(false) {
+Scanner::Scanner(std::unique_ptr<Source> source) : source(std::move(source)), flag(false) {
     keyWords.insert(std::make_pair("return", Token::Type::Return));
     keyWords.insert(std::make_pair("if", Token::Type::If));
     keyWords.insert(std::make_pair("else", Token::Type::Else));
@@ -170,8 +172,4 @@ Scanner::Scanner(Source* source) : source(source), flag(false) {
     keyWords.insert(std::make_pair("C", Token::Type::C));
     keyWords.insert(std::make_pair("s", Token::Type::s));
     keyWords.insert(std::make_pair("J", Token::Type::J));
-}
-
-Scanner::~Scanner() {
-    delete source;
 }

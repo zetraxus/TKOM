@@ -8,3 +8,7 @@ InstructionDeclarationVariable::InstructionDeclarationVariable(Token::Type type,
                                                                const std::string& identifier) : type(type),
                                                                                                 identifier(
                                                                                                     identifier) {}
+
+void InstructionDeclarationVariable::execute() {
+
+}

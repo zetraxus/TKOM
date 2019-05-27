@@ -6,6 +6,7 @@
 #define TKOM_PARSER_H
 
 
+#include <memory>
 #include "../lexer/Scanner.h"
 #include "../instructions/DefinitionOfFunction.h"
 #include "../instructions/Program.h"
@@ -13,14 +14,14 @@
 #include "../instructions/Operation.h"
 
 class Parser {
-    Scanner* scanner;
-    Token* current;
-    Token* peeked;
+    std::unique_ptr<Scanner> scanner;
+    std::shared_ptr<Token> current;
+    std::shared_ptr<Token> peeked;
 
 public:
-    Parser(Scanner* scanner);
+    Parser(std::unique_ptr<Scanner> scanner);
 
-    Token* getCurrent() const;
+    std::shared_ptr<Token> getCurrent() const;
 
     bool CheckToken(std::initializer_list<Token::Type> list, bool isIf);
 
@@ -34,45 +35,45 @@ public:
 
     bool PeekAndCheckIfNotToken(std::initializer_list<Token::Type> list, bool isIf);
 
-    std::vector<std::pair<Token::Type, Variable*> > parseArgumentList(bool& flag, Token::Type endListSymbol);
+    void parseArgumentList(std::vector<Token::Type>& types, std::vector<std::unique_ptr<Variable>>& variables, bool& flag, Token::Type endListSymbol);
 
-    Program* parseProgram();
+    std::unique_ptr <Program> parseProgram();
 
-    DefinitionOfFunction* parseFunction();
+    std::unique_ptr <DefinitionOfFunction> parseFunction();
 
-    Block* parseBlock();
+    std::unique_ptr <Block> parseBlock();
 
-    Instruction* parseInstruction();
+    std::unique_ptr <Instruction> parseInstruction();
 
-    Instruction* parseDeclaration();
+    std::unique_ptr <Instruction> parseDeclaration();
 
-    Instruction* parseFunctionCall();
+    std::unique_ptr <Instruction> parseFunctionCall();
 
-    Instruction* parseAssignment();
+    std::unique_ptr <Instruction> parseAssignment();
 
-    Instruction* parseLoopFor();
+    std::unique_ptr <Instruction> parseLoopFor();
 
-    Instruction* parseReturnInstruction();
+    std::unique_ptr <Instruction> parseReturnInstruction();
 
-    Instruction* parseIfInstruction();
+    std::unique_ptr <Instruction> parseIfInstruction();
 
-    Expression* parseExpression();
+    std::unique_ptr <Expression> parseExpression();
 
-    Expression* parseExpressionAnd();
+    std::unique_ptr <Expression> parseExpressionAnd();
 
-    Expression* parseExpressionEq();
+    std::unique_ptr <Expression> parseExpressionEq();
 
-    Expression* parseExpressionLessMore();
+    std::unique_ptr <Expression> parseExpressionLessMore();
 
-    Expression* parseExpressionPar();
+    std::unique_ptr <Expression> parseExpressionPar();
 
-    Operation* parseOperation();
+    std::unique_ptr <Operation> parseOperation();
 
-    Operation* parseOperationMulDiv();
+    std::unique_ptr <Operation> parseOperationMulDiv();
 
-    Operation* parseOperationParIdVal();
+    std::unique_ptr <Operation> parseOperationParIdVal();
 
-    Variable* parseVariable();
+    std::unique_ptr <Variable> parseVariable();
 };
 
 

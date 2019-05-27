@@ -4,6 +4,10 @@
 
 #include "InstructionReturnFromFunction.h"
 
-InstructionReturnFromFunction::InstructionReturnFromFunction(Variable* variable) : variable(variable) {
+InstructionReturnFromFunction::InstructionReturnFromFunction(std::unique_ptr<Variable> variable) : variable(std::move(variable)){
+
+}
+
+void InstructionReturnFromFunction::execute() {
 
 }

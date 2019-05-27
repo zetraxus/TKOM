@@ -6,6 +6,7 @@
 #define TKOM_VALUE_H
 
 
+#include <iostream>
 #include "../lexer/Token.h"
 
 class Value {

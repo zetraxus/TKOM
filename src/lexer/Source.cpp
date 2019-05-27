@@ -1,3 +1,5 @@
+#include <memory>
+
 //
 // Created by adam on 06.04.19.
 //
@@ -10,12 +12,12 @@ const int LineFeed = 10; // \n in ASCII
 Source::Source(const std::string& fileNameOrInput, bool mode) : mode(mode) {
     if (mode == 0) { // release
         fileName = fileNameOrInput;
-        current = new Position();
+        current = std::make_shared<Position>();
         inputStream.open(fileName.c_str());
         if (!inputStream)
             throw std::runtime_error("File not found.");
     } else {
-        current = new Position();
+        current = std::make_shared<Position>();
         input << fileNameOrInput;
     }
 }
@@ -33,7 +35,7 @@ Source::~Source() {
         inputStream.close();
 }
 
-Position* Source::getCurrentPosition() const {
+std::shared_ptr<Position> Source::getCurrentPosition() const {
     return current;
 }
 

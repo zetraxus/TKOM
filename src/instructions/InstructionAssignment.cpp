@@ -5,9 +5,10 @@
 #include "Operation.h"
 #include "InstructionAssignment.h"
 
-InstructionAssignment::InstructionAssignment(Variable* variable, Operation* operation) : variable(variable),
-                                                                                         operation(operation) {}
+InstructionAssignment::InstructionAssignment(std::unique_ptr<Variable> variable, std::unique_ptr<Operation> operation) : variable(std::move(variable)),
+                                                                                         operation(std::move(operation)) {}
 
-Operation* InstructionAssignment::getOperation() const {
-    return operation;
+void InstructionAssignment::execute() {
+
 }
+

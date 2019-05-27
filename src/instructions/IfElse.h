@@ -17,6 +17,7 @@ class IfElse : public Instruction {
 public:
     IfElse(std::unique_ptr <Expression> expression, std::unique_ptr <Block> blockIf, std::unique_ptr <Block> blockElse);
 
+    void execute() override;
 };
 
 

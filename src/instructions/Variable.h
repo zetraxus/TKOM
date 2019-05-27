@@ -9,6 +9,7 @@
 #include "../lexer/Token.h"
 #include "Value.h"
 #include <memory>
+#include <experimental/optional>
 
 class Variable {
 public:
@@ -22,6 +23,7 @@ private:
     std::string name; // if type == id
     std::string positionInContainer; // (optional) if type == id
     std::unique_ptr <Value> value; // if type == val
+//    std::experimental::optional<std::unique_ptr<Value>> value;
 
 public:
     Variable();

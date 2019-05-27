@@ -27,6 +27,7 @@ Parser::Parser(std::unique_ptr<Scanner> scanner) : scanner(std::move(scanner)) {
 
 std::unique_ptr<Program> Parser::parseProgram() {
     std::unique_ptr <Program> program (new Program());
+
     while (GetAndCheckIfNotToken({Token::EofSymbol}, NOTTHROW))
         program->addFunction(parseFunction());
 
@@ -125,7 +126,7 @@ std::unique_ptr<Instruction> Parser::parseFunctionCall() {
 
 std::unique_ptr<Instruction> Parser::parseAssignment() {
     std::unique_ptr <Variable> variable = parseVariable();
-    GetAndCheckToken({Token::Assign}, THROW); // TODO bug here
+    GetAndCheckToken({Token::Assign}, THROW);
     std::unique_ptr <InstructionAssignment> instruction (new InstructionAssignment(std::move(variable), std::move(parseOperation())));
     GetAndCheckToken({Token::SemiColon}, THROW);
     return instruction;
@@ -303,7 +304,8 @@ std::unique_ptr<Variable> Parser::parseVariable() {
             std::string position = current->getValue();
             GetAndCheckToken({Token::SquareBracketsClose}, THROW);
             return std::make_unique<Variable> (id, position);
-        }
+        } else
+            return std::make_unique<Variable> (id, current->getValue()); // todo check it
     } else if (CheckToken({Token::Value}, THROW)) {
         std::string value = current->getValue();
         if ((peeked = scanner->peekNextToken())->isUnitType()) {

@@ -14,3 +14,7 @@ void InstructionDeclarationContainer::setInitialValues(std::vector<Token::Type>&
     InstructionDeclarationContainer::variables = std::move(variables);
 }
 
+void InstructionDeclarationContainer::execute() {
+
+}
+

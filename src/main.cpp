@@ -2,6 +2,7 @@
 #include "lexer/Source.h"
 #include "lexer/Scanner.h"
 #include "parser/Parser.h"
+#include "interpreter/SymbolMap.h"
 #include <memory>
 
 int main(int argc, char** argv) {
@@ -30,6 +31,5 @@ int main(int argc, char** argv) {
                   << parser->getCurrent()->getStartPosition()->getPosition() << std::endl;
         return -1;
     }
-
     return 0;
 }

@@ -20,6 +20,8 @@ public:
     For(Token::Type type, const std::string& itName, const std::string& container);
 
     void setBody(std::unique_ptr <Block> body);
+
+    void execute() override;
 };
 
 

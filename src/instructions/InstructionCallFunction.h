@@ -23,6 +23,8 @@ public:
     void addArgument(Token::Type type, std::unique_ptr<Variable> next);
 
     void setArguments(std::vector<Token::Type> types, std::vector<std::unique_ptr<Variable>> variables);
+
+    void execute() override;
 };
 
 

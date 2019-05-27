@@ -62,7 +62,7 @@ private:
 
 public:
 
-    Token(std::shared_ptr<Position> startPosition);
+    explicit Token(std::shared_ptr<Position> startPosition);
 
     void setTokenType(Type tokenType);
 

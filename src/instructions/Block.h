@@ -16,6 +16,8 @@ public:
     Block();
 
     void addInstruction(std::unique_ptr<Instruction> next);
+
+    void execute();
 };
 
 

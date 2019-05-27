@@ -17,3 +17,7 @@ void InstructionCallFunction::setArguments(std::vector<Token::Type> types, std::
     InstructionCallFunction::types = types;
     InstructionCallFunction::variables = std::move(variables);
 }
+
+void InstructionCallFunction::execute() {
+
+}

@@ -15,6 +15,8 @@ class InstructionReturnFromFunction : public Instruction {
     std::unique_ptr <Variable> variable;
 public:
     explicit InstructionReturnFromFunction(std::unique_ptr <Variable> variable);
+
+    void execute() override;
 };
 
 

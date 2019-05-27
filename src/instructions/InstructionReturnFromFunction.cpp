@@ -7,3 +7,7 @@
 InstructionReturnFromFunction::InstructionReturnFromFunction(std::unique_ptr<Variable> variable) : variable(std::move(variable)){
 
 }
+
+void InstructionReturnFromFunction::execute() {
+
+}

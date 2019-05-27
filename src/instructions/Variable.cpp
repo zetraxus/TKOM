@@ -15,7 +15,9 @@ void Variable::setPositionInContainer(const std::string& positionInContainer) {
 }
 
 Variable::Variable(const std::string& name, const std::string& positionInContainer) : name(name), positionInContainer(
-    positionInContainer), type(Type::Id) {}
+    positionInContainer), type(Type::Id) {
+    value = std::make_unique<Value> (Token::BadType, "");
+}
 
 Variable::Variable(std::unique_ptr <Value> value) : value(std::move(value)), type(Type::Val) {}
 

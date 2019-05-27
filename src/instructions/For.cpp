@@ -10,3 +10,7 @@ For::For(Token::Type type, const std::string& itName, const std::string& contain
 void For::setBody(std::unique_ptr <Block> body) {
     For::body = std::move(body);
 }
+
+void For::execute() {
+
+}

@@ -8,6 +8,33 @@
 #include "../src/lexer/Scanner.h"
 #include "../src/lexer/Source.h"
 #include "../src/parser/Parser.h"
+#include "../src/interpreter/SymbolMap.h"
+
+BOOST_AUTO_TEST_SUITE(INTERPRETER)
+
+BOOST_AUTO_TEST_CASE(SYMBOLMAP_TEST){
+    auto map = std::make_unique <SymbolMap>();
+    auto a = std::make_unique<Val> (Token::Int, 10);
+    auto b = std::make_unique<Val> (Token::Unit, 20, Token::A);
+    auto c = std::make_unique<Val> (Token::Unit, 25, Token::W);
+    auto newc = std::make_unique<Val> (Token::Unit, 30, Token::W);
+
+    map->insert("a", std::move(a));
+    map->insert("bb", std::move(b));
+    map->insert("ccc", std::move(c));
+
+    auto _a = map->find("a");
+    auto _b = map->find("bb");
+    auto _c = map->find("ccc");
+    auto result = map->replace("ccc", std::move(newc));
+
+    BOOST_CHECK_EQUAL((map->find("ccc"))->getValues()[0], 30);
+    BOOST_CHECK_EQUAL(result->getValues()[0], 25);
+}
+
+BOOST_AUTO_TEST_SUITE_END()
+
+BOOST_AUTO_TEST_SUITE(PARSER)
 
 std::unique_ptr<Parser> config(const std::string& program){
     std::stringstream input(program);
@@ -17,12 +44,12 @@ std::unique_ptr<Parser> config(const std::string& program){
     return std::make_unique<Parser> (std::move(scanner));
 }
 
-//BOOST_AUTO_TEST_CASE(SIMPLE_INCORRECT_EXAMPLE){
-//    std::string program = "int a(){a}";
-//    auto parser = config(program);
-//
-//    BOOST_CHECK_THROW(parser->parseProgram(), std::runtime_error);
-//}
+BOOST_AUTO_TEST_CASE(SIMPLE_INCORRECT_EXAMPLE){
+    std::string program = "int a(){a}";
+    auto parser = config(program);
+
+    BOOST_CHECK_THROW(parser->parseProgram(), std::runtime_error);
+}
 
 BOOST_AUTO_TEST_CASE(SIMPLE_CORRECT_EXAMPLE){
     std::string program = "int a(){}";
@@ -305,3 +332,5 @@ BOOST_AUTO_TEST_CASE(FOOR_LOOP_INT){
 
     BOOST_CHECK_NO_THROW(parser->parseProgram());
 }
+
+BOOST_AUTO_TEST_SUITE_END()

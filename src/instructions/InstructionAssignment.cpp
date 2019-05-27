@@ -8,3 +8,7 @@
 InstructionAssignment::InstructionAssignment(std::unique_ptr<Variable> variable, std::unique_ptr<Operation> operation) : variable(std::move(variable)),
                                                                                          operation(std::move(operation)) {}
 
+void InstructionAssignment::execute() {
+
+}
+

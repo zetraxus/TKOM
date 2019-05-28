@@ -60,15 +60,13 @@ public:
 
     std::unique_ptr <Instruction> parseIfInstruction();
 
-    std::unique_ptr <Expression> parseExpression();
+    std::unique_ptr <Operation> parseExpression();
 
-    std::unique_ptr <Expression> parseExpressionAnd();
+    std::unique_ptr <Operation> parseExpressionAnd();
 
-    std::unique_ptr <Expression> parseExpressionEq();
+    std::unique_ptr <Operation> parseExpressionEq();
 
-    std::unique_ptr <Expression> parseExpressionLessMore();
-
-    std::unique_ptr <Expression> parseExpressionPar();
+    std::unique_ptr <Operation> parseExpressionLessMore();
 
     std::unique_ptr <Operation> parseOperation();
 

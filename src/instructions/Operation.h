@@ -20,6 +20,14 @@ public:
         Mul, // *
         Div, // /
         Par, // ()
+        LogMul, // &&
+        LogSum, // ||
+        L, // <
+        LE, // <=
+        M, // >
+        ME, // >=
+        E, // ==
+        NE, // !=
     };
 
 private:

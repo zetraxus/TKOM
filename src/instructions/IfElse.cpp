@@ -4,7 +4,7 @@
 
 #include "IfElse.h"
 
-IfElse::IfElse(std::unique_ptr <Expression> expression, std::unique_ptr <Block> blockIf, std::unique_ptr <Block> blockElse) : expression(std::move(expression)), blockIf(std::move(blockIf)),
+IfElse::IfElse(std::unique_ptr <Operation> expression, std::unique_ptr <Block> blockIf, std::unique_ptr <Block> blockElse) : expression(std::move(expression)), blockIf(std::move(blockIf)),
                                                                            blockElse(std::move(blockElse)) {}
 
 void IfElse::execute(SymbolMap& symbols) {

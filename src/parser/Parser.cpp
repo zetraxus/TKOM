@@ -157,7 +157,7 @@ std::unique_ptr<Instruction> Parser::parseReturnInstruction() {
 
 std::unique_ptr<Instruction> Parser::parseIfInstruction() {
     GetAndCheckToken({Token::ParenthesesOpen}, THROW);
-    std::unique_ptr <Expression> expression = parseExpression();
+    std::unique_ptr <Operation> expression = parseExpression();
     GetAndCheckToken({Token::ParenthesesClose}, THROW);
     std::unique_ptr <Block> ifBlock = parseBlock();
     if (PeekAndCheckToken({Token::Else}, NOTTHROW)) {
@@ -185,74 +185,64 @@ std::unique_ptr<Instruction> Parser::parseInstruction() {
         return parseIfInstruction();
 }
 
-std::unique_ptr<Expression> Parser::parseExpression() {
-    std::unique_ptr<Expression> exp (new Expression());
+std::unique_ptr<Operation> Parser::parseExpression() {
+    std::unique_ptr<Operation> op (new Operation());
 
-    exp->addExpression(parseExpressionAnd());
+    op->addOperation(parseExpressionAnd());
     while (PeekAndCheckToken({Token::LogicalOr}, NOTTHROW)) {
         current = scanner->getNextToken();
-        exp->setType(current->getTokenType());
-        exp->addExpression(parseExpressionAnd());
+        op->set_operator(Operation::LogSum);
+        op->addOperation(parseExpressionAnd());
     }
 
-    return exp;
+    return op;
 }
 
-std::unique_ptr<Expression> Parser::parseExpressionAnd() {
-    std::unique_ptr<Expression> exp (new Expression());
+std::unique_ptr<Operation> Parser::parseExpressionAnd() {
+    std::unique_ptr<Operation> op (new Operation());
 
-    exp->addExpression(parseExpressionEq());
+    op->addOperation(parseExpressionEq());
     while (PeekAndCheckToken({Token::LogicalAnd}, NOTTHROW)) {
         current = scanner->getNextToken();
-        exp->setType(current->getTokenType());
-        exp->addExpression(parseExpressionEq());
+        op->set_operator(Operation::LogMul);
+        op->addOperation(parseExpressionEq());
     }
 
-    return exp;
+    return op;
 }
 
-std::unique_ptr<Expression> Parser::parseExpressionEq() {
-    std::unique_ptr<Expression> exp (new Expression());
+std::unique_ptr<Operation> Parser::parseExpressionEq() {
+    std::unique_ptr<Operation> op (new Operation());
 
-    exp->addExpression(parseExpressionLessMore());
-    while (PeekAndCheckToken({Token::Equal, Token::NotEqual}, NOTTHROW)) {
+    op->addOperation(parseExpressionLessMore());
+    if (PeekAndCheckToken({Token::Equal, Token::NotEqual}, NOTTHROW)) {
         current = scanner->getNextToken();
-        exp->setType(current->getTokenType());
-        exp->addExpression(parseExpressionLessMore());
+        current->getTokenType() == Token::Type::Equal ? op->set_operator(Operation::E) : op->set_operator(Operation::NE);
+        op->addOperation(parseExpressionLessMore());
     }
 
-    return exp;
+    return op;
 }
 
-std::unique_ptr<Expression> Parser::parseExpressionLessMore() {
-    std::unique_ptr<Expression> exp (new Expression());
+std::unique_ptr<Operation> Parser::parseExpressionLessMore() {
+    std::unique_ptr<Operation> op (new Operation());
 
-    exp->addExpression(parseExpressionPar());
-    while (PeekAndCheckToken({Token::Less, Token::More, Token::LessEq, Token::MoreEq}, NOTTHROW)) {
+    op->addOperation(parseOperation());
+    if (PeekAndCheckToken({Token::Less, Token::More, Token::LessEq, Token::MoreEq}, NOTTHROW)) {
         current = scanner->getNextToken();
-        exp->setType(current->getTokenType());
-        exp->addExpression(parseExpressionPar());
+        if(current->getTokenType() == Token::Less)
+            op->set_operator(Operation::L);
+        else if(current->getTokenType() == Token::LessEq)
+            op->set_operator(Operation::LE);
+        else if(current->getTokenType() == Token::More)
+            op->set_operator(Operation::M);
+        else
+            op->set_operator(Operation::ME);
+        op->addOperation(parseOperation());
     }
 
-    return exp;
+    return op;
 }
-
-std::unique_ptr<Expression> Parser::parseExpressionPar() {
-    std::unique_ptr<Expression> exp (new Expression());
-
-    if (PeekAndCheckToken({Token::ParenthesesOpen}, NOTTHROW)) {
-        current = scanner->getNextToken();
-        exp->setType(current->getTokenType());
-        exp->addExpression(parseExpression());
-        GetAndCheckToken({Token::ParenthesesClose}, THROW);
-    } else
-        exp->setOperation(parseOperation());
-
-    return exp;
-}
-
-
-
 
 std::unique_ptr<Operation> Parser::parseOperation() {
     std::unique_ptr<Operation> op (new Operation());
@@ -286,7 +276,7 @@ std::unique_ptr<Operation> Parser::parseOperationParIdVal(bool flag) {
     if (PeekAndCheckToken({Token::ParenthesesOpen}, NOTTHROW)) {
         current = scanner->getNextToken();
         op->set_operator(Operation::Par);
-        op->addOperation(parseOperation());
+        op->addOperation(parseExpression());
         GetAndCheckToken({Token::ParenthesesClose}, THROW);
     } else if (PeekAndCheckToken({Token::Identifier, Token::Value}, NOTTHROW)) {
         current = scanner->getNextToken();

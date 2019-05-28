@@ -16,6 +16,8 @@ public:
     Program();
 
     void addFunction(std::unique_ptr<DefinitionOfFunction> next);
+
+    DefinitionOfFunction* getMain();
 };
 
 

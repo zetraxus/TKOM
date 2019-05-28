@@ -12,7 +12,7 @@
 
 BOOST_AUTO_TEST_SUITE(INTERPRETER)
 
-BOOST_AUTO_TEST_CASE(SYMBOLMAP_TEST){
+BOOST_AUTO_TEST_CASE(SYMBOLMAP_TEST_INSERT_AND_REPLACE){
     auto map = std::make_unique <SymbolMap>();
     auto a = std::make_unique<Val> (Token::Int, 10);
     auto b = std::make_unique<Val> (Token::Unit, 20, Token::A);
@@ -30,6 +30,22 @@ BOOST_AUTO_TEST_CASE(SYMBOLMAP_TEST){
 
     BOOST_CHECK_EQUAL((map->find("ccc"))->getValues()[0], 30);
     BOOST_CHECK_EQUAL(result->getValues()[0], 25);
+    BOOST_CHECK_EQUAL(map->getSize(), 3);
+}
+
+BOOST_AUTO_TEST_CASE(SYMBOLMAP_TEST_REMOVE) {
+    auto map = std::make_unique<SymbolMap>();
+    auto a = std::make_unique<Val>(Token::Int, 10);
+    auto b = std::make_unique<Val>(Token::Unit, 20, Token::A);
+
+    map->insert("a", std::move(a));
+    map->insert("bb", std::move(b));
+
+    BOOST_CHECK_EQUAL(map->getSize(), 2);
+    map->remove("a");
+    BOOST_CHECK_EQUAL(map->getSize(), 1);
+    map->remove("uknown");
+    BOOST_CHECK_EQUAL(map->getSize(), 1);
 }
 
 BOOST_AUTO_TEST_SUITE_END()

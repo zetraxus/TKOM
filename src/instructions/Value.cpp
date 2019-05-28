@@ -5,3 +5,7 @@
 #include "Value.h"
 
 Value::Value(Token::Type type, const std::string& value) : type(type), value(value) {}
+
+std::string Value::getValue() const {
+    return value;
+}

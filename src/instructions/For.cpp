@@ -11,6 +11,6 @@ void For::setBody(std::unique_ptr <Block> body) {
     For::body = std::move(body);
 }
 
-void For::execute() {
+void For::execute(SymbolMap& symbols) {
 
 }

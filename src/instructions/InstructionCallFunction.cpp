@@ -18,6 +18,6 @@ void InstructionCallFunction::setArguments(std::vector<Token::Type> types, std::
     InstructionCallFunction::variables = std::move(variables);
 }
 
-void InstructionCallFunction::execute() {
+void InstructionCallFunction::execute(SymbolMap& symbols) {
 
 }

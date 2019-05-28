@@ -10,14 +10,14 @@
 #include "Block.h"
 
 class IfElse : public Instruction {
-    std::unique_ptr <Expression> expression;
+    std::unique_ptr <Operation> expression;
     std::unique_ptr <Block> blockIf;
     std::unique_ptr <Block> blockElse;
 
 public:
-    IfElse(std::unique_ptr <Expression> expression, std::unique_ptr <Block> blockIf, std::unique_ptr <Block> blockElse);
+    IfElse(std::unique_ptr <Operation> expression, std::unique_ptr <Block> blockIf, std::unique_ptr <Block> blockElse);
 
-    void execute() override;
+    void execute(SymbolMap& symbols) override;
 };
 
 

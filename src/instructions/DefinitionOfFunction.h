@@ -27,6 +27,10 @@ public:
     void setBody(std::unique_ptr<Block> body);
 
     void addArgument(Token::Type type, std::unique_ptr<Variable> next);
+
+    const std::string& getIdentifier() const;
+
+    Block* getBlock();
 };
 
 

@@ -24,7 +24,7 @@ public:
 
     void setArguments(std::vector<Token::Type> types, std::vector<std::unique_ptr<Variable>> variables);
 
-    void execute() override;
+    void execute(SymbolMap& symbols) override;
 };
 
 

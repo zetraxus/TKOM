@@ -16,7 +16,7 @@ class InstructionReturnFromFunction : public Instruction {
 public:
     explicit InstructionReturnFromFunction(std::unique_ptr <Variable> variable);
 
-    void execute() override;
+    void execute(SymbolMap& symbols) override;
 };
 
 

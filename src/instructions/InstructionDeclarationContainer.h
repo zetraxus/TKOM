@@ -25,7 +25,9 @@ public:
 
     void setInitialValues(std::vector<Token::Type>& types, std::vector<std::unique_ptr<Variable>>& variables);
 
-    void execute() override;
+    void execute(SymbolMap& symbols) override;
+
+    const std::string& getIdentifier() const;
 };
 
 

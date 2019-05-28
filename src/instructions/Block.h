@@ -8,6 +8,7 @@
 
 #include <vector>
 #include "Instruction.h"
+#include "../interpreter/SymbolMap.h"
 #include <memory>
 
 class Block {
@@ -17,7 +18,7 @@ public:
 
     void addInstruction(std::unique_ptr<Instruction> next);
 
-    void execute();
+    void execute(SymbolMap& symbols);
 };
 
 

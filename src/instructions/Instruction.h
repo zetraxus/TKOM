@@ -6,6 +6,8 @@
 #define TKOM_INSTRUCTION_H
 
 
+#include "../interpreter/SymbolMap.h"
+
 class Instruction {
     enum InstructionType {
         DeclarationVariable,
@@ -20,7 +22,7 @@ class Instruction {
 
 public:
     Instruction();
-    virtual void execute() = 0;
+    virtual void execute(SymbolMap& symbols) = 0;
 };
 
 

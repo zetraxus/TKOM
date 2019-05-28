@@ -8,8 +8,6 @@
 SymbolMap::SymbolMap() {}
 
 void SymbolMap::insert(std::string name, std::unique_ptr<Val> value) {
-    std::cout << "dodano " << std::endl;
-    value->print();
     symbols.insert(std::make_pair(std::move(name), std::move(value)));
 }
 

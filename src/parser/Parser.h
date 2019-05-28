@@ -72,9 +72,9 @@ public:
 
     std::unique_ptr <Operation> parseOperation();
 
-    std::unique_ptr <Operation> parseOperationMulDiv();
+    std::unique_ptr <Operation> parseOperationMulDiv(bool flag);
 
-    std::unique_ptr <Operation> parseOperationParIdVal();
+    std::unique_ptr <Operation> parseOperationParIdVal(bool flag);
 
     std::unique_ptr <Variable> parseVariable();
 };

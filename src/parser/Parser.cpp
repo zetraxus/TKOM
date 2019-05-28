@@ -251,37 +251,38 @@ std::unique_ptr<Expression> Parser::parseExpressionPar() {
     return exp;
 }
 
+
+
+
 std::unique_ptr<Operation> Parser::parseOperation() {
     std::unique_ptr<Operation> op (new Operation());
-
-    op->addOperation(parseOperationMulDiv());
+    op->addOperation(parseOperationMulDiv(true));
     while (PeekAndCheckToken({Token::OpSum, Token::OpSub}, NOTTHROW)) {
         current = scanner->getNextToken();
         current->getTokenType() == Token::Type::OpSum ? op->set_operator(Operation::Sum) : op->set_operator(
             Operation::Sub);
-        op->addOperation(parseOperationMulDiv());
+        op->addOperation(parseOperationMulDiv(false));
     }
 
     return op;
 }
 
-std::unique_ptr<Operation> Parser::parseOperationMulDiv() {
+std::unique_ptr<Operation> Parser::parseOperationMulDiv(bool flag) {
     std::unique_ptr<Operation> op (new Operation());
-
-    op->addOperation(parseOperationParIdVal());
+    op->addOperation(parseOperationParIdVal(flag));
     while (PeekAndCheckToken({Token::OpMul, Token::OpDiv}, NOTTHROW)) {
         current = scanner->getNextToken();
         current->getTokenType() == Token::Type::OpMul ? op->set_operator(Operation::Mul) : op->set_operator(
             Operation::Div);
-        op->addOperation(parseOperationParIdVal());
+        op->addOperation(parseOperationParIdVal(false));
     }
-
     return op;
 }
 
-std::unique_ptr<Operation> Parser::parseOperationParIdVal() {
+std::unique_ptr<Operation> Parser::parseOperationParIdVal(bool flag) {
     std::unique_ptr<Operation> op (new Operation());
 
+    std::cout << "debug " << scanner->peekNextToken()->getTokenType() << std::endl;
     if (PeekAndCheckToken({Token::ParenthesesOpen}, NOTTHROW)) {
         current = scanner->getNextToken();
         op->set_operator(Operation::Par);
@@ -290,8 +291,12 @@ std::unique_ptr<Operation> Parser::parseOperationParIdVal() {
     } else if (PeekAndCheckToken({Token::Identifier, Token::Value}, NOTTHROW)) {
         current = scanner->getNextToken();
         op->setVariable(parseVariable());
+    } else{
+        if(flag)
+            op->setVariable(std::make_unique<Variable> (std::make_unique<Value>(Token::Value, "0")));
+        else
+            throw std::runtime_error("Unexpected token.");
     }
-
     return op;
 }
 

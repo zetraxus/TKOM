@@ -26,3 +26,7 @@ Variable::Variable(const std::string& name) : name(name) {}
 std::string Variable::getValue() {
     return value->getValue();
 }
+
+const std::string& Variable::getName() const {
+    return name;
+}

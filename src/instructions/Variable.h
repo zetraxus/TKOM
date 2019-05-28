@@ -28,9 +28,9 @@ private:
 public:
     Variable();
 
-    Variable(std::unique_ptr <Value> value);
+    explicit Variable(std::unique_ptr <Value> value);
 
-    Variable(const std::string& name);
+    explicit Variable(const std::string& name);
 
     Variable(const std::string& name, const std::string& positionInContainer);
 
@@ -39,6 +39,8 @@ public:
     void setPositionInContainer(const std::string& positionInContainer);
 
     std::string getValue();
+
+    const std::string& getName() const;
 };
 
 

@@ -13,19 +13,19 @@ class Val {
 
     Token::Type type;
     size_t size; // 0 if variable, more if container
-    std::vector<unsigned> values; // values[0] if variable
+    std::vector<int> values; // values[0] if variable
     std::vector<Token::Type> units; // values[0] if variable
 
 public:
-    Val(Token::Type type, size_t size, const std::vector<unsigned int>& values, const std::vector<Token::Type>& units);
+    Val(Token::Type type, size_t size, const std::vector< int>& values, const std::vector<Token::Type>& units);
 
-    Val(Token::Type type, const std::vector<unsigned int>& values);
+    Val(Token::Type type, const std::vector<int>& values);
 
-    Val(Token::Type type, const std::vector<unsigned int>& values, const std::vector<Token::Type>& units);
+    Val(Token::Type type, const std::vector<int>& values, const std::vector<Token::Type>& units);
 
-    Val(Token::Type type, unsigned value);
+    Val(Token::Type type, int value);
 
-    Val(Token::Type type, unsigned value, Token::Type unit);
+    Val(Token::Type type, int value, Token::Type unit);
 
     Val(Token::Type type);
 
@@ -33,9 +33,11 @@ public:
 
     size_t getSize() const;
 
-    const std::vector<unsigned int>& getValues() const;
+    const std::vector<int>& getValues() const;
 
     const std::vector<Token::Type>& getUnits() const;
+
+    void print() const;
 };
 
 

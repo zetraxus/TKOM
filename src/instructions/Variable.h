@@ -37,6 +37,8 @@ public:
     void setName(const std::string& name);
 
     void setPositionInContainer(const std::string& positionInContainer);
+
+    std::string getValue();
 };
 
 

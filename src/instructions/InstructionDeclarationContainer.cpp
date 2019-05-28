@@ -15,10 +15,21 @@ void InstructionDeclarationContainer::setInitialValues(std::vector<Token::Type>&
 }
 
 void InstructionDeclarationContainer::execute(SymbolMap& symbols) {
-
+    std::vector<int> values;
+    for(auto& v : variables){
+        int next = stoi(v->getValue());
+        values.emplace_back(next);
+    }
+    std::unique_ptr<Val> value (new Val(type, static_cast<size_t>(stoi(size)), values, types));
+    symbols.insert(identifier, std::move(value));
 }
 
 const std::string& InstructionDeclarationContainer::getIdentifier() const {
     return identifier;
 }
 
+Token::Type type;
+std::string identifier;
+std::string size;
+std::vector<Token::Type> types; //initial values
+std::vector<std::unique_ptr<Variable>> variables; //initial values

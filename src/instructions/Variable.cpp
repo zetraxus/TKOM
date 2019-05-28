@@ -22,3 +22,7 @@ Variable::Variable(const std::string& name, const std::string& positionInContain
 Variable::Variable(std::unique_ptr <Value> value) : value(std::move(value)), type(Type::Val) {}
 
 Variable::Variable(const std::string& name) : name(name) {}
+
+std::string Variable::getValue() {
+    return value->getValue();
+}

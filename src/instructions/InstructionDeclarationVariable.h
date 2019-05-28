@@ -17,7 +17,9 @@ class InstructionDeclarationVariable : public Instruction {
 public:
     InstructionDeclarationVariable(Token::Type type, const std::string& identifier);
 
-    void execute() override;
+    void execute(SymbolMap& symbols) override;
+
+    const std::string& getIdentifier() const;
 };
 
 

@@ -27,6 +27,8 @@ public:
 
     Val(Token::Type type, unsigned value, Token::Type unit);
 
+    Val(Token::Type type);
+
     Token::Type getType() const;
 
     size_t getSize() const;

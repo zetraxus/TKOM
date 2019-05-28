@@ -17,9 +17,12 @@ class Parser {
     std::unique_ptr<Scanner> scanner;
     std::shared_ptr<Token> current;
     std::shared_ptr<Token> peeked;
+    std::unique_ptr<Program> parsedProgram;
 
 public:
-    Parser(std::unique_ptr<Scanner> scanner);
+    explicit Parser(std::unique_ptr<Scanner> scanner);
+
+    Program* getParsedProgram() const;
 
     std::shared_ptr<Token> getCurrent() const;
 
@@ -37,7 +40,7 @@ public:
 
     void parseArgumentList(std::vector<Token::Type>& types, std::vector<std::unique_ptr<Variable>>& variables, bool& flag, Token::Type endListSymbol);
 
-    std::unique_ptr <Program> parseProgram();
+    void parseProgram();
 
     std::unique_ptr <DefinitionOfFunction> parseFunction();
 

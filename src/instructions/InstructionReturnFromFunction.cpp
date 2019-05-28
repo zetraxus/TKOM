@@ -8,6 +8,6 @@ InstructionReturnFromFunction::InstructionReturnFromFunction(std::unique_ptr<Var
 
 }
 
-void InstructionReturnFromFunction::execute() {
+void InstructionReturnFromFunction::execute(SymbolMap& symbols) {
 
 }

@@ -19,3 +19,11 @@ void DefinitionOfFunction::addArgument(Token::Type type, std::unique_ptr<Variabl
 void DefinitionOfFunction::setBody(std::unique_ptr<Block> body) {
     DefinitionOfFunction::body = std::move(body);
 }
+
+const std::string& DefinitionOfFunction::getIdentifier() const {
+    return identifier;
+}
+
+Block* DefinitionOfFunction::getBlock() {
+    return body.get();
+}

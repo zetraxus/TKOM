@@ -16,7 +16,7 @@ class InstructionAssignment : public Instruction {
     std::unique_ptr<Operation> operation;
 public:
     InstructionAssignment(std::unique_ptr<Variable> variable, std::unique_ptr<Operation> operation);
-    void execute() override;
+    void execute(SymbolMap& symbols) override;
 };
 
 

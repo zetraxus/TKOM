@@ -14,7 +14,11 @@ void InstructionDeclarationContainer::setInitialValues(std::vector<Token::Type>&
     InstructionDeclarationContainer::variables = std::move(variables);
 }
 
-void InstructionDeclarationContainer::execute() {
+void InstructionDeclarationContainer::execute(SymbolMap& symbols) {
 
+}
+
+const std::string& InstructionDeclarationContainer::getIdentifier() const {
+    return identifier;
 }
 

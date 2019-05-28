@@ -25,13 +25,13 @@ const bool NOTTHROW = false;
 
 Parser::Parser(std::unique_ptr<Scanner> scanner) : scanner(std::move(scanner)) {}
 
-std::unique_ptr<Program> Parser::parseProgram() {
+void Parser::parseProgram() {
     std::unique_ptr <Program> program (new Program());
 
     while (GetAndCheckIfNotToken({Token::EofSymbol}, NOTTHROW))
         program->addFunction(parseFunction());
 
-    return program;
+    parsedProgram = std::move(program);
 }
 
 std::unique_ptr<DefinitionOfFunction> Parser::parseFunction() {
@@ -379,4 +379,8 @@ bool Parser::PeekAndCheckIfNotToken(std::initializer_list<Token::Type> list, boo
             return isIf ? throw std::runtime_error("Unexpected token.") : false;
     }
     return true;
+}
+
+Program* Parser::getParsedProgram() const {
+    return parsedProgram.get();
 }

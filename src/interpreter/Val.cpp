@@ -44,3 +44,5 @@ const std::vector<unsigned int>& Val::getValues() const {
 const std::vector<Token::Type>& Val::getUnits() const {
     return units;
 }
+
+Val::Val(Token::Type type) : type(type) {}

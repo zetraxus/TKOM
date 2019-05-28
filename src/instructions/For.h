@@ -21,7 +21,7 @@ public:
 
     void setBody(std::unique_ptr <Block> body);
 
-    void execute() override;
+    void execute(SymbolMap& symbols) override;
 };
 
 

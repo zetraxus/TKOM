@@ -9,6 +9,11 @@ InstructionDeclarationVariable::InstructionDeclarationVariable(Token::Type type,
                                                                                                 identifier(
                                                                                                     identifier) {}
 
-void InstructionDeclarationVariable::execute() {
+void InstructionDeclarationVariable::execute(SymbolMap& symbols) {
+    std::unique_ptr<Val> value (new Val(type));
+    symbols.insert(identifier, std::move(value));
+}
 
+const std::string& InstructionDeclarationVariable::getIdentifier() const {
+    return identifier;
 }

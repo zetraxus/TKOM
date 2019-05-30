@@ -23,7 +23,6 @@ private:
     std::string name; // if type == id
     std::string positionInContainer; // (optional) if type == id
     std::unique_ptr <Value> value; // if type == val
-//    std::experimental::optional<std::unique_ptr<Value>> value;
 
 public:
     Variable();
@@ -38,10 +37,13 @@ public:
 
     void setPositionInContainer(const std::string& positionInContainer);
 
-    std::string getValue();
+    Value* getValue();
+
+    Type getType() const;
 
     const std::string& getName() const;
-};
 
+    const std::string& getPositionInContainer() const;
+};
 
 #endif //TKOM_VARIABLE_H

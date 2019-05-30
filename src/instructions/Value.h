@@ -17,6 +17,8 @@ public:
     Value(Token::Type type, const std::string& value);
 
     std::string getValue() const;
+
+    Token::Type getType() const;
 };
 
 

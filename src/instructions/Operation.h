@@ -9,8 +9,12 @@
 #include <string>
 #include "../lexer/Token.h"
 #include "Variable.h"
+#include "../interpreter/SymbolMap.h"
 #include <memory>
 #include <vector>
+
+typedef std::experimental::optional<Token::Type> optToken;
+typedef std::pair<int, optToken> ValueType;
 
 class Operation {
 public:
@@ -32,7 +36,8 @@ public:
 
 private:
     std::vector<std::unique_ptr<Operation>> operations;
-    Operator _operator;
+    std::vector<Operator> operators;
+//    Operator _operator;
     std::unique_ptr<Variable> variable;
     bool empty = false;
 
@@ -41,17 +46,23 @@ public:
 
     void addOperation(std::unique_ptr<Operation> next);
 
+    void addOperators(Operator op);
+
     void setEmpty(bool empty);
 
     void setVariable(std::unique_ptr<Variable> variable);
 
-    void set_operator(Operator _operator);
+//    void set_operator(Operator _operator);
 
     bool isEmpty() const;
 
     bool opEmpty(size_t id) const;
 
-    std::pair<int, std::experimental::optional<Token::Type>> calculate();
+    ValueType calculate(SymbolMap& symbols);
+
+    ValueType calculate(ValueType arg1, ValueType arg2, Operator op);
+
+    Variable* getVariable();
 };
 
 

@@ -13,8 +13,8 @@ void InstructionAssignment::execute(SymbolMap& symbols) {
     if(symbols.find(name) == nullptr)
         throw std::runtime_error("Variable " + name + " did not declarated.");
 
-    std::pair<int, std::experimental::optional<Token::Type>> result = operation->calculate();
-    // TODO continue here
+    std::pair<int, std::experimental::optional<Token::Type>> result = operation->calculate(symbols);
+    std::cout << "Debug: " << result.first << std::endl;
 
 }
 

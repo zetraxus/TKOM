@@ -191,7 +191,7 @@ std::unique_ptr<Operation> Parser::parseExpression() {
     op->addOperation(parseExpressionAnd());
     while (PeekAndCheckToken({Token::LogicalOr}, NOTTHROW)) {
         current = scanner->getNextToken();
-        op->set_operator(Operation::LogSum);
+        op->addOperators(Operation::LogSum);
         op->addOperation(parseExpressionAnd());
     }
 
@@ -204,7 +204,7 @@ std::unique_ptr<Operation> Parser::parseExpressionAnd() {
     op->addOperation(parseExpressionEq());
     while (PeekAndCheckToken({Token::LogicalAnd}, NOTTHROW)) {
         current = scanner->getNextToken();
-        op->set_operator(Operation::LogMul);
+        op->addOperators(Operation::LogMul);
         op->addOperation(parseExpressionEq());
     }
 
@@ -217,7 +217,7 @@ std::unique_ptr<Operation> Parser::parseExpressionEq() {
     op->addOperation(parseExpressionLessMore());
     if (PeekAndCheckToken({Token::Equal, Token::NotEqual}, NOTTHROW)) {
         current = scanner->getNextToken();
-        current->getTokenType() == Token::Type::Equal ? op->set_operator(Operation::E) : op->set_operator(Operation::NE);
+        current->getTokenType() == Token::Type::Equal ? op->addOperators(Operation::E) : op->addOperators(Operation::NE);
         op->addOperation(parseExpressionLessMore());
     }
 
@@ -231,13 +231,13 @@ std::unique_ptr<Operation> Parser::parseExpressionLessMore() {
     if (PeekAndCheckToken({Token::Less, Token::More, Token::LessEq, Token::MoreEq}, NOTTHROW)) {
         current = scanner->getNextToken();
         if(current->getTokenType() == Token::Less)
-            op->set_operator(Operation::L);
+            op->addOperators(Operation::L);
         else if(current->getTokenType() == Token::LessEq)
-            op->set_operator(Operation::LE);
+            op->addOperators(Operation::LE);
         else if(current->getTokenType() == Token::More)
-            op->set_operator(Operation::M);
+            op->addOperators(Operation::M);
         else
-            op->set_operator(Operation::ME);
+            op->addOperators(Operation::ME);
         op->addOperation(parseOperation());
     }
 
@@ -249,7 +249,7 @@ std::unique_ptr<Operation> Parser::parseOperation() {
     op->addOperation(parseOperationMulDiv(true));
     while (PeekAndCheckToken({Token::OpSum, Token::OpSub}, NOTTHROW)) {
         current = scanner->getNextToken();
-        current->getTokenType() == Token::Type::OpSum ? op->set_operator(Operation::Sum) : op->set_operator(
+        current->getTokenType() == Token::Type::OpSum ? op->addOperators(Operation::Sum) : op->addOperators(
             Operation::Sub);
         op->addOperation(parseOperationMulDiv(false));
     }
@@ -262,7 +262,7 @@ std::unique_ptr<Operation> Parser::parseOperationMulDiv(bool flag) {
     op->addOperation(parseOperationParIdVal(flag));
     while (PeekAndCheckToken({Token::OpMul, Token::OpDiv}, NOTTHROW)) {
         current = scanner->getNextToken();
-        current->getTokenType() == Token::Type::OpMul ? op->set_operator(Operation::Mul) : op->set_operator(
+        current->getTokenType() == Token::Type::OpMul ? op->addOperators(Operation::Mul) : op->addOperators(
             Operation::Div);
         op->addOperation(parseOperationParIdVal(false));
     }
@@ -272,10 +272,9 @@ std::unique_ptr<Operation> Parser::parseOperationMulDiv(bool flag) {
 std::unique_ptr<Operation> Parser::parseOperationParIdVal(bool flag) {
     std::unique_ptr<Operation> op (new Operation());
 
-    std::cout << "debug " << scanner->peekNextToken()->getTokenType() << std::endl;
     if (PeekAndCheckToken({Token::ParenthesesOpen}, NOTTHROW)) {
         current = scanner->getNextToken();
-        op->set_operator(Operation::Par);
+        op->addOperators(Operation::Par);
         op->addOperation(parseExpression());
         GetAndCheckToken({Token::ParenthesesClose}, THROW);
     } else if (PeekAndCheckToken({Token::Identifier, Token::Value}, NOTTHROW)) {

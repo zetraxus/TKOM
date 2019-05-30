@@ -13,8 +13,9 @@ void SymbolMap::insert(std::string name, std::unique_ptr<Val> value) {
 
 Val* SymbolMap::find(std::string name) {
     auto search = symbols.find(name);
-    if(search != symbols.end())
+    if(search != symbols.end()){
         return (search->second).get();
+    }
     else
         return nullptr;
 }

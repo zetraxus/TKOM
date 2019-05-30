@@ -22,25 +22,16 @@ void Operation::setVariable(std::unique_ptr<Variable> variable) {
 }
 
 std::pair<int, optToken> Operation::calculate(SymbolMap& symbols) {
-//    std::cout << __LINE__ << std::endl;
     std::pair<int, optToken> result;
     if(!operations.empty()){
-//        std::cout << __LINE__ << std::endl;
         for(auto i = 0; i < operations.size(); ++i){
-//            std::cout << __LINE__ << std::endl;
-            if(!i){
-//                std::cout << __LINE__ << std::endl;
+            if(!i)
                 result = operations[i]->calculate(symbols);
-            }
-            else{
-//                std::cout << __LINE__ << std::endl;
+            else
                 result = calculate(result, operations[i]->calculate (symbols), operators[i-1]); // chech if operators[i] is correct
-            }
-//            std::cout << __LINE__ << std::endl;
-            std::cout << "&" << result.first << "&" << result.second.value() << "&" << std::endl;
+//            std::cout << "&" << result.first << "&" << result.second.value() << "&" << std::endl;
         }
     } else{
-//        std::cout << __LINE__ << std::endl;
         if(variable->getType() == Variable::Id){
             auto name = variable->getName();
             auto pos = variable->getPositionInContainer();
@@ -56,7 +47,6 @@ std::pair<int, optToken> Operation::calculate(SymbolMap& symbols) {
         }
     }
 
-//    std::cout << __LINE__ << std::endl;
     return result;
 }
 
@@ -84,6 +74,11 @@ ValueType Operation::calculate(ValueType arg1, ValueType arg2, Operator op) {
         else
             throw std::runtime_error("Cannot calculate it. (-)");
     } else if(op == Mul){
+        if(arg1.second.value() == Token::Value)
+            return std::make_pair(arg1.first * arg2.first, arg2.second.value());
+        else if(arg2.second.value() == Token::Value)
+            return std::make_pair(arg1.first * arg2.first, arg1.second.value());
+
         auto result = Multiplication::getInstance()->getResult(arg1.second.value(), arg2.second.value());
         if(result != Token::BadType)
             return std::make_pair(arg1.first * arg2.first, result);
@@ -101,7 +96,7 @@ ValueType Operation::calculate(ValueType arg1, ValueType arg2, Operator op) {
         else
             throw std::runtime_error("Cannot calculate it. (*)");
     } else if(op == Par){
-
+        //TODO
     } else if(op == LogMul){
         if(arg1.first != 0 && arg2.first != 0)
             return std::make_pair(1, Token::Value);

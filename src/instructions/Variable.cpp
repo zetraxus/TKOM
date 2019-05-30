@@ -23,10 +23,19 @@ Variable::Variable(std::unique_ptr <Value> value) : value(std::move(value)), typ
 
 Variable::Variable(const std::string& name) : name(name) {}
 
-std::string Variable::getValue() {
-    return value->getValue();
+Value* Variable::getValue() {
+    return value.get();
 }
 
 const std::string& Variable::getName() const {
     return name;
 }
+
+Variable::Type Variable::getType() const {
+    return type;
+}
+
+const std::string& Variable::getPositionInContainer() const {
+    return positionInContainer;
+}
+

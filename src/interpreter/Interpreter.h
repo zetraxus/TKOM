@@ -17,6 +17,8 @@ public:
     explicit Interpreter(std::unique_ptr<Parser> parser);
 
     void execute();
+
+    SymbolMap getSymbols();
 };
 
 

@@ -9,6 +9,26 @@
 #include "../src/lexer/Source.h"
 #include "../src/parser/Parser.h"
 #include "../src/interpreter/SymbolMap.h"
+#include "../src/interpreter/Interpreter.h"
+
+std::unique_ptr<Parser> config(const std::string& program){
+    std::stringstream input(program);
+
+    std::unique_ptr<Source> source (new Source(program, 1));
+    std::unique_ptr<Scanner> scanner (new Scanner(std::move(source)));
+    return std::make_unique<Parser> (std::move(scanner));
+}
+
+std::unique_ptr<Interpreter> configInterpreter(const std::string& program){
+    std::stringstream input(program);
+
+    std::unique_ptr<Source> source (new Source(program, 1));
+    std::unique_ptr<Scanner> scanner (new Scanner(std::move(source)));
+    std::unique_ptr<Parser> parser (new Parser(std::move(scanner)));
+    parser->parseProgram();
+
+    return std::make_unique<Interpreter> (std::move(parser));
+}
 
 BOOST_AUTO_TEST_SUITE(INTERPRETER)
 
@@ -48,17 +68,19 @@ BOOST_AUTO_TEST_CASE(SYMBOLMAP_TEST_REMOVE) {
     BOOST_CHECK_EQUAL(map->getSize(), 1);
 }
 
+BOOST_AUTO_TEST_CASE(ASSIGN_VALUE) {
+    std::string program = "int main(){unit a; a = 10V * 5A;}";
+    auto interpreter = configInterpreter(program);
+    interpreter->execute();
+    auto symbols = interpreter->getSymbols();
+
+    BOOST_CHECK_EQUAL(symbols.find("a")->getValues()[0], 50);
+    BOOST_CHECK_EQUAL(symbols.find("a")->getType(), Token::W);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(PARSER)
-
-std::unique_ptr<Parser> config(const std::string& program){
-    std::stringstream input(program);
-
-    std::unique_ptr<Source> source (new Source(program, 1));
-    std::unique_ptr<Scanner> scanner (new Scanner(std::move(source)));
-    return std::make_unique<Parser> (std::move(scanner));
-}
 
 BOOST_AUTO_TEST_CASE(SIMPLE_INCORRECT_EXAMPLE){
     std::string program = "int a(){a}";

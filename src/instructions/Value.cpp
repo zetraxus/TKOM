@@ -9,3 +9,7 @@ Value::Value(Token::Type type, const std::string& value) : type(type), value(val
 std::string Value::getValue() const {
     return value;
 }
+
+Token::Type Value::getType() const {
+    return type;
+}

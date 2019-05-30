@@ -12,3 +12,7 @@ void Interpreter::execute() {
 
     main->getBlock()->execute(symbols);
 }
+
+SymbolMap Interpreter::getSymbols() {
+    return std::move(symbols);
+}

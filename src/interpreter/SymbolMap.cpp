@@ -43,3 +43,12 @@ std::unique_ptr<Val> SymbolMap::remove(std::string name) {
     }
     return nullptr;
 }
+
+void SymbolMap::update(std::string name, int positionInContainer, int value, Token::Type type) {
+    auto val = this->find(name);
+    if(val == nullptr)
+        throw std::runtime_error("Cannot update data");
+
+    val->setOnPosition(type, value, positionInContainer);
+}
+

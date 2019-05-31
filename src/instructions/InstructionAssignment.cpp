@@ -14,7 +14,18 @@ void InstructionAssignment::execute(SymbolMap& symbols) {
         throw std::runtime_error("Variable " + name + " did not declarated.");
 
     std::pair<int, std::experimental::optional<Token::Type>> result = operation->calculate(symbols);
-    std::unique_ptr<Val> value (new Val(result.second.value(), result.first));
-    symbols.replace(name, std::move(value));
+
+    if(!variable->getPositionInContainer().empty()){
+        try{
+            stoi(variable->getPositionInContainer());
+            symbols.update(name, stoi(variable->getPositionInContainer()), result.first, result.second.value());
+        } catch(const std::exception& e){
+            std::unique_ptr<Val> value (new Val(result.second.value(), result.first));
+            symbols.replace(name, std::move(value));
+        }
+    } else{
+        std::unique_ptr<Val> value (new Val(result.second.value(), result.first));
+        symbols.replace(name, std::move(value));
+    }
 }
 

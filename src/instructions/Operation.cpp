@@ -28,14 +28,16 @@ std::pair<int, optToken> Operation::calculate(SymbolMap& symbols) {
             if(!i)
                 result = operations[i]->calculate(symbols);
             else
-                result = calculate(result, operations[i]->calculate (symbols), operators[i-1]); // chech if operators[i] is correct
-//            std::cout << "&" << result.first << "&" << result.second.value() << "&" << std::endl;
+                result = calculate(result, operations[i]->calculate (symbols), operators[i-1]); // check if operators[i] is correct
         }
     } else{
         if(variable->getType() == Variable::Id){
             auto name = variable->getName();
             auto pos = variable->getPositionInContainer();
-            //TODO
+            auto val = symbols.find(name);
+            auto pair = val->getValue(stoi(pos));
+
+            return std::make_pair(pair.first, pair.second);
         } else {
             auto value = variable->getValue();
             auto type = value->getType();
@@ -94,7 +96,7 @@ ValueType Operation::calculate(ValueType arg1, ValueType arg2, Operator op) {
         if(result != Token::BadType)
             return std::make_pair(arg1.first / arg2.first, result);
         else
-            throw std::runtime_error("Cannot calculate it. (*)");
+            throw std::runtime_error("Cannot calculate it. (/)");
     } else if(op == Par){
         //TODO
     } else if(op == LogMul){

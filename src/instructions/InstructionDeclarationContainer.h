@@ -23,7 +23,7 @@ class InstructionDeclarationContainer : public Instruction {
 public:
     InstructionDeclarationContainer(Token::Type type, const std::string& identifier, const std::string& size);
 
-    void setInitialValues(std::vector<Token::Type>& types, std::vector<std::unique_ptr<Variable>>& variables);
+    void setInitialValues(std::string size, std::vector<Token::Type>& types, std::vector<std::unique_ptr<Variable>>& variables);
 
     void execute(SymbolMap& symbols) override;
 

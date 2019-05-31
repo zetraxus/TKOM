@@ -37,7 +37,11 @@ public:
 
     const std::vector<Token::Type>& getUnits() const;
 
+    void setOnPosition(Token::Type type, int value, int position);
+
     void print() const;
+
+    std::pair<int, Token::Type> getValue(int position);
 };
 
 

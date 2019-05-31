@@ -95,7 +95,7 @@ std::unique_ptr<Instruction> Parser::parseDeclaration() {
             std::vector<Token::Type> types;
             std::vector<std::unique_ptr<Variable>> variables;
             parseArgumentList(types, variables, flag, Token::CurlyBracketClose);
-            instruction->setInitialValues(types, variables);
+            instruction->setInitialValues(size, types, variables);
             CheckToken({Token::CurlyBracketClose}, THROW);
             if (!flag) {
                 GetAndCheckToken({Token::SemiColon}, THROW);
@@ -302,6 +302,7 @@ std::unique_ptr<Variable> Parser::parseVariable() {
             return std::make_unique<Variable> (id, current->getValue()); // todo check it
     } else if (CheckToken({Token::Value}, THROW)) {
         std::string value = current->getValue();
+
         if ((peeked = scanner->peekNextToken())->isUnitType()) {
             current = scanner->getNextToken();
             return std::make_unique<Variable> (std::make_unique<Value>(current->getTokenType(), value)); // e.g Value(A, 10)

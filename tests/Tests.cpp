@@ -78,6 +78,28 @@ BOOST_AUTO_TEST_CASE(ASSIGN_VALUE) {
     BOOST_CHECK_EQUAL(symbols.find("a")->getType(), Token::W);
 }
 
+BOOST_AUTO_TEST_CASE(ASSIGN_VALUE_TWICE) {
+    std::string program = "int main(){unit a; a = 10V * 5A; a = 2 * 3s;}";
+    auto interpreter = configInterpreter(program);
+    interpreter->execute();
+    auto symbols = interpreter->getSymbols();
+
+    BOOST_CHECK_EQUAL(symbols.find("a")->getValues()[0], 6);
+    BOOST_CHECK_EQUAL(symbols.find("a")->getType(), Token::s);
+}
+
+BOOST_AUTO_TEST_CASE(ASSIGN_VALUE_TO_CONTAINER) {
+    std::string program = "int main(){unit b[5] {2V, 3A, 5W}; b[3] = b[0] * b[1]; b[4] = b[3] / b[0];}";
+    auto interpreter = configInterpreter(program);
+    interpreter->execute();
+    auto symbols = interpreter->getSymbols();
+
+    BOOST_CHECK_EQUAL(symbols.find("b")->getValues()[3], 6);
+    BOOST_CHECK_EQUAL(symbols.find("b")->getUnits()[3], Token::W);
+    BOOST_CHECK_EQUAL(symbols.find("b")->getValues()[4], 3);
+    BOOST_CHECK_EQUAL(symbols.find("b")->getUnits()[4], Token::A);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(PARSER)

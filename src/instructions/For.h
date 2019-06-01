@@ -14,12 +14,12 @@ class For : public Instruction {
     Token::Type type;
     std::string itName;
     std::string container;
-    std::unique_ptr <Block> body;
+    std::unique_ptr<Block> body;
 
 public:
     For(Token::Type type, const std::string& itName, const std::string& container);
 
-    void setBody(std::unique_ptr <Block> body);
+    void setBody(std::unique_ptr<Block> body);
 
     void execute(SymbolMap& symbols) override;
 };

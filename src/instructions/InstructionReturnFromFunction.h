@@ -12,9 +12,9 @@
 #include <memory>
 
 class InstructionReturnFromFunction : public Instruction {
-    std::unique_ptr <Variable> variable;
+    std::unique_ptr<Variable> variable;
 public:
-    explicit InstructionReturnFromFunction(std::unique_ptr <Variable> variable);
+    explicit InstructionReturnFromFunction(std::unique_ptr<Variable> variable);
 
     void execute(SymbolMap& symbols) override;
 };

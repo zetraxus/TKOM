@@ -22,20 +22,18 @@ private:
     Type type;
     std::string name; // if type == id
     std::string positionInContainer; // (optional) if type == id
-    std::unique_ptr <Value> value; // if type == val
+    std::unique_ptr<Value> value; // if type == val
 
 public:
     Variable();
 
-    explicit Variable(std::unique_ptr <Value> value);
+    explicit Variable(std::unique_ptr<Value> value);
 
     explicit Variable(const std::string& name);
 
     Variable(const std::string& name, const std::string& positionInContainer);
 
     void setName(const std::string& name);
-
-    void setPositionInContainer(const std::string& positionInContainer);
 
     Value* getValue();
 

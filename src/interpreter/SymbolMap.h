@@ -13,11 +13,17 @@ class SymbolMap {
 
 public:
     SymbolMap();
+
     size_t getSize();
 
     void insert(std::string name, std::unique_ptr<Val> value);
+
+    void update(std::string name, int positionInContainer, int value, Token::Type type);
+
     Val* find(std::string name);
+
     std::unique_ptr<Val> replace(std::string name, std::unique_ptr<Val> value);
+
     std::unique_ptr<Val> remove(std::string name);
 };
 

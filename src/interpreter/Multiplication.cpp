@@ -14,8 +14,8 @@ Multiplication::Multiplication() {
 }
 
 Token::Type Multiplication::getResult(Token::Type arg1, Token::Type arg2) {
-    for (auto& e : equation){
-        if((arg1 == e.arg1 && arg2 == e.arg2) || (arg1 == e.arg2 && arg2 == e.arg1))
+    for (auto& e : equation) {
+        if ((arg1 == e.arg1 && arg2 == e.arg2) || (arg1 == e.arg2 && arg2 == e.arg1))
             return e.result;
     }
     return Token::BadType;

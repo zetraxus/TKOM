@@ -40,7 +40,7 @@ std::shared_ptr<Token> Scanner::getNextToken() {
 }
 
 std::shared_ptr<Token> Scanner::getAlphaToken(int firstChar) {
-    std::shared_ptr<Token> token (new Token(std::make_shared<Position> (*(source->getCurrentPosition()))));
+    std::shared_ptr<Token> token(new Token(std::make_shared<Position>(*(source->getCurrentPosition()))));
 
     std::string result;
     result += (char) firstChar;
@@ -65,7 +65,7 @@ std::shared_ptr<Token> Scanner::getAlphaToken(int firstChar) {
 }
 
 std::shared_ptr<Token> Scanner::getNumberToken(int firstChar) {
-    std::shared_ptr<Token> token (new Token(std::make_shared<Position> (*(source->getCurrentPosition()))));
+    std::shared_ptr<Token> token(new Token(std::make_shared<Position>(*(source->getCurrentPosition()))));
 
     std::string result;
     result += (char) firstChar;
@@ -82,7 +82,7 @@ std::shared_ptr<Token> Scanner::getNumberToken(int firstChar) {
 }
 
 std::shared_ptr<Token> Scanner::getOperatorToken(int firstChar) {
-    std::shared_ptr<Token> token (new Token(std::make_shared<Position> (*(source->getCurrentPosition()))));
+    std::shared_ptr<Token> token(new Token(std::make_shared<Position>(*(source->getCurrentPosition()))));
     std::string result;
     result += (char) firstChar;
 

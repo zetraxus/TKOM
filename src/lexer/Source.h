@@ -10,6 +10,7 @@
 #include <fstream>
 #include <sstream>
 #include <memory>
+
 class Position {
     unsigned line;
     int position; // position in line

@@ -16,8 +16,8 @@
 class DefinitionOfFunction {
     Token::Type returnType;
     std::string identifier;
-    std::vector<std::pair<Token::Type, std::unique_ptr<Variable>> > arguments;
-    std::unique_ptr <Block> body;
+    std::vector<std::pair<Token::Type, std::unique_ptr<Variable>>> arguments;
+    std::unique_ptr<Block> body;
 
 public:
     void setReturnType(Token::Type returnType);

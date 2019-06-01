@@ -18,8 +18,8 @@ Division::Division() {
 }
 
 Token::Type Division::getResult(Token::Type arg1, Token::Type arg2) {
-    for (auto& e : equation){
-        if(arg1 == e.arg1 && arg2 == e.arg2)
+    for (auto& e : equation) {
+        if (arg1 == e.arg1 && arg2 == e.arg2)
             return e.result;
     }
 

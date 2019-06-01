@@ -22,6 +22,7 @@ class Instruction {
 
 public:
     Instruction();
+
     virtual void execute(SymbolMap& symbols) = 0;
 };
 

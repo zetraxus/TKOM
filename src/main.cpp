@@ -2,9 +2,7 @@
 #include "lexer/Source.h"
 #include "lexer/Scanner.h"
 #include "parser/Parser.h"
-#include "interpreter/SymbolMap.h"
 #include "interpreter/Interpreter.h"
-#include <memory>
 
 int main(int argc, char** argv) {
     std::unique_ptr<Source> source;
@@ -36,9 +34,9 @@ int main(int argc, char** argv) {
 
     interpreter = std::make_unique<Interpreter>(std::move(parser));
 
-    try{
+    try {
         interpreter->execute();
-    } catch(const std::runtime_error& e){
+    } catch (const std::runtime_error& e) {
         std::cout << "Interpreter error: " << e.what() << std::endl;
     }
 

@@ -10,7 +10,7 @@ InstructionDeclarationVariable::InstructionDeclarationVariable(Token::Type type,
                                                                                                     identifier) {}
 
 void InstructionDeclarationVariable::execute(SymbolMap& symbols) {
-    std::unique_ptr<Val> value (new Val(type));
+    std::unique_ptr<Val> value(new Val(type));
     symbols.insert(identifier, std::move(value));
 }
 

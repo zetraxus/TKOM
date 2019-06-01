@@ -9,7 +9,7 @@
 #include <vector>
 #include "../lexer/Token.h"
 
-struct Equation{
+struct Equation {
     Token::Type arg1;
     Token::Type arg2;
     Token::Type result;

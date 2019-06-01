@@ -17,7 +17,7 @@ class Val {
     std::vector<Token::Type> units; // values[0] if variable
 
 public:
-    Val(Token::Type type, size_t size, const std::vector< int>& values, const std::vector<Token::Type>& units);
+    Val(Token::Type type, size_t size, const std::vector<int>& values, const std::vector<Token::Type>& units);
 
     Val(Token::Type type, const std::vector<int>& values);
 

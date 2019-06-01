@@ -38,43 +38,45 @@ public:
 
     bool PeekAndCheckIfNotToken(std::initializer_list<Token::Type> list, bool isIf);
 
-    void parseArgumentList(std::vector<Token::Type>& types, std::vector<std::unique_ptr<Variable>>& variables, bool& flag, Token::Type endListSymbol);
+    void
+    parseArgumentList(std::vector<Token::Type>& types, std::vector<std::unique_ptr<Variable>>& variables, bool& flag,
+                      Token::Type endListSymbol);
 
     void parseProgram();
 
-    std::unique_ptr <DefinitionOfFunction> parseFunction();
+    std::unique_ptr<DefinitionOfFunction> parseFunction();
 
-    std::unique_ptr <Block> parseBlock();
+    std::unique_ptr<Block> parseBlock();
 
-    std::unique_ptr <Instruction> parseInstruction();
+    std::unique_ptr<Instruction> parseInstruction();
 
-    std::unique_ptr <Instruction> parseDeclaration();
+    std::unique_ptr<Instruction> parseDeclaration();
 
-    std::unique_ptr <Instruction> parseFunctionCall();
+    std::unique_ptr<Instruction> parseFunctionCall();
 
-    std::unique_ptr <Instruction> parseAssignment();
+    std::unique_ptr<Instruction> parseAssignment();
 
-    std::unique_ptr <Instruction> parseLoopFor();
+    std::unique_ptr<Instruction> parseLoopFor();
 
-    std::unique_ptr <Instruction> parseReturnInstruction();
+    std::unique_ptr<Instruction> parseReturnInstruction();
 
-    std::unique_ptr <Instruction> parseIfInstruction();
+    std::unique_ptr<Instruction> parseIfInstruction();
 
-    std::unique_ptr <Operation> parseExpression();
+    std::unique_ptr<Operation> parseExpression();
 
-    std::unique_ptr <Operation> parseExpressionAnd();
+    std::unique_ptr<Operation> parseExpressionAnd();
 
-    std::unique_ptr <Operation> parseExpressionEq();
+    std::unique_ptr<Operation> parseExpressionEq();
 
-    std::unique_ptr <Operation> parseExpressionLessMore();
+    std::unique_ptr<Operation> parseExpressionLessMore();
 
-    std::unique_ptr <Operation> parseOperation();
+    std::unique_ptr<Operation> parseOperation();
 
-    std::unique_ptr <Operation> parseOperationMulDiv(bool flag);
+    std::unique_ptr<Operation> parseOperationMulDiv(bool flag);
 
-    std::unique_ptr <Operation> parseOperationParIdVal(bool flag);
+    std::unique_ptr<Operation> parseOperationParIdVal(bool flag);
 
-    std::unique_ptr <Variable> parseVariable();
+    std::unique_ptr<Variable> parseVariable();
 };
 
 

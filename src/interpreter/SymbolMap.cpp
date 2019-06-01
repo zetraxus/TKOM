@@ -13,17 +13,16 @@ void SymbolMap::insert(std::string name, std::unique_ptr<Val> value) {
 
 Val* SymbolMap::find(std::string name) {
     auto search = symbols.find(name);
-    if(search != symbols.end()){
+    if (search != symbols.end()) {
         return (search->second).get();
-    }
-    else
+    } else
         return nullptr;
 }
 
 std::unique_ptr<Val> SymbolMap::replace(std::string name, std::unique_ptr<Val> value) {
     auto search = symbols.find(name);
-    if(search != symbols.end()){
-        std::unique_ptr<Val> ret (std::move(search->second));
+    if (search != symbols.end()) {
+        std::unique_ptr<Val> ret(std::move(search->second));
         search->second = std::move(value);
         return std::move(ret);
     } else
@@ -36,7 +35,7 @@ size_t SymbolMap::getSize() {
 
 std::unique_ptr<Val> SymbolMap::remove(std::string name) {
     auto search = symbols.find(name);
-    if(search != symbols.end()){
+    if (search != symbols.end()) {
         auto ret = std::move(search->second);
         symbols.erase(search);
         return ret;
@@ -46,7 +45,7 @@ std::unique_ptr<Val> SymbolMap::remove(std::string name) {
 
 void SymbolMap::update(std::string name, int positionInContainer, int value, Token::Type type) {
     auto val = this->find(name);
-    if(val == nullptr)
+    if (val == nullptr)
         throw std::runtime_error("Cannot update data");
 
     val->setOnPosition(type, value, positionInContainer);

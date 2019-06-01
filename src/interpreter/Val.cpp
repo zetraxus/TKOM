@@ -6,7 +6,7 @@
 #include "Val.h"
 
 Val::Val(Token::Type type, size_t size, const std::vector<int>& values, const std::vector<Token::Type>& units)
-    : type(type), size(size){
+    : type(type), size(size) {
     this->values = values;
     this->values.resize(size);
     this->units = units;
@@ -14,11 +14,11 @@ Val::Val(Token::Type type, size_t size, const std::vector<int>& values, const st
 }
 
 Val::Val(Token::Type type, const std::vector<int>& values, const std::vector<Token::Type>& units) : type(type),
-                                                                                                           size(values.size()),
-                                                                                                           values(
-                                                                                                               values),
-                                                                                                           units(
-                                                                                                               units) {}
+                                                                                                    size(values.size()),
+                                                                                                    values(
+                                                                                                        values),
+                                                                                                    units(
+                                                                                                        units) {}
 
 Val::Val(Token::Type type, const std::vector<int>& values) : type(type), size(values.size()), values(values) {}
 
@@ -61,16 +61,16 @@ void Val::print() const {
 }
 
 std::pair<int, Token::Type> Val::getValue(int position) {
-    if(position > size || position < 0)
+    if (position > size || position < 0)
         throw std::runtime_error("Bad array index");
 
-    if(type == Token::Value)
+    if (type == Token::Value)
         return std::make_pair(values[position], Token::Value);
     return std::make_pair(values[position], units[position]);
 }
 
 void Val::setOnPosition(Token::Type type, int value, int position) {
-    if(position > size || position < 0)
+    if (position > size || position < 0)
         throw std::runtime_error("Bad array index");
     this->values[position] = value;
     this->units[position] = type;

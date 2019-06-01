@@ -14,7 +14,6 @@ void InstructionAssignment::execute(SymbolMap& symbols) {
     std::string name = variable->getName();
     if (symbols.find(name) == nullptr)
         throw std::runtime_error("Variable " + name + " did not declarated.");
-
     std::pair<int, std::experimental::optional<Token::Type>> result = operation->calculate(symbols);
     if (!variable->getPositionInContainer().empty()) {
         try {

@@ -175,6 +175,46 @@ BOOST_AUTO_TEST_SUITE(INTERPRETER)
         BOOST_CHECK_EQUAL(symbols.find("b")->getValues()[0], 44);
     }
 
+    BOOST_AUTO_TEST_CASE(FOR_LOOP_UNIT) {
+        std::string program = "int main(){"
+                              "        unit a[5] {2A, 5W, 6s};"
+                              "        for(unit i : a){"
+                              "                i = i * 3;"
+                              "        }"
+                              "}";
+        auto interpreter = configInterpreter(program);
+        interpreter->execute();
+        auto symbols = interpreter->getSymbols();
+
+        BOOST_CHECK_EQUAL(symbols.find("a")->getValues()[0], 6);
+        BOOST_CHECK_EQUAL(symbols.find("a")->getValues()[1], 15);
+        BOOST_CHECK_EQUAL(symbols.find("a")->getValues()[2], 18);
+        BOOST_CHECK_EQUAL(symbols.find("a")->getValues()[3], 0);
+        BOOST_CHECK_EQUAL(symbols.find("a")->getValues()[4], 0);
+    }
+
+//    BOOST_AUTO_TEST_CASE(LOOP_WITH_CONDITION) {
+//        std::string program = "int main(){"
+//                              "        int a[5] {2, 3, 0, 2, 7};"
+//                              "        int b;"
+//                              "        b = 3;"
+//                              "        for(int i : a){"
+//                              "                if(i != 2){"
+//                              "                     i = i + 1;"
+//                              "                }"
+//                              "        }"
+//                              "}";
+//        auto interpreter = configInterpreter(program);
+//        interpreter->execute();
+//        auto symbols = interpreter->getSymbols();
+//
+//        BOOST_CHECK_EQUAL(symbols.find("a")->getValues()[0], 3);
+//        BOOST_CHECK_EQUAL(symbols.find("a")->getValues()[1], 4);
+//        BOOST_CHECK_EQUAL(symbols.find("a")->getValues()[2], 0);
+//        BOOST_CHECK_EQUAL(symbols.find("a")->getValues()[3], 3);
+//        BOOST_CHECK_EQUAL(symbols.find("a")->getValues()[4], 7);
+//    }
+
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(PARSER)

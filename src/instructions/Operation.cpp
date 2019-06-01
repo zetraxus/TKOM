@@ -38,13 +38,11 @@ std::pair<int, optToken> Operation::calculate(SymbolMap& symbols) {
                 auto pos = variable->getPositionInContainer();
                 auto val = symbols.find(name);
                 auto pair = val->getValue(stoi(pos));
-
                 return std::make_pair(pair.first, pair.second);
             } else {
                 auto name = variable->getName();
                 auto val = symbols.find(name);
                 auto pair = val->getValue(0);
-
                 return std::make_pair(pair.first, pair.second);
             }
         } else {

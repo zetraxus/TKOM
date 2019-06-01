@@ -42,6 +42,8 @@ public:
     void print() const;
 
     std::pair<int, Token::Type> getValue(int position);
+
+    void setValue(int position, std::pair<int, Token::Type>);
 };
 
 

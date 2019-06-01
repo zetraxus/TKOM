@@ -299,7 +299,7 @@ std::unique_ptr<Variable> Parser::parseVariable() {
             GetAndCheckToken({Token::SquareBracketsClose}, THROW);
             return std::make_unique<Variable> (id, position);
         } else
-            return std::make_unique<Variable> (id, current->getValue()); // todo check it
+            return std::make_unique<Variable> (id); // todo check it
     } else if (CheckToken({Token::Value}, THROW)) {
         std::string value = current->getValue();
 

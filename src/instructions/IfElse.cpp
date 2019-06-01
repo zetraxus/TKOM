@@ -8,5 +8,8 @@ IfElse::IfElse(std::unique_ptr <Operation> expression, std::unique_ptr <Block> b
                                                                            blockElse(std::move(blockElse)) {}
 
 void IfElse::execute(SymbolMap& symbols) {
-
+    if(expression->calculate(symbols).first)
+        blockIf->execute(symbols);
+    else
+        blockElse->execute(symbols);
 }

@@ -35,8 +35,6 @@ public:
 
     void setName(const std::string& name);
 
-    void setPositionInContainer(const std::string& positionInContainer);
-
     Value* getValue();
 
     Type getType() const;

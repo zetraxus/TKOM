@@ -32,12 +32,21 @@ std::pair<int, optToken> Operation::calculate(SymbolMap& symbols) {
         }
     } else{
         if(variable->getType() == Variable::Id){
-            auto name = variable->getName();
-            auto pos = variable->getPositionInContainer();
-            auto val = symbols.find(name);
-            auto pair = val->getValue(stoi(pos));
+            if(!variable->getPositionInContainer().empty()){
+                auto name = variable->getName();
+                auto pos = variable->getPositionInContainer();
+                auto val = symbols.find(name);
+                auto pair = val->getValue(stoi(pos));
 
-            return std::make_pair(pair.first, pair.second);
+                return std::make_pair(pair.first, pair.second);
+            }
+            else{
+                auto name = variable->getName();
+                auto val = symbols.find(name);
+                auto pair = val->getValue(0);
+
+                return std::make_pair(pair.first, pair.second);
+            }
         } else {
             auto value = variable->getValue();
             auto type = value->getType();

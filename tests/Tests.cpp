@@ -100,6 +100,82 @@ BOOST_AUTO_TEST_CASE(ASSIGN_VALUE_TO_CONTAINER) {
     BOOST_CHECK_EQUAL(symbols.find("b")->getUnits()[4], Token::A);
 }
 
+BOOST_AUTO_TEST_CASE(IF_ELSE_SEQUENCE) {
+    std::string program = "int main(){"
+                          "        int a;"
+                          "        if(10 + 2){"
+                          "                a = 1;"
+                          "                if(2 + 2 * 2 - 6){"
+                          "                        a = 2;"
+                          "                } else{"
+                          "                        a = 3;"
+                          "                }"
+                          "        } else{"
+                          "                a = 4;"
+                          "        }"
+                          "}";
+
+    auto interpreter = configInterpreter(program);
+    interpreter->execute();
+    auto symbols = interpreter->getSymbols();
+
+    BOOST_CHECK_EQUAL(symbols.find("a")->getValues()[0], 3);
+}
+
+BOOST_AUTO_TEST_CASE(CHECK_VARIABLE_SCOPE) {
+    std::string program = "int main(){"
+                              "        int a;  "
+                              "        a = 0;"
+                              "        if(1 > 0){"
+                              "                int a;"
+                              "                a = 1;"
+                              "        }"
+                              "}";
+
+    auto interpreter = configInterpreter(program);
+    interpreter->execute();
+    auto symbols = interpreter->getSymbols();
+
+    BOOST_CHECK_EQUAL(symbols.find("a")->getValues()[0], 0);
+}
+
+BOOST_AUTO_TEST_CASE(ASSIGN_VALUE_IN_IF_BLOCK) {
+    std::string program = "int main(){"
+                          "        int a;"
+                          "        int b;"
+                          "        a = 20;"
+                          "        if(1 > 0){"
+                          "                b = a + 23;"
+                          "        } else{"
+                          "                b = a + 24;"
+                          "        }"
+                          "}";
+
+    auto interpreter = configInterpreter(program);
+    interpreter->execute();
+    auto symbols = interpreter->getSymbols();
+
+    BOOST_CHECK_EQUAL(symbols.find("b")->getValues()[0], 43);
+}
+
+BOOST_AUTO_TEST_CASE(ASSIGN_VALUE_IN_ELSE_BLOCK) {
+    std::string program = "int main(){"
+                          "        int a;"
+                          "        int b;"
+                          "        a = 20;"
+                          "        if(1 < 0){"
+                          "                b = a + 23;"
+                          "        } else{"
+                          "                b = a + 24;"
+                          "        }"
+                          "}";
+    auto interpreter = configInterpreter(program);
+    interpreter->execute();
+    auto symbols = interpreter->getSymbols();
+
+    BOOST_CHECK_EQUAL(symbols.find("b")->getValues()[0], 44);
+}
+
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(PARSER)

@@ -14,7 +14,7 @@ class Value {
     std::string value;
 
 public:
-    Value(Token::Type type, const std::string& value);
+    Value(Token::Type type, const std::string& value = "");
 
     std::string getValue() const;
 

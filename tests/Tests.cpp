@@ -193,28 +193,6 @@ BOOST_AUTO_TEST_SUITE(INTERPRETER)
         BOOST_CHECK_EQUAL(symbols.find("a")->getValues()[4], 0);
     }
 
-//    BOOST_AUTO_TEST_CASE(LOOP_WITH_CONDITION) {
-//        std::string program = "int main(){"
-//                              "        int a[5] {2, 3, 0, 2, 7};"
-//                              "        int b;"
-//                              "        b = 3;"
-//                              "        for(int i : a){"
-//                              "                if(i != 2){"
-//                              "                     i = i + 1;"
-//                              "                }"
-//                              "        }"
-//                              "}";
-//        auto interpreter = configInterpreter(program);
-//        interpreter->execute();
-//        auto symbols = interpreter->getSymbols();
-//
-//        BOOST_CHECK_EQUAL(symbols.find("a")->getValues()[0], 3);
-//        BOOST_CHECK_EQUAL(symbols.find("a")->getValues()[1], 4);
-//        BOOST_CHECK_EQUAL(symbols.find("a")->getValues()[2], 0);
-//        BOOST_CHECK_EQUAL(symbols.find("a")->getValues()[3], 3);
-//        BOOST_CHECK_EQUAL(symbols.find("a")->getValues()[4], 7);
-//    }
-
 BOOST_AUTO_TEST_SUITE_END()
 
 BOOST_AUTO_TEST_SUITE(PARSER)

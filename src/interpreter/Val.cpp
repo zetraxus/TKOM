@@ -58,18 +58,10 @@ const std::vector<Token::Type>& Val::getUnits() const {
 
 Val::Val(Token::Type type) : type(type), size(0) {}
 
-void Val::print() const {
-    std::cout << type << std::endl;
-    std::cout << size << std::endl;
-    std::cout << values.size() << std::endl;
-    std::cout << units.size() << std::endl << std::endl;
-}
-
 std::pair<int, Token::Type> Val::getValue(int position) {
     if (position > size || position < 0)
         throw std::runtime_error("Bad array index");
-//    if (type == Token::Value)
-//        return std::make_pair(values[position], Token::Value);
+
     return std::make_pair(values[position], units[position]);
 }
 

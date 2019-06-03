@@ -41,7 +41,7 @@ private:
     std::stringstream input; // if mode == 0
 
 public:
-    Source(const std::string& fileName, bool mode = 0);
+    explicit Source(const std::string& fileName, bool mode = 0);
 
     virtual ~Source();
 

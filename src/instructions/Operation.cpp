@@ -38,13 +38,11 @@ std::pair<int, optToken> Operation::calculate(SymbolMap& symbols) {
                 auto pos = variable->getPositionInContainer();
                 auto val = symbols.find(name);
                 auto pair = val->getValue(stoi(pos));
-
                 return std::make_pair(pair.first, pair.second);
             } else {
                 auto name = variable->getName();
                 auto val = symbols.find(name);
                 auto pair = val->getValue(0);
-
                 return std::make_pair(pair.first, pair.second);
             }
         } else {
@@ -107,7 +105,7 @@ ValueType Operation::calculate(ValueType arg1, ValueType arg2, Operator op) {
         else
             throw std::runtime_error("Cannot calculate it. (/)");
     } else if (op == Par) {
-        //TODO
+        ;
     } else if (op == LogMul) {
         if (arg1.first != 0 && arg2.first != 0)
             return std::make_pair(1, Token::Value);

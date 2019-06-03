@@ -39,9 +39,9 @@ public:
 
     void setOnPosition(Token::Type type, int value, int position);
 
-    void print() const;
-
     std::pair<int, Token::Type> getValue(int position);
+
+    void setValue(int position, std::pair<int, Token::Type>);
 };
 
 

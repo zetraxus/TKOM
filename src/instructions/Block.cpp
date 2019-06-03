@@ -15,7 +15,6 @@ void Block::addInstruction(std::unique_ptr<Instruction> next) {
 
 void Block::execute(SymbolMap& symbols) {
     std::vector<std::pair<std::string, std::unique_ptr<Val>>> replaced;
-
     for (auto& instruction : instructions) {
         if (dynamic_cast<InstructionDeclarationVariable*> (instruction.get())) {
             std::string name = dynamic_cast<InstructionDeclarationVariable*> (instruction.get())->getIdentifier();
@@ -26,9 +25,7 @@ void Block::execute(SymbolMap& symbols) {
             if ((symbols.find(name)) != nullptr)
                 replaced.emplace_back(std::make_pair(name, std::move(symbols.remove(name))));
         }
-
         instruction->execute(symbols);
-
     }
 
     for (auto& pair : replaced)
